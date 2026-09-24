@@ -149,17 +149,17 @@
 
             @auth
                 @if (auth()->user()->canManageInventoryOperations())
-                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white">
+                    <a href="{{ route('retours.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('retours.*') ? 'bg-emerald-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                         <x-heroicon-o-arrow-uturn-left class="w-5 h-5" />
                         <span>Retours clients</span>
                     </a>
 
-                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white">
+                    <a href="{{ route('pertes.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('pertes.*') ? 'bg-emerald-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                         <x-heroicon-o-x-circle class="w-5 h-5" />
                         <span>Pertes</span>
                     </a>
 
-                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white">
+                    <a href="{{ route('reconditionnement.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('reconditionnement.*') ? 'bg-emerald-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                         <x-heroicon-o-arrows-right-left class="w-5 h-5" />
                         <span>Reconditionnement</span>
                     </a>

@@ -10,8 +10,14 @@ use App\Domain\Facturation\Models\Invoice;
 use App\Domain\Facturation\Policies\InvoicePolicy;
 use App\Domain\Paiements\Models\Payment;
 use App\Domain\Paiements\Policies\PaymentPolicy;
+use App\Domain\Pertes\Models\Loss;
+use App\Domain\Pertes\Policies\LossPolicy;
 use App\Domain\Produits\Models\Product;
 use App\Domain\Produits\Policies\ProductPolicy;
+use App\Domain\Reconditionnement\Models\Repackaging;
+use App\Domain\Reconditionnement\Policies\RepackagingPolicy;
+use App\Domain\Retours\Models\CustomerReturn;
+use App\Domain\Retours\Policies\CustomerReturnPolicy;
 use App\Domain\Utilisateurs\Policies\UserPolicy;
 use App\Domain\Ventes\Models\Sale;
 use App\Domain\Ventes\Policies\SalePolicy;
@@ -41,5 +47,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Sale::class, SalePolicy::class);
         Gate::policy(Invoice::class, InvoicePolicy::class);
         Gate::policy(Payment::class, PaymentPolicy::class);
+        Gate::policy(CustomerReturn::class, CustomerReturnPolicy::class);
+        Gate::policy(Loss::class, LossPolicy::class);
+        Gate::policy(Repackaging::class, RepackagingPolicy::class);
     }
 }

@@ -349,6 +349,93 @@ Réalisation complète de la **Phase 3 — Ventes, cassures, facturation immuabl
 
 ---
 
+## Session 6 — Phase 5 : Retours clients, pertes et reconditionnement
+
+### 1. Tâche réalisée
+Réalisation complète de la **Phase 5 — Retours clients, pertes et reconditionnement** selon les spécifications de `context.md`, `convention.md` et `tasksandplan.md`.
+
+### 2. Fonctionnalités implémentées
+- **Sous-domaine Retours Clients (`app/Domain/Retours/`)** :
+  - **Migration** `2026_01_01_000014_create_customer_returns_table.php` (`return_number`, `customer_id`, `invoice_id`, `product_id`, `stock_unit_id`, `quantity`, `reason`, `status`, `return_date`, `created_by_user_id`, `validated_by_user_id`, `validated_at`, `notes`).
+  - **Model `CustomerReturn`** (`isPending()`, `isRestocked()`, `isDiscarded()`).
+  - **Service `CustomerReturnService`** :
+    - `recordReturn()` : Enregistrement d'un retour client à l'état `pending`. **Le stock n'est PAS réintégré à la création** (conforme à la règle métier 2.76 du cahier des charges).
+    - `validateAndRestock()` : Validation manuelle réservée à l'Admin, passage au statut `restocked`, incrémentation du compteur de l'unité reçue et consignation d'un mouvement `RETURN` (entrée).
+    - `validateAndDiscard()` : Validation manuelle avec passage au statut `discarded`, création automatique d'une `Loss` et consignation d'un mouvement `LOSS` (sortie) sans réintégration au stock.
+  - **Policy `CustomerReturnPolicy`** : Accès et validation réservés aux Administrateurs/Super-Admins (`canManageInventoryOperations()`). Accès interdit aux Caissiers.
+  - **Controller `CustomerReturnController`** & **Vues Blade** (`retours/index`, `create`, `show` avec boutons de validation manuelle).
+- **Sous-domaine Pertes (`app/Domain/Pertes/`)** :
+  - **Migration** `2026_01_01_000015_create_losses_table.php` (`loss_number`, `product_id`, `stock_unit_id`, `quantity`, `reason`, `loss_date`, `notes`, `customer_return_id`, `created_by_user_id`).
+  - **Model `Loss`**.
+  - **Service `LossService`** : Décrémentation directe du compteur de l'unité concernée sous transaction DB et consignation d'un mouvement `LOSS` (sortie).
+  - **Policy `LossPolicy`** : Accès réservé aux Administrateurs/Super-Admins.
+  - **Controller `LossController`** & **Vues Blade** (`pertes/index`, `create`, `show`).
+- **Sous-domaine Reconditionnement (`app/Domain/Reconditionnement/`)** :
+  - **Migration** `2026_01_01_000016_create_repackagings_table.php` (`repackaging_number`, `product_id`, `source_stock_unit_id`, `source_quantity`, `target_stock_unit_id`, `target_quantity`, `repackaging_date`, `notes`, `created_by_user_id`).
+  - **Model `Repackaging`**.
+  - **Service `RepackagingService`** :
+    - Contrôle de cohérence d'équivalence entre l'unité source et l'unité cible (ex: 12 bidons d'équivalence 1 = 1 carton d'équivalence 12).
+    - Décrémentation de l'unité source avec mouvement `REPACKAGING_OUT` (sortie).
+    - Incrémentation de l'unité cible avec mouvement `REPACKAGING_IN` (entrée).
+  - **Policy `RepackagingPolicy`** : Accès réservé aux Administrateurs/Super-Admins.
+  - **Controller `RepackagingController`** & **Vues Blade** (`reconditionnement/index`, `create`, `show`). Formulaire Alpine.js calculant en temps réel les volumes de base et vérifiant l'égalité des équivalences.
+- **Routes & Navigation** :
+  - Routes web enregistrées pour `retours.*`, `retours.restock`, `retours.discard`, `pertes.*`, `reconditionnement.*`.
+  - Policies enregistrées dans `AppServiceProvider`.
+  - Liens actifs ajoutés dans la sidebar sous la condition `@if(auth()->user()->canManageInventoryOperations())`.
+
+### 3. Principaux fichiers créés ou modifiés
+- `database/migrations/2026_01_01_000014_create_customer_returns_table.php` (Créé)
+- `database/migrations/2026_01_01_000015_create_losses_table.php` (Créé)
+- `database/migrations/2026_01_01_000016_create_repackagings_table.php` (Créé)
+- `app/Domain/Retours/Models/CustomerReturn.php` (Créé)
+- `app/Domain/Retours/Services/CustomerReturnService.php` (Créé)
+- `app/Domain/Retours/Policies/CustomerReturnPolicy.php` (Créé)
+- `app/Domain/Retours/Http/Requests/StoreCustomerReturnRequest.php` (Créé)
+- `app/Domain/Retours/Http/Controllers/CustomerReturnController.php` (Créé)
+- `resources/views/retours/index.blade.php`, `create.blade.php`, `show.blade.php` (Créés)
+- `app/Domain/Pertes/Models/Loss.php` (Créé)
+- `app/Domain/Pertes/Services/LossService.php` (Créé)
+- `app/Domain/Pertes/Policies/LossPolicy.php` (Créé)
+- `app/Domain/Pertes/Http/Requests/StoreLossRequest.php` (Créé)
+- `app/Domain/Pertes/Http/Controllers/LossController.php` (Créé)
+- `resources/views/pertes/index.blade.php`, `create.blade.php`, `show.blade.php` (Créés)
+- `app/Domain/Reconditionnement/Models/Repackaging.php` (Créé)
+- `app/Domain/Reconditionnement/Services/RepackagingService.php` (Créé)
+- `app/Domain/Reconditionnement/Policies/RepackagingPolicy.php` (Créé)
+- `app/Domain/Reconditionnement/Http/Requests/StoreRepackagingRequest.php` (Créé)
+- `app/Domain/Reconditionnement/Http/Controllers/RepackagingController.php` (Créé)
+- `resources/views/reconditionnement/index.blade.php`, `create.blade.php`, `show.blade.php` (Créés)
+- `app/Providers/AppServiceProvider.php` (Modifié - enregistrement policies)
+- `routes/web.php` (Modifié - routes retours, pertes, reconditionnement)
+- `resources/views/layouts/app.blade.php` (Modifié - liens navigation conditionnels)
+- `tests/Feature/CustomerReturnTest.php`, `LossTest.php`, `RepackagingTest.php` (Créés)
+
+### 4. Décisions techniques importantes
+- **Non-réintégration automatique des retours** : Conforme au cahier des charges, créer un retour n'affecte pas le stock tant qu'une validation explicite n'a pas été effectuée (`restock` ou `discard`).
+- **Verrouillage et vérification d'équivalence** : Le service de reconditionnement contrôle l'égalité exacte du nombre d'unités de base entre les quantités prélevées et obtenues.
+- **Interdictions Caissier** : Les Policies et le masquage dans la navigation bloquent l'accès à ces 3 modules pour le rôle Caissier.
+
+### 5. Tests et vérifications effectués
+- `tests/Feature/CustomerReturnTest.php` : Vérification du statut initial `pending`, de la non-altération du stock à l'enregistrement, de la réintégration de stock lors de la validation `restock`, de la création de perte lors de `discard`, et du blocage du Caissier.
+- `tests/Feature/LossTest.php` : Décrémentation du stock lors de la déclaration de perte et enregistrement de `StockMovement` (sortie).
+- `tests/Feature/RepackagingTest.php` : Exécution d'un reconditionnement avec mise à jour exacte des compteurs source et cible, et rejet si les équivalences ne correspondent pas.
+
+### 6. Problèmes rencontrés et leurs solutions
+- Aucun problème rencontré.
+
+### 7. État actuel de la tâche
+- **Phase 5** : Terminée à 100%. Les sous-modules Retours clients, Pertes et Reconditionnement sont complètement implémentés, testés et reliés au journal des mouvements de stock.
+
+### 8. Prochaine tâche recommandée
+**Phase 6 — Snapshots et historique/suivi avancé** :
+1. Implémentation du sous-domaine `app/Domain/Historique/`.
+2. Job/Command Artisan planifié pour les snapshots mensuels de stock (`StockSnapshot`).
+3. Algorithme de reconstitution du stock à une date passée (repartir du snapshot mensuel le plus proche et rejouer les mouvements).
+4. Vues d'historique et suivi : achats/ventes par produit et par période, classement des produits les plus vendus, vue consolidée créances/dettes.
+
+---
+
 ## Session 5 — Phase 4 : Paiements, Fournisseurs et Clients (Gestion des règlements et créances/dettes)
 
 ### 1. Tâche réalisée

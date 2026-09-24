@@ -5,7 +5,10 @@ use App\Domain\Clients\Http\Controllers\CustomerController;
 use App\Domain\Facturation\Http\Controllers\InvoiceController;
 use App\Domain\Fournisseurs\Http\Controllers\SupplierController;
 use App\Domain\Paiements\Http\Controllers\PaymentController;
+use App\Domain\Pertes\Http\Controllers\LossController;
 use App\Domain\Produits\Http\Controllers\ProductController;
+use App\Domain\Reconditionnement\Http\Controllers\RepackagingController;
+use App\Domain\Retours\Http\Controllers\CustomerReturnController;
 use App\Domain\Stock\Http\Controllers\StockController;
 use App\Domain\Ventes\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Route;
@@ -92,6 +95,38 @@ Route::middleware(['auth'])->group(function () {
     Route::get('paiements', [PaymentController::class, 'index'])->name('paiements.index');
     Route::get('factures/{invoice}/regler', [PaymentController::class, 'create'])->name('paiements.create');
     Route::post('paiements', [PaymentController::class, 'store'])->name('paiements.store');
+
+    // Customer Returns
+    Route::resource('retours', CustomerReturnController::class)->parameters([
+        'retours' => 'customerReturn',
+    ])->names([
+        'index' => 'retours.index',
+        'create' => 'retours.create',
+        'store' => 'retours.store',
+        'show' => 'retours.show',
+    ]);
+    Route::post('retours/{customerReturn}/restock', [CustomerReturnController::class, 'restock'])->name('retours.restock');
+    Route::post('retours/{customerReturn}/discard', [CustomerReturnController::class, 'discard'])->name('retours.discard');
+
+    // Losses
+    Route::resource('pertes', LossController::class)->only(['index', 'create', 'store', 'show'])->parameters([
+        'pertes' => 'loss',
+    ])->names([
+        'index' => 'pertes.index',
+        'create' => 'pertes.create',
+        'store' => 'pertes.store',
+        'show' => 'pertes.show',
+    ]);
+
+    // Repackaging
+    Route::resource('reconditionnement', RepackagingController::class)->only(['index', 'create', 'store', 'show'])->parameters([
+        'reconditionnement' => 'repackaging',
+    ])->names([
+        'index' => 'reconditionnement.index',
+        'create' => 'reconditionnement.create',
+        'store' => 'reconditionnement.store',
+        'show' => 'reconditionnement.show',
+    ]);
 
     // Stock Module
     Route::get('stock', [StockController::class, 'index'])->name('stock.index');
