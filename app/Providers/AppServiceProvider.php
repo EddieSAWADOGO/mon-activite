@@ -8,6 +8,8 @@ use App\Domain\Clients\Models\Customer;
 use App\Domain\Clients\Policies\CustomerPolicy;
 use App\Domain\Facturation\Models\Invoice;
 use App\Domain\Facturation\Policies\InvoicePolicy;
+use App\Domain\Paiements\Models\Payment;
+use App\Domain\Paiements\Policies\PaymentPolicy;
 use App\Domain\Produits\Models\Product;
 use App\Domain\Produits\Policies\ProductPolicy;
 use App\Domain\Utilisateurs\Policies\UserPolicy;
@@ -38,5 +40,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Customer::class, CustomerPolicy::class);
         Gate::policy(Sale::class, SalePolicy::class);
         Gate::policy(Invoice::class, InvoicePolicy::class);
+        Gate::policy(Payment::class, PaymentPolicy::class);
     }
 }

@@ -14,6 +14,12 @@
             </div>
 
             <div class="flex items-center flex-wrap gap-2">
+                @if($invoice->remaining_amount > 0)
+                    <x-ui.button href="{{ route('paiements.create', $invoice) }}" variant="primary" icon="banknotes" size="sm">
+                        Enregistrer un règlement
+                    </x-ui.button>
+                @endif
+
                 <button onclick="window.print()" class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-slate-700 text-xs font-semibold hover:bg-slate-50">
                     <x-heroicon-o-document-text class="w-4 h-4 text-slate-500" />
                     <span>Imprimer</span>
@@ -23,7 +29,7 @@
                     Télécharger PDF
                 </x-ui.button>
 
-                <x-ui.button href="{{ route('factures.whatsapp', $invoice) }}" variant="primary" icon="chat-bubble-left-right" size="sm" target="_blank">
+                <x-ui.button href="{{ route('factures.whatsapp', $invoice) }}" variant="outline" icon="chat-bubble-left-right" size="sm" target="_blank">
                     Partager WhatsApp
                 </x-ui.button>
 
@@ -157,5 +163,38 @@
                 Merci de votre confiance ! — Document reconstruit à la demande à partir de la base de données.
             </div>
         </x-ui.card>
+
+        @if($invoice->payments->count() > 0)
+            <x-ui.card class="mt-6 p-6">
+                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <x-heroicon-o-clock class="w-5 h-5 text-emerald-600" />
+                    Historique des Règlements de cette Facture
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
+                                <th class="py-2.5 px-3">Date</th>
+                                <th class="py-2.5 px-3">Mode</th>
+                                <th class="py-2.5 px-3">Référence</th>
+                                <th class="py-2.5 px-3 text-right">Montant</th>
+                                <th class="py-2.5 px-3">Enregistré par</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @foreach($invoice->payments as $payment)
+                                <tr>
+                                    <td class="py-2.5 px-3 text-slate-600">{{ $payment->payment_date->format('d/m/Y H:i') }}</td>
+                                    <td class="py-2.5 px-3"><x-ui.badge color="sky">{{ $payment->payment_method }}</x-ui.badge></td>
+                                    <td class="py-2.5 px-3 text-slate-500 font-mono text-[11px]">{{ $payment->reference ?: '-' }}</td>
+                                    <td class="py-2.5 px-3 text-right font-bold text-emerald-600">+ {{ number_format($payment->amount, 0, ',', ' ') }} FCFA</td>
+                                    <td class="py-2.5 px-3 text-slate-500">{{ $payment->createdBy->name }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </x-ui.card>
+        @endif
     </div>
 </x-layouts.app>

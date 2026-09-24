@@ -132,6 +132,11 @@
                 <span>Factures</span>
             </a>
 
+            <a href="{{ route('paiements.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('paiements.*') ? 'bg-emerald-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                <x-heroicon-o-banknotes class="w-5 h-5" />
+                <span>Règlements</span>
+            </a>
+
             <a href="{{ route('clients.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('clients.*') ? 'bg-emerald-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                 <x-heroicon-o-user class="w-5 h-5" />
                 <span>Clients</span>

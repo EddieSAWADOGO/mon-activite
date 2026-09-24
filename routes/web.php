@@ -4,6 +4,7 @@ use App\Domain\Achats\Http\Controllers\PurchaseController;
 use App\Domain\Clients\Http\Controllers\CustomerController;
 use App\Domain\Facturation\Http\Controllers\InvoiceController;
 use App\Domain\Fournisseurs\Http\Controllers\SupplierController;
+use App\Domain\Paiements\Http\Controllers\PaymentController;
 use App\Domain\Produits\Http\Controllers\ProductController;
 use App\Domain\Stock\Http\Controllers\StockController;
 use App\Domain\Ventes\Http\Controllers\SaleController;
@@ -86,6 +87,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('factures/{invoice}/pdf', [InvoiceController::class, 'pdf'])->name('factures.pdf');
     Route::get('factures/{invoice}/whatsapp', [InvoiceController::class, 'whatsapp'])->name('factures.whatsapp');
+
+    // Payments
+    Route::get('paiements', [PaymentController::class, 'index'])->name('paiements.index');
+    Route::get('factures/{invoice}/regler', [PaymentController::class, 'create'])->name('paiements.create');
+    Route::post('paiements', [PaymentController::class, 'store'])->name('paiements.store');
 
     // Stock Module
     Route::get('stock', [StockController::class, 'index'])->name('stock.index');

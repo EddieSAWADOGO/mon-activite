@@ -3,6 +3,7 @@
 namespace App\Domain\Facturation\Models;
 
 use App\Domain\Clients\Models\Customer;
+use App\Domain\Paiements\Models\Payment;
 use App\Domain\Ventes\Models\Sale;
 use App\Models\User;
 use App\Support\Enums\InvoiceStatus;
@@ -82,5 +83,10 @@ class Invoice extends Model
     public function lines(): HasMany
     {
         return $this->hasMany(InvoiceLine::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 }
