@@ -1,9 +1,12 @@
 <?php
 
 use App\Domain\Achats\Http\Controllers\PurchaseController;
+use App\Domain\Clients\Http\Controllers\CustomerController;
+use App\Domain\Facturation\Http\Controllers\InvoiceController;
 use App\Domain\Fournisseurs\Http\Controllers\SupplierController;
 use App\Domain\Produits\Http\Controllers\ProductController;
 use App\Domain\Stock\Http\Controllers\StockController;
+use App\Domain\Ventes\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -40,6 +43,19 @@ Route::middleware(['auth'])->group(function () {
         'destroy' => 'fournisseurs.destroy',
     ]);
 
+    // Customers
+    Route::resource('clients', CustomerController::class)->parameters([
+        'clients' => 'customer',
+    ])->names([
+        'index' => 'clients.index',
+        'create' => 'clients.create',
+        'store' => 'clients.store',
+        'show' => 'clients.show',
+        'edit' => 'clients.edit',
+        'update' => 'clients.update',
+        'destroy' => 'clients.destroy',
+    ]);
+
     // Purchases
     Route::resource('achats', PurchaseController::class)->only(['index', 'create', 'store', 'show'])->parameters([
         'achats' => 'purchase',
@@ -49,6 +65,27 @@ Route::middleware(['auth'])->group(function () {
         'store' => 'achats.store',
         'show' => 'achats.show',
     ]);
+
+    // Sales
+    Route::resource('ventes', SaleController::class)->only(['index', 'create', 'store', 'show'])->parameters([
+        'ventes' => 'sale',
+    ])->names([
+        'index' => 'ventes.index',
+        'create' => 'ventes.create',
+        'store' => 'ventes.store',
+        'show' => 'ventes.show',
+    ]);
+
+    // Invoices
+    Route::resource('factures', InvoiceController::class)->only(['index', 'show'])->parameters([
+        'factures' => 'invoice',
+    ])->names([
+        'index' => 'factures.index',
+        'show' => 'factures.show',
+    ]);
+
+    Route::get('factures/{invoice}/pdf', [InvoiceController::class, 'pdf'])->name('factures.pdf');
+    Route::get('factures/{invoice}/whatsapp', [InvoiceController::class, 'whatsapp'])->name('factures.whatsapp');
 
     // Stock Module
     Route::get('stock', [StockController::class, 'index'])->name('stock.index');

@@ -122,17 +122,17 @@
                 @endif
             @endauth
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white">
+            <a href="{{ route('ventes.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('ventes.*') ? 'bg-emerald-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                 <x-heroicon-o-arrow-up-tray class="w-5 h-5" />
                 <span>Ventes</span>
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white">
+            <a href="{{ route('factures.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('factures.*') ? 'bg-emerald-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                 <x-heroicon-o-document-text class="w-5 h-5" />
                 <span>Factures</span>
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white">
+            <a href="{{ route('clients.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('clients.*') ? 'bg-emerald-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                 <x-heroicon-o-user class="w-5 h-5" />
                 <span>Clients</span>
             </a>
@@ -241,6 +241,18 @@
                         </a>
                     @endif
                 @endauth
+                <a @click="mobileMenuOpen = false" href="{{ route('ventes.index') }}" class="p-3 bg-slate-800 rounded-xl text-slate-200 flex flex-col items-center gap-2 text-xs font-medium">
+                    <x-heroicon-o-arrow-up-tray class="w-6 h-6 text-emerald-500" />
+                    <span>Ventes</span>
+                </a>
+                <a @click="mobileMenuOpen = false" href="{{ route('factures.index') }}" class="p-3 bg-slate-800 rounded-xl text-slate-200 flex flex-col items-center gap-2 text-xs font-medium">
+                    <x-heroicon-o-document-text class="w-6 h-6 text-emerald-500" />
+                    <span>Factures</span>
+                </a>
+                <a @click="mobileMenuOpen = false" href="{{ route('clients.index') }}" class="p-3 bg-slate-800 rounded-xl text-slate-200 flex flex-col items-center gap-2 text-xs font-medium">
+                    <x-heroicon-o-user class="w-6 h-6 text-emerald-500" />
+                    <span>Clients</span>
+                </a>
                 <a @click="mobileMenuOpen = false" href="{{ route('fournisseurs.index') }}" class="p-3 bg-slate-800 rounded-xl text-slate-200 flex flex-col items-center gap-2 text-xs font-medium">
                     <x-heroicon-o-truck class="w-6 h-6 text-emerald-500" />
                     <span>Fournisseurs</span>
@@ -271,22 +283,22 @@
 
     <!-- Mobile Bottom Navigation Bar (Persistent touch bar) -->
     <nav class="sm:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 flex items-center justify-around py-2 px-1 shadow-lg">
-        <a href="#" class="flex flex-col items-center gap-0.5 text-slate-500 hover:text-slate-900 text-[10px] font-medium">
-            <x-heroicon-o-squares-2x2 class="w-5 h-5" />
-            <span>Accueil</span>
-        </a>
-
         <a href="{{ route('produits.index') }}" class="flex flex-col items-center gap-0.5 {{ request()->routeIs('produits.*') ? 'text-emerald-600' : 'text-slate-500 hover:text-slate-900' }} text-[10px] font-medium">
             <x-heroicon-o-cube class="w-5 h-5" />
             <span>Produits</span>
         </a>
 
-        <a href="#" class="flex flex-col items-center gap-0.5 text-slate-500 hover:text-slate-900 text-[10px] font-medium">
-            <x-heroicon-o-arrow-up-tray class="w-5 h-5" />
-            <span>Vente</span>
+        <a href="{{ route('stock.index') }}" class="flex flex-col items-center gap-0.5 {{ request()->routeIs('stock.*') ? 'text-emerald-600' : 'text-slate-500 hover:text-slate-900' }} text-[10px] font-medium">
+            <x-heroicon-o-archive-box class="w-5 h-5" />
+            <span>Stock</span>
         </a>
 
-        <a href="#" class="flex flex-col items-center gap-0.5 text-slate-500 hover:text-slate-900 text-[10px] font-medium">
+        <a href="{{ route('ventes.index') }}" class="flex flex-col items-center gap-0.5 {{ request()->routeIs('ventes.*') ? 'text-emerald-600' : 'text-slate-500 hover:text-slate-900' }} text-[10px] font-medium">
+            <x-heroicon-o-arrow-up-tray class="w-5 h-5" />
+            <span>Ventes</span>
+        </a>
+
+        <a href="{{ route('factures.index') }}" class="flex flex-col items-center gap-0.5 {{ request()->routeIs('factures.*') ? 'text-emerald-600' : 'text-slate-500 hover:text-slate-900' }} text-[10px] font-medium">
             <x-heroicon-o-document-text class="w-5 h-5" />
             <span>Factures</span>
         </a>

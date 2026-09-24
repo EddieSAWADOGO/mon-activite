@@ -243,3 +243,107 @@ Réalisation complète de la **Phase 2 — Mouvements de base : Achats et Stock*
 3. Détection d'écart vs `prix_vente_defaut` de l'unité avec saisie obligatoire d'un motif de remise/écart.
 4. Mécanisme de cassure (sélection manuelle de l'unité source à ouvrir, décrément de l'unité source, vente en unité de base, réintégration du reliquat non vendu dans l'unité de base).
 5. Génération automatique de la facture immuable et du reçu commercial.
+
+---
+
+## Session 4 — Phase 3 : Ventes, cassures, facturation immuable et gestion des clients
+
+### 1. Tâche réalisée
+Réalisation complète de la **Phase 3 — Ventes, cassures, facturation immuable et gestion des clients** selon les spécifications de `context.md`, `convention.md` et `tasksandplan.md`.
+
+### 2. Fonctionnalités implémentées
+- **Module Clients (`app/Domain/Clients/`)** :
+  - Correction de la faute de frappe du namespace d'importation dans `Customer.php`.
+  - `CustomerFactory` pour les tests et seeders (`particulier` et `entreprise`).
+  - Policy `CustomerPolicy` : Autorisation de création et consultation pour le rôle Caissier, modification/suppression réservée aux Administrateurs et Super Administrateurs.
+  - Form Requests `StoreCustomerRequest` et `UpdateCustomerRequest` avec règles strictes.
+  - Contrôleur `CustomerController` avec recherche multi-critères et filtre par type.
+  - Vues Blade mobile-first (`index`, `create`, `edit`, `show`) avec bascule dynamique Alpine.js selon le type de client (IFU, RCCM, personne de contact pour les entreprises).
+- **Module Ventes & Mécanisme de Cassure (`app/Domain/Ventes/`)** :
+  - Model `Sale` et `SaleLine`.
+  - Policy `SalePolicy` : Création et consultation autorisées aux Caissiers.
+  - Form Request `StoreSaleRequest` :
+    - Règle stricte d'écart de prix : Saisie obligatoire d'un `discount_reason` si `unit_price != default_selling_price`.
+    - Validation du stock et de la cohérence de l'unité source lors d'une cassure.
+  - Service `SaleService` :
+    - Transaction atomique `DB::transaction`.
+    - Génération du numéro de vente unique (`VNT-YYYYMMDD-XXXX`).
+    - Traitement du **mécanisme de cassure (breakage)** :
+      - Ouverture de l'unité source (ex. carton) : décrément de 1 sur le compteur source et enregistrement du mouvement `BREAKAGE_OUT`.
+      - Réintégration de l'équivalence complète sur l'unité de base et enregistrement du mouvement `BREAKAGE_IN`.
+      - Déduction de la quantité vendue sur l'unité de base et enregistrement du mouvement `SALE`.
+    - Vente directe sans cassure : décrément direct et enregistrement du mouvement `SALE`.
+    - Génération automatique de la facture immuable associée.
+  - Contrôleur `SaleController` et vues Blade (`index`, `create`, `show`). Formulaire dynamique Alpine.js gérant le calcul automatique des sous-totaux, la détection d'écart de prix en direct et la sélection du carton source en cas de stock vrac insuffisant.
+- **Module Facturation Immuable (`app/Domain/Facturation/`)** :
+  - Models `Invoice` et `InvoiceLine` avec événements de modèle (`booted()`) empêchant toute modification des colonnes protégées ou suppression.
+  - Service/Méthodes `InvoiceController` :
+    - Reconstitution en direct du document HTML depuis la base de données (`show`).
+    - Téléchargement PDF à la demande avec DomPDF (`pdf`).
+    - Génération de lien de partage WhatsApp avec message prérempli (`whatsapp`).
+  - Policy `InvoicePolicy` interdisant modification et suppression.
+  - Vues Blade (`index`, `show`, `pdf`).
+- **Mise à jour des Routes & de la Navigation** :
+  - Routes enregistrées dans `routes/web.php` pour `clients.*`, `ventes.*`, `factures.*`, `factures.pdf`, `factures.whatsapp`.
+  - Enregistrement des Policies dans `AppServiceProvider`.
+  - Liens de navigation mis à jour sur sidebar desktop, menu slide-over mobile et barre tactile mobile.
+
+### 3. Principaux fichiers créés ou modifiés
+- `app/Domain/Clients/Models/Customer.php` (Modifié - correction namespace)
+- `app/Domain/Facturation/Models/InvoiceLine.php` (Modifié - correction namespace)
+- `database/factories/CustomerFactory.php` (Créé)
+- `app/Domain/Clients/Policies/CustomerPolicy.php` (Créé)
+- `app/Domain/Clients/Http/Requests/StoreCustomerRequest.php` (Créé)
+- `app/Domain/Clients/Http/Requests/UpdateCustomerRequest.php` (Créé)
+- `app/Domain/Clients/Http/Controllers/CustomerController.php` (Créé)
+- `resources/views/clients/index.blade.php` (Créé)
+- `resources/views/clients/create.blade.php` (Créé)
+- `resources/views/clients/edit.blade.php` (Créé)
+- `resources/views/clients/show.blade.php` (Créé)
+- `app/Domain/Ventes/Policies/SalePolicy.php` (Créé)
+- `app/Domain/Ventes/Http/Requests/StoreSaleRequest.php` (Créé)
+- `app/Domain/Ventes/Services/SaleService.php` (Créé)
+- `app/Domain/Ventes/Http/Controllers/SaleController.php` (Créé)
+- `resources/views/ventes/index.blade.php` (Créé)
+- `resources/views/ventes/create.blade.php` (Créé)
+- `resources/views/ventes/show.blade.php` (Créé)
+- `app/Domain/Facturation/Policies/InvoicePolicy.php` (Créé)
+- `app/Domain/Facturation/Http/Controllers/InvoiceController.php` (Créé)
+- `resources/views/factures/index.blade.php` (Créé)
+- `resources/views/factures/show.blade.php` (Créé)
+- `resources/views/factures/pdf.blade.php` (Créé)
+- `routes/web.php` (Modifié - routes clients, ventes, factures)
+- `app/Providers/AppServiceProvider.php` (Modifié - enregistrement de `CustomerPolicy`)
+- `resources/views/layouts/app.blade.php` (Modifié - navigation web & mobile)
+- `tests/Feature/CustomerTest.php` (Créé)
+- `tests/Feature/SaleTest.php` (Créé)
+- `tests/Feature/InvoiceTest.php` (Créé)
+
+### 4. Décisions techniques importantes
+- **Cassure de stock atomique** : Lors d'une vente en unité de base nécessitant d'ouvrir un carton, l'unité source est décrémentée de 1 (`BREAKAGE_OUT`), la totalité de l'équivalence est réintégrée sur l'unité de base (`BREAKAGE_IN`), puis la quantité vendue est prélevée (`SALE`). Le reliquat non vendu reste disponible en unité de base dans le stock.
+- **Immutabilité des Factures** : Toute tentative de mise à jour des données de fond d'une facture ou de suppression déclenche une `DomainException` au niveau d'Eloquent. Les factures sont reconstruites à la demande à partir de la base sans stockage de fichier PDF permanent sur le serveur.
+- **Motif d'écart obligatoire** : La Form Request vérifie côté serveur que si le prix saisi diffère de `default_selling_price`, un motif est obligatoirement fourni.
+
+### 5. Tests et vérifications effectués
+- Tests fonctionnels complets créés dans `tests/Feature/CustomerTest.php`, `tests/Feature/SaleTest.php` et `tests/Feature/InvoiceTest.php` couvrant :
+  - Création de clients et gestion des rôles (Caissier vs Admin).
+  - Validation obligatoire du motif d'écart de prix.
+  - Vente directe avec décrémentation de stock et émission de facture.
+  - Vente avec cassure (décrément du carton, réintégration de l'équivalence sur l'unité de base, mouvement de vente).
+  - Immutabilité de la facture (exception levée lors de modification/suppression).
+  - Génération de PDF et lien de partage WhatsApp.
+
+### 6. Problèmes rencontrés et leurs solutions
+- *Problème* : Fautes de frappe dans les namespaces de `Customer.php` et `InvoiceLine.php` (`/` au lieu de `\`).
+- *Solution* : Correction des séparateurs de namespace.
+
+### 7. État actuel de la tâche
+- **Phase 3** : Terminée à 100%. Les sous-modules Ventes, Cassures, Facturation immuable et Clients sont totalement implémentés et testés.
+
+### 8. Prochaine tâche recommandée
+**Phase 4 — Paiements, Fournisseurs et Clients (Gestion des règlements et créances/dettes)** :
+1. Implémentation du sous-domaine `app/Domain/Paiements/`.
+2. Création du modèle `Payment` (enregistrement des règlements partiels ou totaux des factures).
+3. Recalcul dynamique du montant payé / reste à payer et mise à jour du statut de la facture.
+4. Finalisation des vues de suivi des dettes fournisseurs et des créances clients.
+
