@@ -4,6 +4,7 @@ use App\Domain\Achats\Http\Controllers\PurchaseController;
 use App\Domain\Clients\Http\Controllers\CustomerController;
 use App\Domain\Facturation\Http\Controllers\InvoiceController;
 use App\Domain\Fournisseurs\Http\Controllers\SupplierController;
+use App\Domain\Historique\Http\Controllers\HistoryController;
 use App\Domain\Paiements\Http\Controllers\PaymentController;
 use App\Domain\Pertes\Http\Controllers\LossController;
 use App\Domain\Produits\Http\Controllers\ProductController;
@@ -131,4 +132,12 @@ Route::middleware(['auth'])->group(function () {
     // Stock Module
     Route::get('stock', [StockController::class, 'index'])->name('stock.index');
     Route::get('stock/mouvements', [StockController::class, 'movements'])->name('stock.movements');
+
+    // History & Tracking Module
+    Route::get('historique', [HistoryController::class, 'index'])->name('historique.index');
+    Route::get('historique/achats', [HistoryController::class, 'purchases'])->name('historique.purchases');
+    Route::get('historique/ventes', [HistoryController::class, 'sales'])->name('historique.sales');
+    Route::get('historique/stock-date', [HistoryController::class, 'stockAtDate'])->name('historique.stock-at-date');
+    Route::get('historique/top-produits', [HistoryController::class, 'topProducts'])->name('historique.top-products');
+    Route::get('historique/finances', [HistoryController::class, 'financialOverview'])->name('historique.financial-overview');
 });

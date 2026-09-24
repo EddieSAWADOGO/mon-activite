@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Retours\Http/Requests;
+namespace App\Domain\Retours\Http\Requests;
 
 use App\Domain\Retours\Models\CustomerReturn;
 use Illuminate\Foundation\Http\FormRequest;

@@ -166,7 +166,7 @@
                 @endif
 
                 @if (auth()->user()->canAccessHistory())
-                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white">
+                    <a href="{{ route('historique.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('historique.*') ? 'bg-emerald-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                         <x-heroicon-o-clock class="w-5 h-5" />
                         <span>Historique & Suivi</span>
                     </a>

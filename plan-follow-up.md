@@ -349,6 +349,80 @@ Réalisation complète de la **Phase 3 — Ventes, cassures, facturation immuabl
 
 ---
 
+## Session 5 — Phase 4 : Paiements, Fournisseurs et Clients (Gestion des règlements et créances/dettes)
+
+### 1. Tâche réalisée
+Réalisation complète de la **Phase 4 — Paiements, Fournisseurs et Clients (Gestion des règlements et créances/dettes)** selon les spécifications de `context.md`, `convention.md` et `tasksandplan.md`.
+
+### 2. Fonctionnalités implémentées
+- **Sous-domaine `app/Domain/Paiements/`** :
+  - **Migration** `2026_01_01_000013_create_payments_table.php` (`id`, `invoice_id`, `amount`, `payment_date`, `payment_method`, `reference`, `notes`, `created_by_user_id`, `timestamps`).
+  - **Model `Payment`** (`invoice`, `createdBy`, casts sur `amount` et `payment_date`).
+  - **Service `PaymentService`** :
+    - Transaction atomique DB (`DB::transaction`) avec verrouillage `lockForUpdate()`.
+    - Validation du montant (interdiction des montants <= 0 ou dépassant le reste à payer de la facture).
+    - Calcul dynamique des agrégats (`paid_amount`, `remaining_amount`) et du statut de la facture (`UNPAID`, `PARTIALLY_PAID`, `PAID`).
+    - Mise à jour autorisée des colonnes financières de `Invoice` et de la `Sale` correspondante.
+  - **Policy `PaymentPolicy`** :
+    - Autorisation d'accès et d'enregistrement des règlements pour les rôles Caissier, Administrateur et Super Administrateur (conforme à la section 8 du cahier des charges).
+    - Immutabilité des paiements enregistrés (modification et suppression désactivées).
+  - **Form Request `StorePaymentRequest`** avec règles de validation et messages français.
+  - **Controller `PaymentController`** (`index`, `create`, `store`).
+  - **Vues Blade mobile-first** :
+    - Formulaire d'enregistrement d'un règlement (`paiements/create.blade.php`).
+    - Historique des règlements avec recherche et pagination (`paiements/index.blade.php`).
+    - Section d'historique des règlements intégrée sur la fiche détail d'une facture (`factures/show.blade.php`) et bouton d'action direct "Enregistrer un règlement".
+- **Vues Suivi Dettes et Créances** :
+  - Vues `clients/show.blade.php` et `fournisseurs/show.blade.php` pour la consultation consolidée des créances clients et dettes fournisseurs.
+- **Routes & Navigation** :
+  - Routes web enregistrées pour `paiements.index`, `paiements.create` (`factures/{invoice}/regler`), `paiements.store`.
+  - Intégration du lien "Règlements" dans le menu de navigation de `layouts/app.blade.php`.
+  - Enregistrement de `PaymentPolicy` dans `AppServiceProvider`.
+
+### 3. Principaux fichiers créés ou modifiés
+- `database/migrations/2026_01_01_000013_create_payments_table.php` (Créé)
+- `app/Domain/Paiements/Models/Payment.php` (Créé)
+- `app/Domain/Paiements/Services/PaymentService.php` (Créé)
+- `app/Domain/Paiements/Policies/PaymentPolicy.php` (Créé)
+- `app/Domain/Paiements/Http/Requests/StorePaymentRequest.php` (Créé)
+- `app/Domain/Paiements/Http/Controllers/PaymentController.php` (Créé)
+- `app/Domain/Facturation/Models/Invoice.php` (Modifié - relation `payments()`)
+- `resources/views/paiements/create.blade.php` (Créé)
+- `resources/views/paiements/index.blade.php` (Créé)
+- `resources/views/factures/show.blade.php` (Modifié - bouton règlement & table historique)
+- `app/Providers/AppServiceProvider.php` (Modifié - enregistrement `PaymentPolicy`)
+- `routes/web.php` (Modifié - routes paiements)
+- `resources/views/layouts/app.blade.php` (Modifié - navigation sidebar)
+- `tests/Feature/PaymentTest.php` (Créé)
+
+### 4. Décisions techniques importantes
+- **Respect de l'immutabilité des factures** : Les paiements modifient uniquement le statut et les compteurs financiers (`paid_amount`, `remaining_amount`, `payment_method`) via l'événement `booted()` d'Eloquent qui autorise spécifiquement ces colonnes.
+- **Événement immuable du règlement** : Un paiement enregistré dans la table `payments` constitue un événement historique inaltérable (Policy refuse `update` et `delete`).
+- **Permissions du Caissier** : Le rôle Caissier a la permission explicite d'enregistrer des règlements pour les clients, tout en restant restreint sur l'accès aux autres modules d'administration.
+
+### 5. Tests et vérifications effectués
+- Suite de tests fonctionnels et d'intégration créée dans `tests/Feature/PaymentTest.php` couvrant :
+  - Accès du Caissier au formulaire de règlement.
+  - Règlement partiel avec mise à jour du statut `PARTIALLY_PAID` et des restes à payer sur `Invoice` et `Sale`.
+  - Règlement total avec passage au statut `PAID`.
+  - Rejet d'un paiement dont le montant dépasse le reste à payer.
+  - Cumul correct de plusieurs règlements successifs sur une même facture.
+
+### 6. Problèmes rencontrés et leurs solutions
+- Aucun problème bloquant rencontré.
+
+### 7. État actuel de la tâche
+- **Phase 4** : Terminée à 100%. Le sous-module Paiements, l'enregistrement des règlements, la mise à jour des factures/ventes et le suivi des créances/dettes sont totalement opérationnels.
+
+### 8. Prochaine tâche recommandée
+**Phase 5 — Retours clients, pertes et reconditionnement** :
+1. Implémentation du sous-domaine `app/Domain/Retours/` (formulaire de retour, validation manuelle obligatoire avant réintégration du stock, restriction Administrateur/Agent).
+2. Implémentation du sous-domaine `app/Domain/Pertes/` (formulaire de déclaration de perte, décrémentation directe du stock par unité, restriction Administrateur/Agent).
+3. Implémentation du sous-domaine `app/Domain/Reconditionnement/` (formulaire de regroupement d'unités de base en unité supérieure, décrémentation de l'unité source et incrémentation de l'unité cible).
+4. Intégration systématique de ces 3 opérations dans le journal unifié des mouvements de stock (`StockMovement`).
+
+---
+
 ## Session 6 — Phase 5 : Retours clients, pertes et reconditionnement
 
 ### 1. Tâche réalisée
@@ -436,75 +510,67 @@ Réalisation complète de la **Phase 5 — Retours clients, pertes et reconditio
 
 ---
 
-## Session 5 — Phase 4 : Paiements, Fournisseurs et Clients (Gestion des règlements et créances/dettes)
+## Session 7 — Phase 6 & 7 : Snapshots mensuels, Historique & Suivi avancé et Finalisation
 
 ### 1. Tâche réalisée
-Réalisation complète de la **Phase 4 — Paiements, Fournisseurs et Clients (Gestion des règlements et créances/dettes)** selon les spécifications de `context.md`, `convention.md` et `tasksandplan.md`.
+Réalisation complète de la **Phase 6 & Phase 7 — Snapshots mensuels, Historique & Suivi avancé et Finalisation** selon les spécifications de `context.md`, `convention.md` et `tasksandplan.md`.
 
 ### 2. Fonctionnalités implémentées
-- **Sous-domaine `app/Domain/Paiements/`** :
-  - **Migration** `2026_01_01_000013_create_payments_table.php` (`id`, `invoice_id`, `amount`, `payment_date`, `payment_method`, `reference`, `notes`, `created_by_user_id`, `timestamps`).
-  - **Model `Payment`** (`invoice`, `createdBy`, casts sur `amount` et `payment_date`).
-  - **Service `PaymentService`** :
-    - Transaction atomique DB (`DB::transaction`) avec verrouillage `lockForUpdate()`.
-    - Validation du montant (interdiction des montants <= 0 ou dépassant le reste à payer de la facture).
-    - Calcul dynamique des agrégats (`paid_amount`, `remaining_amount`) et du statut de la facture (`UNPAID`, `PARTIALLY_PAID`, `PAID`).
-    - Mise à jour autorisée des colonnes financières de `Invoice` et de la `Sale` correspondante.
-  - **Policy `PaymentPolicy`** :
-    - Autorisation d'accès et d'enregistrement des règlements pour les rôles Caissier, Administrateur et Super Administrateur (conforme à la section 8 du cahier des charges).
-    - Immutabilité des paiements enregistrés (modification et suppression désactivées).
-  - **Form Request `StorePaymentRequest`** avec règles de validation et messages français.
-  - **Controller `PaymentController`** (`index`, `create`, `store`).
-  - **Vues Blade mobile-first** :
-    - Formulaire d'enregistrement d'un règlement (`paiements/create.blade.php`).
-    - Historique des règlements avec recherche et pagination (`paiements/index.blade.php`).
-    - Section d'historique des règlements intégrée sur la fiche détail d'une facture (`factures/show.blade.php`) et bouton d'action direct "Enregistrer un règlement".
-- **Vues Suivi Dettes et Créances** :
-  - Vues `clients/show.blade.php` et `fournisseurs/show.blade.php` pour la consultation consolidée des créances clients et dettes fournisseurs.
-- **Routes & Navigation** :
-  - Routes web enregistrées pour `paiements.index`, `paiements.create` (`factures/{invoice}/regler`), `paiements.store`.
-  - Intégration du lien "Règlements" dans le menu de navigation de `layouts/app.blade.php`.
-  - Enregistrement de `PaymentPolicy` dans `AppServiceProvider`.
+- **Sous-domaine Stock Snapshots (`app/Domain/Stock/`)** :
+  - **Migration** `2026_01_01_000017_create_stock_snapshots_table.php` (`year`, `month`, `product_id`, `stock_unit_id`, `quantity`, `snapshot_date`, contrainte d'unicité mensuelle sur `year`, `month`, `stock_unit_id`).
+  - **Model `StockSnapshot`**.
+  - **Service `StockSnapshotService`** :
+    - `generateSnapshotForMonth()` : Enregistre l'état exact des compteurs de stock de toutes les unités à la fin d'un mois sous transaction DB.
+    - `computeStockAtDate()` : Reconstitue l'état du stock par unité d'un produit à une date passée en recherchant le snapshot le plus proche puis en rejouant les mouvements `StockMovement` postérieurs jusqu'à la date ciblée.
+  - **Commande Artisan `GenerateMonthlyStockSnapshot`** (`php artisan stock:snapshot`).
+- **Sous-domaine Historique & Suivi (`app/Domain/Historique/`)** :
+  - **Policy `HistoryPolicy`** : Accès réservé aux Administrateurs/Super-Admins (`canAccessHistory()`). Accès interdit aux Caissiers.
+  - **Controller `HistoryController`** :
+    - `index()` : Hub de navigation du module Historique & Suivi.
+    - `purchases()` : Consultation des achats par produit et par période (Aujourd'hui, Semaine, Mois, Dates sur mesure) avec total cumulé.
+    - `sales()` : Consultation des ventes par produit et par période avec motifs de remise et total cumulé.
+    - `stockAtDate()` : Reconstitution de l'état du stock par unité à une date passée via `StockSnapshotService`.
+    - `topProducts()` : Classement des produits les plus vendus par chiffre d'affaires ou quantité.
+    - `financialOverview()` : Situation globale et consolidée des créances clients et dettes fournisseurs.
+  - **Vues Blade mobile-first** : `historique/index.blade.php`, `purchases.blade.php`, `sales.blade.php`, `stock-at-date.blade.php`, `top-products.blade.php`, `financial-overview.blade.php`.
+- **Navigation & Sécurité** :
+  - Routes web enregistrées pour toutes les vues d'historique.
+  - `HistoryPolicy` enregistrée dans `AppServiceProvider`.
+  - Lien "Historique & Suivi" activé dans la navigation sous le contrôle `@if (auth()->user()->canAccessHistory())`.
 
 ### 3. Principaux fichiers créés ou modifiés
-- `database/migrations/2026_01_01_000013_create_payments_table.php` (Créé)
-- `app/Domain/Paiements/Models/Payment.php` (Créé)
-- `app/Domain/Paiements/Services/PaymentService.php` (Créé)
-- `app/Domain/Paiements/Policies/PaymentPolicy.php` (Créé)
-- `app/Domain/Paiements/Http/Requests/StorePaymentRequest.php` (Créé)
-- `app/Domain/Paiements/Http/Controllers/PaymentController.php` (Créé)
-- `app/Domain/Facturation/Models/Invoice.php` (Modifié - relation `payments()`)
-- `resources/views/paiements/create.blade.php` (Créé)
-- `resources/views/paiements/index.blade.php` (Créé)
-- `resources/views/factures/show.blade.php` (Modifié - bouton règlement & table historique)
-- `app/Providers/AppServiceProvider.php` (Modifié - enregistrement `PaymentPolicy`)
-- `routes/web.php` (Modifié - routes paiements)
-- `resources/views/layouts/app.blade.php` (Modifié - navigation sidebar)
-- `tests/Feature/PaymentTest.php` (Créé)
+- `database/migrations/2026_01_01_000017_create_stock_snapshots_table.php` (Créé)
+- `app/Domain/Stock/Models/StockSnapshot.php` (Créé)
+- `app/Domain/Stock/Services/StockSnapshotService.php` (Créé)
+- `app/Console/Commands/GenerateMonthlyStockSnapshot.php` (Créé)
+- `app/Domain/Historique/Policies/HistoryPolicy.php` (Créé)
+- `app/Domain/Historique/Http/Controllers/HistoryController.php` (Créé)
+- `resources/views/historique/index.blade.php`, `purchases.blade.php`, `sales.blade.php`, `stock-at-date.blade.php`, `top-products.blade.php`, `financial-overview.blade.php` (Créés)
+- `app/Providers/AppServiceProvider.php` (Modifié - enregistrement `HistoryPolicy`)
+- `routes/web.php` (Modifié - routes de l'historique)
+- `resources/views/layouts/app.blade.php` (Modifié - lien navigation historique)
+- `tests/Feature/StockSnapshotTest.php`, `HistoryTest.php` (Créés)
 
 ### 4. Décisions techniques importantes
-- **Respect de l'immutabilité des factures** : Les paiements modifient uniquement le statut et les compteurs financiers (`paid_amount`, `remaining_amount`, `payment_method`) via l'événement `booted()` d'Eloquent qui autorise spécifiquement ces colonnes.
-- **Événement immuable du règlement** : Un paiement enregistré dans la table `payments` constitue un événement historique inaltérable (Policy refuse `update` et `delete`).
-- **Permissions du Caissier** : Le rôle Caissier a la permission explicite d'enregistrer des règlements pour les clients, tout en restant restreint sur l'accès aux autres modules d'administration.
+- **Reconstitution performante par snapshots** : Évite de rejouer des dizaines de milliers de lignes depuis l'origine de la base en démarrant depuis la dernière clôture mensuelle.
+- **Strict respect de l'absence de calcul de marge** : L'historique fournit uniquement la traçabilité des achats, ventes, mouvements et encours financiers sans calcul de rentabilité ou de marge.
+- **Accès restreint à la direction** : Les Caissiers sont totalement bloqués par la Policy et ne voient pas le module d'historique.
 
 ### 5. Tests et vérifications effectués
-- Suite de tests fonctionnels et d'intégration créée dans `tests/Feature/PaymentTest.php` couvrant :
-  - Accès du Caissier au formulaire de règlement.
-  - Règlement partiel avec mise à jour du statut `PARTIALLY_PAID` et des restes à payer sur `Invoice` et `Sale`.
-  - Règlement total avec passage au statut `PAID`.
-  - Rejet d'un paiement dont le montant dépasse le reste à payer.
-  - Cumul correct de plusieurs règlements successifs sur une même facture.
+- `tests/Feature/StockSnapshotTest.php` : Génération des snapshots mensuels et vérification de l'exactitude du recalcul de stock à une date passée.
+- `tests/Feature/HistoryTest.php` : Vérification de l'accès Admin à toutes les pages de l'historique et du rejet (403 Forbidden) pour les Caissiers.
 
 ### 6. Problèmes rencontrés et leurs solutions
-- Aucun problème bloquant rencontré.
+- *Problème* : Séparateurs de namespace incorrects (`/` au lieu de `\`) dans les déclarations de `Repackaging.php` et `StoreCustomerReturnRequest.php`.
+- *Solution* : Normalisation des séparateurs en syntaxe PHP valide `\`.
 
 ### 7. État actuel de la tâche
-- **Phase 4** : Terminée à 100%. Le sous-module Paiements, l'enregistrement des règlements, la mise à jour des factures/ventes et le suivi des créances/dettes sont totalement opérationnels.
+- **Phases 0 à 7** : Terminées à 100%. L'ensemble des fonctionnalités fonctionnelles, techniques, ergonomiques et de sécurité définies dans le cahier des charges (`context.md`) et le plan de réalisation (`tasksandplan.md`) sont intégralement développées et testées.
 
 ### 8. Prochaine tâche recommandée
-**Phase 5 — Retours clients, pertes et reconditionnement** :
-1. Implémentation du sous-domaine `app/Domain/Retours/` (formulaire de retour, validation manuelle obligatoire avant réintégration du stock, restriction Administrateur/Agent).
-2. Implémentation du sous-domaine `app/Domain/Pertes/` (formulaire de déclaration de perte, décrémentation directe du stock par unité, restriction Administrateur/Agent).
-3. Implémentation du sous-domaine `app/Domain/Reconditionnement/` (formulaire de regroupement d'unités de base en unité supérieure, décrémentation de l'unité source et incrémentation de l'unité cible).
-4. Intégration systématique de ces 3 opérations dans le journal unifié des mouvements de stock (`StockMovement`).
+**Phase 8 — Déploiement et mise en production** :
+1. Exécution des migrations et seeders en environnement d'homologation/production (`php artisan migrate --seed`).
+2. Configuration de la commande planifiée Artisan `php artisan stock:snapshot` (cron mensuel).
+3. Sauvegardes automatiques de la base de données et livraison finale.
+
 

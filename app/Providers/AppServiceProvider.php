@@ -8,6 +8,7 @@ use App\Domain\Clients\Models\Customer;
 use App\Domain\Clients\Policies\CustomerPolicy;
 use App\Domain\Facturation\Models\Invoice;
 use App\Domain\Facturation\Policies\InvoicePolicy;
+use App\Domain\Historique\Policies\HistoryPolicy;
 use App\Domain\Paiements\Models\Payment;
 use App\Domain\Paiements\Policies\PaymentPolicy;
 use App\Domain\Pertes\Models\Loss;
@@ -50,5 +51,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(CustomerReturn::class, CustomerReturnPolicy::class);
         Gate::policy(Loss::class, LossPolicy::class);
         Gate::policy(Repackaging::class, RepackagingPolicy::class);
+        Gate::policy('history', HistoryPolicy::class);
     }
 }

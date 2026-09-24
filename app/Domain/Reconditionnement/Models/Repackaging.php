@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Reconditionnement/Models;
+namespace App\Domain\Reconditionnement\Models;
 
 use App\Domain\Produits\Models\Product;
 use App\Domain\Produits\Models\StockUnit;
