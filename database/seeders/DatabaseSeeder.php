@@ -49,5 +49,31 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ]
         );
+
+        // Demo Suppliers
+        \App\Domain\Fournisseurs\Models\Supplier::firstOrCreate(
+            ['name' => 'SODEFA Agro-Chimie'],
+            [
+                'type' => 'company',
+                'phone' => '+229 97 00 11 22',
+                'whatsapp' => '+229 97 00 11 22',
+                'address' => 'Cotonou, Zone Industrielle',
+                'contact_person' => 'M. Dossou',
+                'email' => 'contact@sodefa.com',
+                'notes' => 'Fournisseur principal d\'engrais et d\'intrants agricoles',
+                'is_active' => true,
+            ]
+        );
+
+        \App\Domain\Fournisseurs\Models\Supplier::firstOrCreate(
+            ['name' => 'Etablissements BioPhyto'],
+            [
+                'type' => 'company',
+                'phone' => '+229 95 33 44 55',
+                'address' => 'Parakou, Quartier Guéma',
+                'contact_person' => 'Mme Bio',
+                'is_active' => true,
+            ]
+        );
     }
 }

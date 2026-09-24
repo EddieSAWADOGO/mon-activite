@@ -108,15 +108,19 @@
                 <span>Produits</span>
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white">
+            <a href="{{ route('stock.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('stock.*') ? 'bg-emerald-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                 <x-heroicon-o-archive-box class="w-5 h-5" />
                 <span>Stock</span>
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white">
-                <x-heroicon-o-arrow-down-tray class="w-5 h-5" />
-                <span>Achats</span>
-            </a>
+            @auth
+                @if (auth()->user()->isAdmin())
+                    <a href="{{ route('achats.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('achats.*') ? 'bg-emerald-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <x-heroicon-o-arrow-down-tray class="w-5 h-5" />
+                        <span>Achats</span>
+                    </a>
+                @endif
+            @endauth
 
             <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white">
                 <x-heroicon-o-arrow-up-tray class="w-5 h-5" />
@@ -133,7 +137,7 @@
                 <span>Clients</span>
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white">
+            <a href="{{ route('fournisseurs.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('fournisseurs.*') ? 'bg-emerald-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                 <x-heroicon-o-truck class="w-5 h-5" />
                 <span>Fournisseurs</span>
             </a>
@@ -225,13 +229,21 @@
                     <x-heroicon-o-cube class="w-6 h-6 text-emerald-500" />
                     <span>Produits</span>
                 </a>
-                <a @click="mobileMenuOpen = false" href="#" class="p-3 bg-slate-800 rounded-xl text-slate-200 flex flex-col items-center gap-2 text-xs font-medium">
+                <a @click="mobileMenuOpen = false" href="{{ route('stock.index') }}" class="p-3 bg-slate-800 rounded-xl text-slate-200 flex flex-col items-center gap-2 text-xs font-medium">
                     <x-heroicon-o-archive-box class="w-6 h-6 text-emerald-500" />
                     <span>Stock</span>
                 </a>
-                <a @click="mobileMenuOpen = false" href="#" class="p-3 bg-slate-800 rounded-xl text-slate-200 flex flex-col items-center gap-2 text-xs font-medium">
-                    <x-heroicon-o-arrow-up-tray class="w-6 h-6 text-emerald-500" />
-                    <span>Ventes</span>
+                @auth
+                    @if (auth()->user()->isAdmin())
+                        <a @click="mobileMenuOpen = false" href="{{ route('achats.index') }}" class="p-3 bg-slate-800 rounded-xl text-slate-200 flex flex-col items-center gap-2 text-xs font-medium">
+                            <x-heroicon-o-arrow-down-tray class="w-6 h-6 text-emerald-500" />
+                            <span>Achats</span>
+                        </a>
+                    @endif
+                @endauth
+                <a @click="mobileMenuOpen = false" href="{{ route('fournisseurs.index') }}" class="p-3 bg-slate-800 rounded-xl text-slate-200 flex flex-col items-center gap-2 text-xs font-medium">
+                    <x-heroicon-o-truck class="w-6 h-6 text-emerald-500" />
+                    <span>Fournisseurs</span>
                 </a>
             </div>
         </div>

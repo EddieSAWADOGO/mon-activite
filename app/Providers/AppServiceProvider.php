@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Domain\Achats\Models\Purchase;
+use App\Domain\Achats\Policies\PurchasePolicy;
 use App\Domain\Produits\Models\Product;
 use App\Domain\Produits\Policies\ProductPolicy;
 use App\Domain\Utilisateurs\Policies\UserPolicy;
@@ -26,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Product::class, ProductPolicy::class);
+        Gate::policy(Purchase::class, PurchasePolicy::class);
     }
 }

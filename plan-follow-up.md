@@ -150,3 +150,96 @@ Réalisation complète de la **Phase 1 — Produits et Unités (Fondation du mod
 3. Formulaire d'enregistrement d'achat multi-produits/multi-unités avec augmentation automatique du compteur de stock de l'unité concernée.
 4. Enregistrement systématique des lignes de mouvements de stock (type entrée).
 5. Écran global du module Stock avec vue d'ensemble par unité et alertes de stock bas.
+
+---
+
+## Session 3 — Phase 2 : Mouvements de base (Achats et Stock)
+
+### 1. Tâche réalisée
+Réalisation complète de la **Phase 2 — Mouvements de base : Achats et Stock** selon les spécifications de `context.md`, `convention.md` et `tasksandplan.md`.
+
+### 2. Fonctionnalités implémentées
+- **Enum `MovementType`** :
+  - Cases : `PURCHASE`, `SALE`, `BREAKAGE_OUT`, `BREAKAGE_IN`, `RETURN`, `LOSS`, `REPACKAGING_OUT`, `REPACKAGING_IN`.
+  - Méthodes `label()` et `badgeColor()` pour le rendu sémantique des mouvements.
+- **Module Fournisseurs (`app/Domain/Fournisseurs/`)** :
+  - Migration `create_suppliers_table` (`name`, `phone`, `whatsapp`, `address`, `type`, `contact_person`, `email`, `notes`, `is_active`).
+  - Modèle `Supplier` avec méthode `newFactory()` et relation `hasMany(Purchase::class)`.
+  - Contrôleur `SupplierController` et vues Blade (`index`, `create`, `edit`, `show`) pour le suivi des fournisseurs et de leurs encours.
+  - Seeder de démonstration avec comptes fournisseurs réels.
+- **Module Achats (`app/Domain/Achats/`)** :
+  - Migration `create_purchases_table` (`purchase_number`, `supplier_id`, `total_amount`, `paid_amount`, `remaining_amount`, `purchase_date`, `created_by_user_id`, `notes`).
+  - Migration `create_purchase_lines_table` (`purchase_id`, `product_id`, `stock_unit_id`, `quantity`, `unit_price`, `subtotal`).
+  - Modèles `Purchase` et `PurchaseLine`.
+  - Service `PurchaseService` :
+    - Exécution atomique sous transaction DB (`DB::transaction`).
+    - Génération du numéro unique d'achat (`ACH-YYYYMMDD-XXXX`).
+    - Recalcul serveur des sous-totaux et du reste à payer.
+    - Appel du service de mouvement de stock pour incrémenter le compteur de stock et consigner le mouvement.
+  - Policy `PurchasePolicy` enregistrée dans `AppServiceProvider` : restriction de création/consultation d'achats aux seuls Administrateurs et Super Administrateurs (interdit au Caissier).
+  - Form Request `StorePurchaseRequest` avec règles de validation et libellés français.
+  - Contrôleur `PurchaseController` et vues Blade (`index`, `create`, `show`). Formulaire dynamique Alpine.js permettant l'ajout/suppression de lignes, sélection d'unités associées, calculs en direct.
+- **Module Stock & Mouvements Unifiés (`app/Domain/Stock/`)** :
+  - Migration `create_stock_movements_table` (`product_id`, `stock_unit_id`, `type`, `quantity`, `direction`, `reference_type`, `reference_id`, `created_by_user_id`, `movement_date`, `notes`).
+  - Modèle `StockMovement`.
+  - Service `StockMovementService` : mise à jour sécurisée par `lockForUpdate()` du champ `current_stock` de l'unité et journalisation de l'événement.
+  - Contrôleur `StockController` et vues Blade (`index.blade.php` pour la consultation par unité avec alerte visuelle de stock bas, `movements.blade.php` pour l'historique complet filtrable par produit, type et période). Accessible au Caissier en consultation.
+
+### 3. Principaux fichiers créés ou modifiés
+- `app/Support/Enums/MovementType.php` (Créé)
+- `database/migrations/2026_01_01_000004_create_suppliers_table.php` (Créé)
+- `database/migrations/2026_01_01_000005_create_purchases_table.php` (Créé)
+- `database/migrations/2026_01_01_000006_create_purchase_lines_table.php` (Créé)
+- `database/migrations/2026_01_01_000007_create_stock_movements_table.php` (Créé)
+- `app/Domain/Fournisseurs/Models/Supplier.php` (Créé)
+- `app/Domain/Fournisseurs/Http/Controllers/SupplierController.php` (Créé)
+- `app/Domain/Achats/Models/Purchase.php` (Créé)
+- `app/Domain/Achats/Models/PurchaseLine.php` (Créé)
+- `app/Domain/Achats/Services/PurchaseService.php` (Créé)
+- `app/Domain/Achats/Policies/PurchasePolicy.php` (Créé)
+- `app/Domain/Achats/Http/Requests/StorePurchaseRequest.php` (Créé)
+- `app/Domain/Achats/Http/Controllers/PurchaseController.php` (Créé)
+- `app/Domain/Stock/Models/StockMovement.php` (Créé)
+- `app/Domain/Stock/Services/StockMovementService.php` (Créé)
+- `app/Domain/Stock/Http/Controllers/StockController.php` (Créé)
+- `app/Providers/AppServiceProvider.php` (Modifié - enregistrement de `PurchasePolicy`)
+- `routes/web.php` (Modifié - ajout des routes d'achats, stock et fournisseurs)
+- `resources/views/layouts/app.blade.php` (Modifié - mise à jour de la navigation)
+- `resources/views/achats/index.blade.php` (Créé)
+- `resources/views/achats/create.blade.php` (Créé)
+- `resources/views/achats/show.blade.php` (Créé)
+- `resources/views/stock/index.blade.php` (Créé)
+- `resources/views/stock/movements.blade.php` (Créé)
+- `resources/views/fournisseurs/index.blade.php` (Créé)
+- `resources/views/fournisseurs/create.blade.php` (Créé)
+- `resources/views/fournisseurs/edit.blade.php` (Créé)
+- `resources/views/fournisseurs/show.blade.php` (Créé)
+- `database/factories/SupplierFactory.php` (Créé)
+- `database/seeders/DatabaseSeeder.php` (Modifié)
+- `tests/Feature/PurchaseTest.php` (Créé)
+- `tests/Feature/StockTest.php` (Créé)
+
+### 4. Décisions techniques importantes
+- **Transactions DB & Atomicité** : Tout enregistrement d'achat verrouille les compteurs des unités concernées, met à jour le stock et consigne les mouvements dans une seule transaction `DB::transaction`.
+- **Accès restreint aux Achats** : Un Caissier ne peut pas accéder aux routes `/achats` (bloqué par `PurchasePolicy`), mais peut consulter l'état du stock `/stock`.
+
+### 5. Tests et vérifications effectués
+- `php artisan migrate:fresh --seed` exécuté avec succès.
+- Suite de tests d'intégration complète exécutée avec 100% de succès (`php artisan test` : 13 tests validés, 51 assertions).
+
+### 6. Problèmes rencontrés et leurs solutions
+- *Problème* : Fautes de frappe dans le séparateur de namespace (`/` au lieu de `\`) dans `Supplier.php` et `StorePurchaseRequest.php`.
+- *Solution* : Normalisation des déclarations de namespace en syntaxe PHP valide.
+- *Problème* : Factory pour le modèle de domaine `Supplier` introuvable par Eloquent.
+- *Solution* : Déclaration de la méthode statique `newFactory()` sur `Supplier` pointant vers `Database\Factories\SupplierFactory`.
+
+### 7. État actuel de la tâche
+- **Phase 2** : Terminée à 100%. L'approvisionnement des stocks par achat, le suivi des fournisseurs, les mouvements unifiés et la vue globale du stock sont pleinement opérationnels et testés.
+
+### 8. Prochaine tâche recommandée
+**Phase 3 — Ventes, cassures et facturation** :
+1. Implémentation du sous-domaine `app/Domain/Ventes/` et `app/Domain/Facturation/`.
+2. Formulaire de vente multi-lignes.
+3. Détection d'écart vs `prix_vente_defaut` de l'unité avec saisie obligatoire d'un motif de remise/écart.
+4. Mécanisme de cassure (sélection manuelle de l'unité source à ouvrir, décrément de l'unité source, vente en unité de base, réintégration du reliquat non vendu dans l'unité de base).
+5. Génération automatique de la facture immuable et du reçu commercial.
