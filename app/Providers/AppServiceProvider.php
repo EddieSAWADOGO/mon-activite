@@ -2,6 +2,11 @@
 
 namespace App\Providers;
 
+use App\Domain\Produits\Models\Product;
+use App\Domain\Produits\Policies\ProductPolicy;
+use App\Domain\Utilisateurs\Policies\UserPolicy;
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(Product::class, ProductPolicy::class);
     }
 }
