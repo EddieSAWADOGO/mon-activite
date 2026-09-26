@@ -23,42 +23,29 @@
 
     <!-- Filters -->
     <x-ui.card class="mb-6 p-4">
-        <form method="GET" action="{{ route('achats.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Recherche</label>
-                <input type="text" name="search" value="{{ request('search') }}"
-                       placeholder="N° d'achat ou fournisseur..."
-                       class="w-full rounded-lg border border-slate-300 text-xs py-2 px-3 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-            </div>
+        <form method="GET" action="{{ route('achats.index') }}" class="flex flex-col sm:flex-row gap-3">
+            <input type="text" name="search" value="{{ request('search') }}"
+                   placeholder="N° d'achat ou fournisseur..."
+                   class="flex-1 rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500">
 
-            <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Fournisseur</label>
-                <select name="supplier_id" class="w-full rounded-lg border border-slate-300 text-xs py-2 px-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
-                    <option value="">Tous les fournisseurs</option>
-                    @foreach($suppliers as $supplier)
-                        <option value="{{ $supplier->id }}" @selected(request('supplier_id') == $supplier->id)>
-                            {{ $supplier->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+            <select name="supplier_id" class="rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500 bg-white w-full sm:w-auto">
+                <option value="">Tous les fournisseurs</option>
+                @foreach($suppliers as $supplier)
+                    <option value="{{ $supplier->id }}" @selected(request('supplier_id') == $supplier->id)>
+                        {{ $supplier->name }}
+                    </option>
+                @endforeach
+            </select>
 
-            <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Date début</label>
-                <input type="date" name="start_date" value="{{ request('start_date') }}"
-                       class="w-full rounded-lg border border-slate-300 text-xs py-2 px-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
-            </div>
+            <input type="date" name="start_date" value="{{ request('start_date') }}"
+                   class="rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500 w-full sm:w-auto">
 
-            <div class="flex items-end gap-2">
-                <div class="flex-1">
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Date fin</label>
-                    <input type="date" name="end_date" value="{{ request('end_date') }}"
-                           class="w-full rounded-lg border border-slate-300 text-xs py-2 px-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
-                </div>
-                <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" class="h-9">
-                    Filtrer
-                </x-ui.button>
-            </div>
+            <input type="date" name="end_date" value="{{ request('end_date') }}"
+                   class="rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500 w-full sm:w-auto">
+
+            <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" class="h-9">
+                Filtrer
+            </x-ui.button>
         </form>
     </x-ui.card>
 

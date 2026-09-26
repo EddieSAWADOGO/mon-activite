@@ -19,25 +19,20 @@
 
     <!-- Filters -->
     <x-ui.card class="mb-6 p-4">
-        <form method="GET" action="{{ route('ventes.index') }}" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-            <div class="sm:col-span-2">
-                <input type="text" name="search" value="{{ request('search') }}"
-                       placeholder="Rechercher par N° vente, nom client..."
-                       class="w-full rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500">
-            </div>
+        <form method="GET" action="{{ route('ventes.index') }}" class="flex flex-col sm:flex-row gap-3">
+            <input type="text" name="search" value="{{ request('search') }}"
+                   placeholder="Rechercher par N° vente, nom client..."
+                   class="flex-1 rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500">
 
-            <div>
-                <input type="date" name="start_date" value="{{ request('start_date') }}"
-                       class="w-full rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500">
-            </div>
+            <input type="date" name="start_date" value="{{ request('start_date') }}"
+                   class="rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500 w-full sm:w-auto">
 
-            <div class="flex gap-2">
-                <input type="date" name="end_date" value="{{ request('end_date') }}"
-                       class="w-full rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500">
-                <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" class="h-9">
-                    Filtrer
-                </x-ui.button>
-            </div>
+            <input type="date" name="end_date" value="{{ request('end_date') }}"
+                   class="rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500 w-full sm:w-auto">
+
+            <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" class="h-9">
+                Filtrer
+            </x-ui.button>
         </form>
     </x-ui.card>
 

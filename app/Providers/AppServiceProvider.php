@@ -52,5 +52,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Loss::class, LossPolicy::class);
         Gate::policy(Repackaging::class, RepackagingPolicy::class);
         Gate::policy('history', HistoryPolicy::class);
+
+        \Illuminate\Support\Facades\Blade::component('layouts.app', 'app-layout');
     }
 }

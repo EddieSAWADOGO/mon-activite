@@ -11,14 +11,43 @@ use App\Domain\Produits\Http\Controllers\ProductController;
 use App\Domain\Reconditionnement\Http\Controllers\RepackagingController;
 use App\Domain\Retours\Http\Controllers\CustomerReturnController;
 use App\Domain\Stock\Http\Controllers\StockController;
+use App\Domain\Utilisateurs\Http\Controllers\AuthController;
+use App\Domain\Utilisateurs\Http\Controllers\DashboardController;
+use App\Domain\Utilisateurs\Http\Controllers\UserController;
 use App\Domain\Ventes\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return redirect()->route('produits.index');
+// Guest Auth Routes
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.store');
 });
 
+// Authenticated Application Routes
 Route::middleware(['auth'])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    Route::get('/', function () {
+        return redirect()->route('dashboard');
+    });
+
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+    // Users Management
+    Route::resource('utilisateurs', UserController::class)->parameters([
+        'utilisateurs' => 'user',
+    ])->names([
+        'index' => 'utilisateurs.index',
+        'create' => 'utilisateurs.create',
+        'store' => 'utilisateurs.store',
+        'show' => 'utilisateurs.show',
+        'edit' => 'utilisateurs.edit',
+        'update' => 'utilisateurs.update',
+        'destroy' => 'utilisateurs.destroy',
+    ]);
+    Route::post('utilisateurs/{user}/reset-password', [UserController::class, 'resetPassword'])
+        ->name('utilisateurs.reset-password');
+
     // Products
     Route::resource('produits', ProductController::class)->parameters([
         'produits' => 'product',

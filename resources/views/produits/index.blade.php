@@ -19,31 +19,24 @@
         </div>
 
         <!-- Filters & Search Bar -->
-        <x-ui.card class="p-4 sm:p-4">
-            <form method="GET" action="{{ route('produits.index') }}" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+        <x-ui.card class="mb-6 p-4">
+            <form method="GET" action="{{ route('produits.index') }}" class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
                 <!-- Search input -->
-                <div class="sm:col-span-5 relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                        <x-heroicon-o-magnifying-glass class="w-5 h-5" />
-                    </div>
-                    <input type="text"
-                           name="search"
-                           value="{{ request('search') }}"
-                           placeholder="Rechercher un produit..."
-                           class="w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg text-sm text-slate-900 focus:ring-emerald-500 focus:border-emerald-500 placeholder-slate-400">
-                </div>
+                <input type="text"
+                       name="search"
+                       value="{{ request('search') }}"
+                       placeholder="Rechercher un produit..."
+                       class="flex-1 rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500">
 
                 <!-- Status Filter -->
-                <div class="sm:col-span-3">
-                    <select name="status" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm text-slate-900 focus:ring-emerald-500 focus:border-emerald-500 bg-white">
-                        <option value="">Tous les statuts</option>
-                        <option value="active" @selected(request('status') === 'active')>Actifs uniquement</option>
-                        <option value="inactive" @selected(request('status') === 'inactive')>Inactifs uniquement</option>
-                    </select>
-                </div>
+                <select name="status" class="rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500 bg-white w-full sm:w-auto">
+                    <option value="">Tous les statuts</option>
+                    <option value="active" @selected(request('status') === 'active')>Actifs uniquement</option>
+                    <option value="inactive" @selected(request('status') === 'inactive')>Inactifs uniquement</option>
+                </select>
 
                 <!-- Low Stock Checkbox -->
-                <div class="sm:col-span-2 flex items-center gap-2 py-2">
+                <label for="low_stock" class="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer py-2 sm:py-0 shrink-0">
                     <input type="checkbox"
                            id="low_stock"
                            name="low_stock"
@@ -51,19 +44,17 @@
                            @checked(request('low_stock'))
                            onchange="this.form.submit()"
                            class="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500">
-                    <label for="low_stock" class="text-xs font-medium text-slate-700 cursor-pointer flex items-center gap-1">
-                        <x-heroicon-o-exclamation-triangle class="w-4 h-4 text-amber-500" />
-                        <span>Stock bas</span>
-                    </label>
-                </div>
+                    <x-heroicon-o-exclamation-triangle class="w-4 h-4 text-amber-500" />
+                    <span>Stock bas</span>
+                </label>
 
                 <!-- Submit / Reset Buttons -->
-                <div class="sm:col-span-2 flex items-center gap-2 justify-end">
-                    <x-ui.button type="submit" variant="secondary" size="sm" class="flex-1 sm:flex-initial">
+                <div class="flex items-center gap-2 shrink-0">
+                    <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" class="h-9">
                         Filtrer
                     </x-ui.button>
                     @if(request()->anyFilled(['search', 'status', 'low_stock']))
-                        <a href="{{ route('produits.index') }}" class="p-2 text-slate-400 hover:text-slate-600 text-xs font-medium" title="Réinitialiser">
+                        <a href="{{ route('produits.index') }}" class="text-slate-400 hover:text-slate-600 text-xs font-medium whitespace-nowrap">
                             Effacer
                         </a>
                     @endif

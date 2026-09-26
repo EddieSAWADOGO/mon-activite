@@ -1,58 +1,160 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Mon-Activité — Application de Gestion Commerciale & Traçabilité
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Mon-Activité** est une application web PWA (Progressive Web App) monolithique développée avec **Laravel 13 (Blade)**, **Alpine.js** et **Tailwind CSS**, conçue pour la gestion commerciale et la traçabilité complète de l'activité d'un commerçant (négoce de produits auprès de fournisseurs et revente aux clients).
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Principes Fondamentaux & Règles Métier
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. **Mémoire complète & traçabilité historique** : L'application conserve l'historique exhaustif de tous les événements (achats, ventes, règlements, retours, pertes, reconditionnements).
+2. **Aucun calcul de bénéfice ou de marge** : L'application n'est pas un logiciel comptable. Elle ne calcule aucune marge ni rentabilité ; son rôle est la traçabilité stricte des mouvements et des encours.
+3. **Modèle de stock par unité réellement détenue** : Le stock n'est pas agrégé en un total unique. Chaque unité déclarée pour un produit (ex: bidon, carton de 6, carton de 12) possède son propre compteur de stock, son seuil d'alerte bas et son prix de vente par défaut (`prix_vente_defaut`).
+4. **Factures Immuables reconstruites à la demande** : Aucun fichier PDF n'est conservé de manière permanente sur le serveur. Toute facture est reconstruite à la demande depuis la base de données. Les données de fond d'une facture sont immuables (interdiction de modification et suppression).
+5. **Non-réintégration automatique des retours clients** : L'enregistrement d'un retour client le place en attente (`pending`). Sa réintégration en stock ou sa déclaration en perte nécessite une validation manuelle explicite par un Administrateur.
+6. **Contrôle d'accès strict côté serveur** : Matrice de rôle (`Super Administrateur`, `Administrateur`, `Caissier`) appliquée via les Policies Laravel. Le Caissier effectue les ventes et enregistre les règlements, mais n'a pas accès à l'historique, aux retours, aux pertes ou au reconditionnement.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🛠️ Stack Technique
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+| Composant | Technologie / Version | Description |
+|---|---|---|
+| Backend | PHP 8.3 / Laravel 13.x | Monolithe MVC, architecture modulaire par domaine |
+| Frontend | Blade SSR + Alpine.js CDN | Rendu serveur + interactivité dynamique côté client (aucun framework SPA séparé) |
+| Styles & Design | Tailwind CSS (Play CDN) | Design system mobile-first responsive |
+| Icônes | Heroicons (`blade-ui-kit/blade-heroicons`) | Icônes SVG sématiques (aucun émoji Unicode dans l'UI) |
+| Base de données | MySQL 8.x | Persistance relationnelle sous transactions DB |
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## 📂 Architecture Modulaire par Domaine (`app/Domain/`)
 
-## Agentic Development
+Le code backend est structuré par domaines métier :
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```
+app/Domain/
+├── Produits/          # Produits & Unités de stock (StockUnit)
+├── Stock/             # Compteurs, Mouvements unifiés & Snapshots mensuels
+├── Achats/            # Approvisionnement auprès des fournisseurs
+├── Ventes/            # Ventes multi-lignes, détection d'écarts de prix & cassures
+├── Facturation/       # Factures immuables, rendu HTML, export PDF temporaire
+├── Paiements/         # Règlements des factures, calcul des soldes & créances/dettes
+├── Clients/           # Fiches clients particuliers & entreprises
+├── Fournisseurs/      # Fiches fournisseurs & encours
+├── Retours/           # Retours clients & validation manuelle
+├── Pertes/            # Déclarations de perte
+├── Reconditionnement/ # Regroupement/éclatement d'unités de stock
+├── Historique/        # Module de suivi avancé, Palmarès & reconstitution de stock
+└── Utilisateurs/      # Rôles, permissions & utilisateurs
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## 💻 Installation & Initialisation Locale
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Prerequisites
+- PHP >= 8.3
+- Composer
+- MySQL >= 8.0
 
-## Code of Conduct
+### Étapes d'installation
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. **Cloner le dépôt et installer les dépendances composer** :
+   ```bash
+   git clone <repository_url> mon-activite
+   cd mon-activite
+   composer install
+   ```
 
-## Security Vulnerabilities
+2. **Configurer les variables d'environnement** :
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+   Configurer la connexion MySQL dans `.env` :
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=monactivite_bd
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+3. **Exécuter les migrations et alimenter les données de démonstration** :
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
 
-## License
+4. **Lancer le serveur local** :
+   ```bash
+   php artisan serve
+   ```
+   Accéder à l'application sur `http://127.0.0.1:8000`.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## 🔑 Comptes de Démonstration (Seeder)
+
+Le seeder `DatabaseSeeder` génère les comptes suivants (Mot de passe commun : `password`) :
+
+| Rôle | Email | Responsabilités |
+|---|---|---|
+| **Super Administrateur** | `superadmin@mon-activite.com` | Accès complet, gestion des utilisateurs & système |
+| **Administrateur** | `admin@mon-activite.com` | Produits, stocks, achats, ventes, retours, pertes, historique & finances |
+| **Caissier** | `cashier@mon-activite.com` | Ventes, création de clients, consultation stock, enregistrement des règlements |
+
+---
+
+## ⏱️ Commandes & Tâches Planifiées
+
+### Clôture mensuelle des compteurs de stock (Snapshot)
+
+Pour capturer l'état exact des compteurs de stock à la fin de chaque mois (permettant la reconstitution rapide du stock à une date passée) :
+
+```bash
+# Générer le snapshot pour le mois en cours
+php artisan stock:snapshot
+
+# Générer le snapshot pour une période spécifique
+php artisan stock:snapshot --year=2026 --month=1
+```
+
+La commande est automatique au 1er de chaque mois à minuit via `routes/console.php` :
+```php
+Schedule::command('stock:snapshot')->monthlyOn(1, '00:00');
+```
+
+---
+
+## 🧪 Exécution de la Suite de Tests
+
+L'application comprend une suite complète de tests fonctionnels et d'intégration :
+
+```bash
+php artisan test
+```
+
+Classes de tests principales :
+- `ProductTest` : CRUD produits, unités, immutabilité des équivalences, alertes stock bas.
+- `PurchaseTest` : Achats multi-lignes, incrémentation du stock, mouvements d'entrée.
+- `SaleTest` : Ventes multi-lignes, cassures de cartons, motif d'écart de prix obligatoire.
+- `InvoiceTest` : Factures immuables (exception sur modification/suppression), PDF et WhatsApp.
+- `PaymentTest` : Règlements partiels/totaux, mise à jour des soldes et statuts.
+- `CustomerReturnTest` : Validation manuelle des retours (réintégration vs perte).
+- `LossTest` : Déclarations de perte et décrémentation du stock.
+- `RepackagingTest` : Reconditionnement d'unités et vérification des équivalences.
+- `StockSnapshotTest` : Reconstitution du stock à une date passée.
+- `HistoryTest` : Contrôle strict des autorisations par rôle (Admin vs Caissier).
+
+---
+
+## 📱 Fonctionnalités PWA
+
+L'application intègre un manifeste PWA (`public/manifest.json`) et est optimisée pour être installée directement sur l'écran d'accueil d'un smartphone, d'une tablette ou d'un ordinateur.
+
+---
+
+## 📜 Licence
+
+Ce projet est un logiciel propriétaire développé pour la gestion commerciale de **Mon-Activité**. Tous droits réservés.

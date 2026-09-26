@@ -5,15 +5,15 @@
     'footer' => null,
 ])
 
-<div {{ $attributes->merge(['class' => 'bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden']) }}>
+<div {{ $attributes->merge(['class' => 'bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden']) }}>
     @if ($title || $subtitle || $actions)
-        <div class="px-4 py-4 sm:px-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div class="px-5 py-4 sm:px-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 bg-slate-50/50">
             <div>
                 @if ($title)
-                    <h3 class="text-base font-semibold text-slate-900">{{ $title }}</h3>
+                    <h3 class="text-base font-bold text-slate-900 tracking-tight">{{ $title }}</h3>
                 @endif
                 @if ($subtitle)
-                    <p class="text-xs sm:text-sm text-slate-500 mt-0.5">{{ $subtitle }}</p>
+                    <p class="text-xs text-slate-500 mt-0.5">{{ $subtitle }}</p>
                 @endif
             </div>
 
@@ -25,13 +25,14 @@
         </div>
     @endif
 
-    <div class="p-4 sm:p-6">
+    <div class="p-5 sm:p-6">
         {{ $slot }}
     </div>
 
     @if ($footer)
-        <div class="px-4 py-3 sm:px-6 bg-slate-50 border-t border-slate-200">
+        <div class="px-5 py-3 sm:px-6 bg-slate-50/80 border-t border-slate-100">
             {{ $footer }}
         </div>
     @endif
 </div>
+

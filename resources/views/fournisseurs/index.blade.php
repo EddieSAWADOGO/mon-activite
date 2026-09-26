@@ -19,7 +19,7 @@
 
     <!-- Search filter -->
     <x-ui.card class="mb-6 p-4">
-        <form method="GET" action="{{ route('fournisseurs.index') }}" class="flex gap-3">
+        <form method="GET" action="{{ route('fournisseurs.index') }}" class="flex flex-col sm:flex-row gap-3">
             <input type="text" name="search" value="{{ request('search') }}"
                    placeholder="Rechercher par nom, téléphone, contact..."
                    class="flex-1 rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500">

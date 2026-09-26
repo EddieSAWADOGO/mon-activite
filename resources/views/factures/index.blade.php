@@ -15,27 +15,21 @@
 
     <!-- Search filter -->
     <x-ui.card class="mb-6 p-4">
-        <form method="GET" action="{{ route('factures.index') }}" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-            <div class="sm:col-span-2">
-                <input type="text" name="search" value="{{ request('search') }}"
-                       placeholder="Rechercher par N° facture, client..."
-                       class="w-full rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500">
-            </div>
+        <form method="GET" action="{{ route('factures.index') }}" class="flex flex-col sm:flex-row gap-3">
+            <input type="text" name="search" value="{{ request('search') }}"
+                   placeholder="Rechercher par N° facture, client..."
+                   class="flex-1 rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500">
 
-            <div>
-                <select name="status" class="w-full rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500">
-                    <option value="">Tous les statuts</option>
-                    <option value="paid" {{ request('status') === 'paid' ? 'selected' : '' }}>Payée</option>
-                    <option value="partially_paid" {{ request('status') === 'partially_paid' ? 'selected' : '' }}>Partiellement payée</option>
-                    <option value="unpaid" {{ request('status') === 'unpaid' ? 'selected' : '' }}>Impayée</option>
-                </select>
-            </div>
+            <select name="status" class="rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500 bg-white w-full sm:w-auto">
+                <option value="">Tous les statuts</option>
+                <option value="paid" {{ request('status') === 'paid' ? 'selected' : '' }}>Payée</option>
+                <option value="partially_paid" {{ request('status') === 'partially_paid' ? 'selected' : '' }}>Partiellement payée</option>
+                <option value="unpaid" {{ request('status') === 'unpaid' ? 'selected' : '' }}>Impayée</option>
+            </select>
 
-            <div class="flex gap-2">
-                <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" class="w-full h-9">
-                    Filtrer
-                </x-ui.button>
-            </div>
+            <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" class="h-9">
+                Filtrer
+            </x-ui.button>
         </form>
     </x-ui.card>
 
