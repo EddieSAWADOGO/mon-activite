@@ -422,7 +422,7 @@
             <!-- Titre -->
             <div class="form-heading">
                 <h1>Connexion</h1>
-                <p>Accédez à votre espace de gestion</p>
+                <p>Connexion à votre espace de gestion</p>
             </div>
 
             <!-- Alertes -->

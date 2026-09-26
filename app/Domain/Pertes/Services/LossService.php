@@ -33,17 +33,20 @@ class LossService
                 'created_by_user_id' => $user->id,
             ]);
 
-            $this->stockMovementService->recordMovement([
-                'product_id' => $loss->product_id,
-                'stock_unit_id' => $loss->stock_unit_id,
-                'type' => MovementType::LOSS,
-                'quantity' => $loss->quantity,
-                'direction' => 'out',
-                'reference_type' => Loss::class,
-                'reference_id' => $loss->id,
-                'movement_date' => $loss->loss_date,
-                'notes' => "Sortie pour perte ({$loss->reason}) - N° {$loss->loss_number}",
-            ], $user);
+            // Only decrement stock if the loss is from warehouse inventory (i.e. not a discarded customer return that was never in stock)
+            if (empty($data['customer_return_id'])) {
+                $this->stockMovementService->recordMovement([
+                    'product_id' => $loss->product_id,
+                    'stock_unit_id' => $loss->stock_unit_id,
+                    'type' => MovementType::LOSS,
+                    'quantity' => $loss->quantity,
+                    'direction' => 'out',
+                    'reference_type' => Loss::class,
+                    'reference_id' => $loss->id,
+                    'movement_date' => $loss->loss_date,
+                    'notes' => "Sortie pour perte ({$loss->reason}) - N° {$loss->loss_number}",
+                ], $user);
+            }
 
             return $loss;
         });

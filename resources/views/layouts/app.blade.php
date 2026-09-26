@@ -111,10 +111,10 @@
         </button>
     </div>
 
-    <!-- Layout -->
-    <div class="min-h-screen flex">
+    <!-- Layout Container Principal -->
+    <div class="min-h-screen bg-slate-50">
 
-        <!-- ── Sidebar Desktop (fixe) ── -->
+        <!-- ── Sidebar Desktop (fixe à gauche) ── -->
         <aside class="hidden sm:flex sm:flex-col sm:w-64 sm:fixed sm:inset-y-0 sm:left-0 z-30
                       bg-white border-r border-slate-200 flex-shrink-0 h-screen">
 
@@ -289,74 +289,149 @@
             </div>
         </aside>
 
-        <!-- ── Contenu Principal ── -->
-        <div class="flex-1 sm:pl-64 flex flex-col min-h-screen w-full min-w-0">
+        <!-- ── Contenu Principal (Prend toute la largeur en mobile, décalé par pl-64 sur desktop) ── -->
+        <div class="sm:pl-64 flex flex-col min-h-screen w-full min-w-0">
 
-            <!-- ── Header Mobile (à l'intérieur du contenu) ── -->
-            <header class="sm:hidden bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between sticky top-0 z-30">
+            <!-- ── Header Mobile sticky (Logo + Nom + Hamburgers) ── -->
+            <header class="sm:hidden bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between sticky top-0 z-30 w-full shadow-xs">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-lg bg-slate-100 p-1 flex items-center justify-center border border-slate-200">
+                    <div class="w-8 h-8 rounded-lg bg-slate-50 p-1 flex items-center justify-center border border-slate-200">
                         <img src="/logo.webp" alt="Mon-Activité" class="w-full h-full object-contain">
                     </div>
                     <span class="font-bold text-base text-slate-900 tracking-tight">Mon-Activité</span>
                 </div>
 
                 <button @click="mobileMenuOpen = !mobileMenuOpen"
-                        class="p-2 text-slate-600 rounded-xl hover:bg-slate-100 transition">
-                    <x-heroicon-o-bars-3 class="w-5 h-5" x-show="!mobileMenuOpen" />
-                    <x-heroicon-o-x-mark class="w-5 h-5" x-show="mobileMenuOpen" x-cloak />
+                        class="p-2 text-slate-600 rounded-xl hover:bg-slate-100 transition focus:outline-none"
+                        aria-label="Menu principal">
+                    <x-heroicon-o-bars-3 class="w-6 h-6" x-show="!mobileMenuOpen" />
+                    <x-heroicon-o-x-mark class="w-6 h-6" x-show="mobileMenuOpen" x-cloak />
                 </button>
             </header>
 
-            <!-- ── Menu Mobile (slide-over, fixed donc hors du flux) ── -->
+            <!-- ── Menu Mobile Complet (slide-over modal) ── -->
             <div x-cloak x-show="mobileMenuOpen"
-                 class="sm:hidden fixed inset-0 z-40 bg-white p-5 flex flex-col overflow-y-auto">
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 translate-y-[-10px]"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 translate-y-[-10px]"
+                 class="sm:hidden fixed inset-0 z-50 bg-white p-5 flex flex-col overflow-y-auto">
 
                 <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
-                    <div class="flex items-center gap-2">
-                        <img src="/logo.webp" alt="Logo" class="w-7 h-7 object-contain">
-                        <span class="font-bold text-slate-900">Mon-Activité</span>
+                    <div class="flex items-center gap-2.5">
+                        <img src="/logo.webp" alt="Logo" class="w-8 h-8 object-contain">
+                        <div>
+                            <p class="font-bold text-slate-900 text-base leading-tight">Mon-Activité</p>
+                            <p class="text-xs text-slate-400">Navigation</p>
+                        </div>
                     </div>
-                    <button @click="mobileMenuOpen = false" class="p-2 text-slate-400 hover:text-slate-700 rounded-lg">
+                    <button @click="mobileMenuOpen = false" class="p-2 text-slate-400 hover:text-slate-700 rounded-xl bg-slate-100">
                         <x-heroicon-o-x-mark class="w-5 h-5" />
                     </button>
                 </div>
 
-                <div class="grid grid-cols-2 gap-2.5 flex-1">
+                <div class="grid grid-cols-2 gap-2.5 flex-1 pb-6">
                     <a @click="mobileMenuOpen = false" href="{{ route('dashboard') }}"
-                       class="p-4 bg-slate-50 rounded-2xl flex flex-col items-center gap-2 text-sm font-semibold text-slate-700 border border-slate-200 hover:bg-slate-100 transition">
+                       class="p-3.5 bg-slate-50 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition">
                         <x-heroicon-o-squares-2x2 class="w-6 h-6 text-emerald-600" />
                         <span>Tableau de bord</span>
                     </a>
+
                     <a @click="mobileMenuOpen = false" href="{{ route('ventes.index') }}"
-                       class="p-4 bg-slate-50 rounded-2xl flex flex-col items-center gap-2 text-sm font-semibold text-slate-700 border border-slate-200 hover:bg-slate-100 transition">
+                       class="p-3.5 bg-slate-50 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition">
                         <x-heroicon-o-arrow-up-tray class="w-6 h-6 text-emerald-600" />
                         <span>Ventes</span>
                     </a>
-                    <a @click="mobileMenuOpen = false" href="{{ route('produits.index') }}"
-                       class="p-4 bg-slate-50 rounded-2xl flex flex-col items-center gap-2 text-sm font-semibold text-slate-700 border border-slate-200 hover:bg-slate-100 transition">
-                        <x-heroicon-o-cube class="w-6 h-6 text-emerald-600" />
-                        <span>Produits</span>
-                    </a>
-                    <a @click="mobileMenuOpen = false" href="{{ route('stock.index') }}"
-                       class="p-4 bg-slate-50 rounded-2xl flex flex-col items-center gap-2 text-sm font-semibold text-slate-700 border border-slate-200 hover:bg-slate-100 transition">
-                        <x-heroicon-o-archive-box class="w-6 h-6 text-emerald-600" />
-                        <span>Stock</span>
-                    </a>
+
+                    @auth
+                        @if (auth()->user()->isAdmin())
+                            <a @click="mobileMenuOpen = false" href="{{ route('achats.index') }}"
+                               class="p-3.5 bg-slate-50 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition">
+                                <x-heroicon-o-arrow-down-tray class="w-6 h-6 text-emerald-600" />
+                                <span>Achats</span>
+                            </a>
+                        @endif
+                    @endauth
+
                     <a @click="mobileMenuOpen = false" href="{{ route('factures.index') }}"
-                       class="p-4 bg-slate-50 rounded-2xl flex flex-col items-center gap-2 text-sm font-semibold text-slate-700 border border-slate-200 hover:bg-slate-100 transition">
+                       class="p-3.5 bg-slate-50 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition">
                         <x-heroicon-o-document-text class="w-6 h-6 text-emerald-600" />
                         <span>Factures</span>
                     </a>
+
+                    <a @click="mobileMenuOpen = false" href="{{ route('paiements.index') }}"
+                       class="p-3.5 bg-slate-50 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition">
+                        <x-heroicon-o-banknotes class="w-6 h-6 text-emerald-600" />
+                        <span>Règlements</span>
+                    </a>
+
+                    <a @click="mobileMenuOpen = false" href="{{ route('produits.index') }}"
+                       class="p-3.5 bg-slate-50 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition">
+                        <x-heroicon-o-cube class="w-6 h-6 text-emerald-600" />
+                        <span>Produits</span>
+                    </a>
+
+                    <a @click="mobileMenuOpen = false" href="{{ route('stock.index') }}"
+                       class="p-3.5 bg-slate-50 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition">
+                        <x-heroicon-o-archive-box class="w-6 h-6 text-emerald-600" />
+                        <span>Stock</span>
+                    </a>
+
                     <a @click="mobileMenuOpen = false" href="{{ route('clients.index') }}"
-                       class="p-4 bg-slate-50 rounded-2xl flex flex-col items-center gap-2 text-sm font-semibold text-slate-700 border border-slate-200 hover:bg-slate-100 transition">
+                       class="p-3.5 bg-slate-50 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition">
                         <x-heroicon-o-user class="w-6 h-6 text-emerald-600" />
                         <span>Clients</span>
                     </a>
+
+                    <a @click="mobileMenuOpen = false" href="{{ route('fournisseurs.index') }}"
+                       class="p-3.5 bg-slate-50 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition">
+                        <x-heroicon-o-truck class="w-6 h-6 text-emerald-600" />
+                        <span>Fournisseurs</span>
+                    </a>
+
+                    @auth
+                        @if (auth()->user()->canManageInventoryOperations())
+                            <a @click="mobileMenuOpen = false" href="{{ route('retours.index') }}"
+                               class="p-3.5 bg-slate-50 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition">
+                                <x-heroicon-o-arrow-uturn-left class="w-6 h-6 text-emerald-600" />
+                                <span>Retours</span>
+                            </a>
+
+                            <a @click="mobileMenuOpen = false" href="{{ route('pertes.index') }}"
+                               class="p-3.5 bg-slate-50 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition">
+                                <x-heroicon-o-x-circle class="w-6 h-6 text-emerald-600" />
+                                <span>Pertes</span>
+                            </a>
+
+                            <a @click="mobileMenuOpen = false" href="{{ route('reconditionnement.index') }}"
+                               class="p-3.5 bg-slate-50 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition">
+                                <x-heroicon-o-arrows-right-left class="w-6 h-6 text-emerald-600" />
+                                <span>Recond.</span>
+                            </a>
+                        @endif
+
+                        @if (auth()->user()->canAccessHistory())
+                            <a @click="mobileMenuOpen = false" href="{{ route('historique.index') }}"
+                               class="p-3.5 bg-slate-50 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition">
+                                <x-heroicon-o-clock class="w-6 h-6 text-emerald-600" />
+                                <span>Historique</span>
+                            </a>
+                        @endif
+
+                        @if (auth()->user()->canManageUsers())
+                            <a @click="mobileMenuOpen = false" href="{{ route('utilisateurs.index') }}"
+                               class="p-3.5 bg-slate-50 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition">
+                                <x-heroicon-o-users class="w-6 h-6 text-emerald-600" />
+                                <span>Utilisateurs</span>
+                            </a>
+                        @endif
+                    @endauth
                 </div>
 
                 @auth
-                    <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
                         <div>
                             <p class="text-sm font-bold text-slate-900">{{ auth()->user()->name }}</p>
                             <p class="text-xs text-slate-500">{{ auth()->user()->role?->label() }}</p>
@@ -373,7 +448,8 @@
                 @endauth
             </div>
 
-            <main class="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+            <!-- ── Zone de contenu principal ── -->
+            <main class="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6 pb-24 sm:pb-8">
                 @if (isset($header))
                     <div class="mb-2">{{ $header }}</div>
                 @endif
@@ -384,7 +460,34 @@
 
     </div>
 
-
+    <!-- ── Barre de navigation mobile (bottom bar tactile) ── -->
+    <nav class="sm:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 flex items-center justify-around py-2 px-1 shadow-lg">
+        <a href="{{ route('dashboard') }}"
+           class="flex flex-col items-center gap-0.5 {{ request()->routeIs('dashboard') ? 'text-emerald-600' : 'text-slate-400' }} text-[10px] font-semibold">
+            <x-heroicon-o-squares-2x2 class="w-5 h-5" />
+            <span>Accueil</span>
+        </a>
+        <a href="{{ route('ventes.index') }}"
+           class="flex flex-col items-center gap-0.5 {{ request()->routeIs('ventes.*') ? 'text-emerald-600' : 'text-slate-400' }} text-[10px] font-semibold">
+            <x-heroicon-o-arrow-up-tray class="w-5 h-5" />
+            <span>Ventes</span>
+        </a>
+        <a href="{{ route('produits.index') }}"
+           class="flex flex-col items-center gap-0.5 {{ request()->routeIs('produits.*') ? 'text-emerald-600' : 'text-slate-400' }} text-[10px] font-semibold">
+            <x-heroicon-o-cube class="w-5 h-5" />
+            <span>Produits</span>
+        </a>
+        <a href="{{ route('stock.index') }}"
+           class="flex flex-col items-center gap-0.5 {{ request()->routeIs('stock.*') ? 'text-emerald-600' : 'text-slate-400' }} text-[10px] font-semibold">
+            <x-heroicon-o-archive-box class="w-5 h-5" />
+            <span>Stock</span>
+        </a>
+        <a href="{{ route('factures.index') }}"
+           class="flex flex-col items-center gap-0.5 {{ request()->routeIs('factures.*') ? 'text-emerald-600' : 'text-slate-400' }} text-[10px] font-semibold">
+            <x-heroicon-o-document-text class="w-5 h-5" />
+            <span>Factures</span>
+        </a>
+    </nav>
 
 </body>
 </html>

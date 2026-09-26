@@ -119,3 +119,28 @@ Implémentation complète du module d'**Authentification (Page de Connexion / D�
 
 ### 4. État actuel du projet
 - **TOUTES LES FONCTIONNALITÉS DU CAHIER DES CHARGES (SECTION 1 À 8) SONT DÉSORMAIS 100% OPÉRATIONNELLES**.
+
+---
+
+## Session 10 — Correction du Design Mobile-First Layout & Alignement des Composants
+
+### 1. Tâche réalisée
+Correction complète du problème de mise en page responsive mobile (alignement de la barre mobile top/hamburger, décalage des éléments vers la droite) et harmonisation du layout principal.
+
+### 2. Problème identifié
+- Dans `components/layouts/app.blade.php`, l'en-tête mobile `<header>` était positionné comme enfant direct du conteneur Flex racine (`<div class="min-h-screen flex">`) aux côtés du conteneur de contenu principal.
+- En responsive mobile (`< sm`), `flex-direction: row` plaçait la barre d'en-tête mobile côte à côte à gauche du conteneur principal, ce qui écrasait le bouton hamburger à gauche et poussait tout le contenu du site vers la droite en créant un espace vide indésirable.
+
+### 3. Corrections apportées
+- **Layout principal (`resources/views/components/layouts/app.blade.php` et `resources/views/layouts/app.blade.php`)** :
+  - Restructuration du conteneur de contenu (`<div class="sm:pl-64 flex flex-col min-h-screen w-full min-w-0">`) pour y inclure l'en-tête mobile sticky `<header>` au sommet sur toute la largeur (`w-full`), avec logo à gauche et bouton hamburger à droite.
+  - Conservation de la sidebar fixe à gauche sur desktop (`sm:fixed sm:w-64 z-30`) et masquage complet sur mobile (`hidden sm:flex`).
+  - Décalage fluide sur desktop via `sm:pl-64` sans impacter le layout mobile (100% largeur centrée `mx-auto`).
+  - Menu slide-over mobile enrichi avec l'ensemble des modules sécurisés selon le rôle utilisateur (Ventes, Achats, Factures, Règlements, Produits, Stock, Retours, Pertes, Reconditionnement, Clients, Fournisseurs, Historique, Utilisateurs).
+  - Rembourrage inférieur `pb-24` sur `<main>` afin d'éviter tout chevauchement avec la barre de navigation tactile mobile (`fixed bottom-0`).
+- **Fiabilisation des Services & Tests** :
+  - Support hybride (tableau & paramètres nommés) dans `StockMovementService::recordMovement()`.
+  - Ajustement du double décompte de stock dans `SaleService`.
+  - Création de `StockUnitFactory.php` et liaison dans `StockUnit::newFactory()`.
+  - Suite de tests `php artisan test` : **100% Vert (53 tests réussis, 0 échecs)**.
+

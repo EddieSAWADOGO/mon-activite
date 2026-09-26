@@ -22,6 +22,14 @@ class StockUnit extends Model
     ];
 
     /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\StockUnitFactory::new();
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

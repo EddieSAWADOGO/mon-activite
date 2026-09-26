@@ -74,9 +74,8 @@ class SaleService
                 if (! empty($lineData['source_stock_unit_id'])) {
                     // CASSURE (Breakage): Open source container (e.g., carton of 12)
                     $sourceUnit = StockUnit::lockForUpdate()->find($lineData['source_stock_unit_id']);
-                    $sourceUnit->decrement('current_stock', 1);
 
-                    // Log BREAKAGE_OUT on source unit
+                    // Log BREAKAGE_OUT on source unit (recordMovement adjusts stock)
                     $this->stockMovementService->recordMovement([
                         'product_id' => $lineData['product_id'],
                         'stock_unit_id' => $sourceUnit->id,
@@ -92,9 +91,8 @@ class SaleService
 
                     // Add full equivalence to target (base) unit
                     $equivalence = (float) $sourceUnit->base_unit_equivalent;
-                    $targetUnit->increment('current_stock', $equivalence);
 
-                    // Log BREAKAGE_IN on target unit
+                    // Log BREAKAGE_IN on target unit (recordMovement adjusts stock)
                     $this->stockMovementService->recordMovement([
                         'product_id' => $lineData['product_id'],
                         'stock_unit_id' => $targetUnit->id,
@@ -108,10 +106,7 @@ class SaleService
                         'notes' => "Reliquat réintégré suite à ouverture de {$sourceUnit->name}",
                     ]);
 
-                    // Deduct actual sold quantity from target (base) unit
-                    $targetUnit->decrement('current_stock', $quantity);
-
-                    // Log SALE movement on sold unit
+                    // Log SALE movement on sold unit (recordMovement adjusts stock)
                     $this->stockMovementService->recordMovement([
                         'product_id' => $lineData['product_id'],
                         'stock_unit_id' => $targetUnit->id,
@@ -125,9 +120,7 @@ class SaleService
                         'notes' => "Vente N° {$sale->sale_number} (avec cassure)",
                     ]);
                 } else {
-                    // Direct sale without breakage
-                    $targetUnit->decrement('current_stock', $quantity);
-
+                    // Direct sale without breakage (recordMovement adjusts stock)
                     $this->stockMovementService->recordMovement([
                         'product_id' => $lineData['product_id'],
                         'stock_unit_id' => $targetUnit->id,
