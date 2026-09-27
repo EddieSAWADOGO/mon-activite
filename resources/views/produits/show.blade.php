@@ -3,25 +3,22 @@
 
     <div class="space-y-6">
         <!-- Header & Navigation -->
-        <div class="flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left gap-4">
-            <div class="flex flex-col sm:flex-row items-center gap-3">
-                <x-ui.back-button href="{{ route('produits.index') }}" />
-                <div>
-                    <div class="flex items-center justify-center sm:justify-start gap-2">
-                        <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">{{ $product->name }}</h1>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-200/60">
+            <div class="flex items-center gap-2.5 min-w-0">
+                <x-ui.back-button href="{{ route('produits.index') }}" label="Retour" />
+                <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h1 class="text-base sm:text-2xl font-extrabold text-slate-900 tracking-tight truncate">{{ $product->name }}</h1>
                         @if($product->is_active)
                             <x-ui.badge color="emerald">Actif</x-ui.badge>
                         @else
                             <x-ui.badge color="slate">Inactif</x-ui.badge>
                         @endif
                     </div>
-                    @if($product->description)
-                        <p class="text-xs sm:text-sm text-slate-500 mt-0.5">{{ $product->description }}</p>
-                    @endif
                 </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-2 w-full sm:w-auto [&>a]:w-full [&>a]:sm:w-auto [&>button]:w-full [&>button]:sm:w-auto" x-data="{ showDeleteModal: false, submittingDelete: false }">
+            <div class="flex flex-col sm:flex-row items-center justify-end gap-2 w-full sm:w-auto [&>a]:w-full [&>a]:sm:w-auto [&>button]:w-full [&>button]:sm:w-auto" x-data="{ showDeleteModal: false, submittingDelete: false }">
                 @can('update', $product)
                     <a href="{{ route('produits.edit', $product) }}" class="w-full sm:w-auto">
                         <x-ui.button variant="outline" icon="pencil-square" size="sm" title="Modifier le produit" class="w-full sm:w-auto">

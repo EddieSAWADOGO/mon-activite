@@ -60,133 +60,73 @@
                 icon="users"
             />
         @else
-            <!-- Mobile View: Cards -->
-            <div class="grid grid-cols-1 gap-3 md:hidden">
-                @foreach ($users as $u)
-                    <div class="bg-white rounded-2xl border border-slate-200/80 p-4 space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="min-w-0">
-                                <h3 class="font-bold text-slate-900 text-sm truncate">{{ $u->name }}</h3>
-                                <p class="text-xs text-slate-500 truncate">{{ $u->email }}</p>
-                            </div>
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold shrink-0
-                                {{ $u->isSuperAdmin() ? 'bg-purple-50 text-purple-700 border border-purple-200' : ($u->isAdmin() ? 'bg-sky-50 text-sky-700 border border-sky-200' : 'bg-slate-100 text-slate-700 border border-slate-200') }}">
-                                {{ $u->role?->label() }}
-                            </span>
-                        </div>
-
-                        <div class="flex items-center justify-between pt-2.5 border-t border-slate-100 text-xs">
-                            <div class="flex items-center gap-1.5">
-                                @if ($u->is_active)
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Actif
+            <!-- Table Unifiée Scrollable Horizon -->
+            <div class="bg-white rounded-2xl border border-slate-200/80 overflow-x-auto shadow-xs">
+                <table class="w-full text-left text-xs sm:text-sm min-w-[650px]">
+                    <thead class="bg-slate-50/80 text-slate-400 text-[10px] sm:text-xs font-bold uppercase tracking-wider border-b border-slate-100">
+                        <tr>
+                            <th class="py-3.5 px-4 whitespace-nowrap">Utilisateur</th>
+                            <th class="py-3.5 px-4 whitespace-nowrap">Rôle</th>
+                            <th class="py-3.5 px-4 whitespace-nowrap">Statut</th>
+                            <th class="py-3.5 px-4 whitespace-nowrap">Créé le</th>
+                            <th class="py-3.5 px-4 text-right whitespace-nowrap">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @foreach ($users as $u)
+                            <tr class="hover:bg-slate-50/70 transition">
+                                <td class="py-3.5 px-4 whitespace-nowrap">
+                                    <div class="font-bold text-slate-900">{{ $u->name }}</div>
+                                    <div class="text-xs text-slate-500 font-medium">{{ $u->email }}</div>
+                                </td>
+                                <td class="py-3.5 px-4 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
+                                        {{ $u->isSuperAdmin() ? 'bg-purple-50 text-purple-700 border border-purple-200' : ($u->isAdmin() ? 'bg-sky-50 text-sky-700 border border-sky-200' : 'bg-slate-100 text-slate-700 border border-slate-200') }}">
+                                        {{ $u->role?->label() }}
                                     </span>
-                                @else
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-500 border border-slate-200">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Inactif
-                                    </span>
-                                @endif
-                                <span class="text-xs text-slate-400">&bull; {{ $u->created_at->format('d/m/Y') }}</span>
-                            </div>
-
-                            <div class="flex items-center gap-1">
-                                @can('update', $u)
-                                    <button type="button"
-                                            @click="selectedUser = {{ json_encode(['id' => $u->id, 'name' => $u->name]) }}; resetAction = '{{ route('utilisateurs.reset-password', $u->id) }}'; showResetModal = true"
-                                            class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition"
-                                            title="Réinitialiser le mot de passe">
-                                        <x-heroicon-o-key class="w-4 h-4" />
-                                    </button>
-                                    <a href="{{ route('utilisateurs.edit', $u->id) }}"
-                                       class="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition"
-                                       title="Modifier l'utilisateur">
-                                        <x-heroicon-o-pencil-square class="w-4 h-4" />
-                                    </a>
-                                @endcan
-
-                                @can('delete', $u)
-                                    <button type="button"
-                                            @click="selectedUser = {{ json_encode(['id' => $u->id, 'name' => $u->name]) }}; deleteAction = '{{ route('utilisateurs.destroy', $u->id) }}'; showDeleteUserModal = true"
-                                            class="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition"
-                                            title="Supprimer l'utilisateur">
-                                        <x-heroicon-o-trash class="w-4 h-4" />
-                                    </button>
-                                @endcan
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-            <!-- Desktop View: Table -->
-            <div class="hidden md:block bg-white rounded-2xl border border-slate-200/80 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs sm:text-sm">
-                        <thead class="bg-slate-50/80 text-slate-400 text-[10px] sm:text-xs font-bold uppercase tracking-wider border-b border-slate-100">
-                            <tr>
-                                <th class="py-3 px-5">Utilisateur</th>
-                                <th class="py-3 px-5">Rôle</th>
-                                <th class="py-3 px-5">Statut</th>
-                                <th class="py-3 px-5">Créé le</th>
-                                <th class="py-3 px-5 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            @foreach ($users as $u)
-                                <tr class="hover:bg-slate-50/70 transition">
-                                    <td class="py-3.5 px-5">
-                                        <div class="font-bold text-slate-900">{{ $u->name }}</div>
-                                        <div class="text-xs text-slate-500 font-medium">{{ $u->email }}</div>
-                                    </td>
-                                    <td class="py-3.5 px-5">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
-                                            {{ $u->isSuperAdmin() ? 'bg-purple-50 text-purple-700 border border-purple-200' : ($u->isAdmin() ? 'bg-sky-50 text-sky-700 border border-sky-200' : 'bg-slate-100 text-slate-700 border border-slate-200') }}">
-                                            {{ $u->role?->label() }}
+                                </td>
+                                <td class="py-3.5 px-4 whitespace-nowrap">
+                                    @if ($u->is_active)
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Actif
                                         </span>
-                                    </td>
-                                    <td class="py-3.5 px-5">
-                                        @if ($u->is_active)
-                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Actif
-                                            </span>
-                                        @else
-                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-500 border border-slate-200">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Inactif
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td class="py-3.5 px-5 text-xs text-slate-500 font-medium">
-                                        {{ $u->created_at->format('d/m/Y') }}
-                                    </td>
-                                    <td class="py-3.5 px-5 text-right space-x-1 whitespace-nowrap">
-                                        @can('update', $u)
-                                            <button type="button"
-                                                    @click="selectedUser = {{ json_encode(['id' => $u->id, 'name' => $u->name]) }}; resetAction = '{{ route('utilisateurs.reset-password', $u->id) }}'; showResetModal = true"
-                                                    class="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition inline-flex items-center"
-                                                    title="Réinitialiser le mot de passe">
-                                                <x-heroicon-o-key class="w-4 h-4" />
-                                            </button>
-                                            <a href="{{ route('utilisateurs.edit', $u->id) }}"
-                                               class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition inline-flex items-center"
-                                               title="Modifier l'utilisateur">
-                                                <x-heroicon-o-pencil-square class="w-4 h-4" />
-                                            </a>
-                                        @endcan
+                                    @else
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-500 border border-slate-200">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Inactif
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="py-3.5 px-4 text-xs text-slate-500 font-medium whitespace-nowrap">
+                                    {{ $u->created_at->format('d/m/Y') }}
+                                </td>
+                                <td class="py-3.5 px-4 text-right space-x-1 whitespace-nowrap">
+                                    @can('update', $u)
+                                        <button type="button"
+                                                @click="selectedUser = {{ json_encode(['id' => $u->id, 'name' => $u->name]) }}; resetAction = '{{ route('utilisateurs.reset-password', $u->id) }}'; showResetModal = true"
+                                                class="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition inline-flex items-center"
+                                                title="Réinitialiser le mot de passe">
+                                            <x-heroicon-o-key class="w-4 h-4" />
+                                        </button>
+                                        <a href="{{ route('utilisateurs.edit', $u->id) }}"
+                                           class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition inline-flex items-center"
+                                           title="Modifier l'utilisateur">
+                                            <x-heroicon-o-pencil-square class="w-4 h-4" />
+                                        </a>
+                                    @endcan
 
-                                        @can('delete', $u)
-                                            <button type="button"
-                                                    @click="selectedUser = {{ json_encode(['id' => $u->id, 'name' => $u->name]) }}; deleteAction = '{{ route('utilisateurs.destroy', $u->id) }}'; showDeleteUserModal = true"
-                                                    class="p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg transition inline-flex items-center"
-                                                    title="Supprimer l'utilisateur">
-                                                <x-heroicon-o-trash class="w-4 h-4" />
-                                            </button>
-                                        @endcan
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                                    @can('delete', $u)
+                                        <button type="button"
+                                                @click="selectedUser = {{ json_encode(['id' => $u->id, 'name' => $u->name]) }}; deleteAction = '{{ route('utilisateurs.destroy', $u->id) }}'; showDeleteUserModal = true"
+                                                class="p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg transition inline-flex items-center"
+                                                title="Supprimer l'utilisateur">
+                                            <x-heroicon-o-trash class="w-4 h-4" />
+                                        </button>
+                                    @endcan
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
 
             @if ($users->hasPages())
@@ -229,7 +169,7 @@
                     <form :action="resetAction" method="POST" @submit="submittingReset = true" class="space-y-4">
                         @csrf
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1.5 text-left">Nouveau mot de passe *</label>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1.5 text-left">Nouveau mot de passe <span class="text-red-500">*</span></label>
                             <input type="password" name="password" required minlength="8"
                                    class="w-full bg-white border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 transition"
                                    placeholder="Minimum 8 caractères">

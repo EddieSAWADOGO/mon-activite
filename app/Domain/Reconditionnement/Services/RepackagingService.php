@@ -52,8 +52,12 @@ class RepackagingService
             }
 
             $dateStr = now()->format('Ymd');
-            $random = str_pad((string) random_int(1, 9999), 4, '0', STR_PAD_LEFT);
-            $repackagingNumber = "REC-{$dateStr}-{$random}";
+            $count = Repackaging::whereDate('created_at', now()->today())->count() + 1;
+            $repackagingNumber = sprintf('REC-%s-%04d', $dateStr, $count);
+            while (Repackaging::where('repackaging_number', $repackagingNumber)->exists()) {
+                $count++;
+                $repackagingNumber = sprintf('REC-%s-%04d', $dateStr, $count);
+            }
 
             $repackaging = Repackaging::create([
                 'repackaging_number' => $repackagingNumber,

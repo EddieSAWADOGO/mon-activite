@@ -48,34 +48,18 @@
                 icon="arrows-right-left">
             </x-ui.empty-state>
         @else
+            <!-- Tableau Unifié Scrollable Horizon -->
             <x-ui.card class="p-0 overflow-hidden">
-                <div class="block sm:hidden divide-y divide-slate-100">
-                    @foreach($repackagings as $r)
-                        <div class="p-4 space-y-2">
-                            <div class="flex items-center justify-between">
-                                <span class="font-bold text-slate-900 text-sm">{{ $r->repackaging_number }}</span>
-                                <span class="text-xs text-slate-500">{{ $r->repackaging_date->format('d/m/Y H:i') }}</span>
-                            </div>
-                            <div class="text-sm font-semibold text-slate-800">{{ $r->product->name }}</div>
-                            <div class="flex items-center gap-2 text-xs">
-                                <span class="text-red-600 font-bold">- {{ number_format($r->source_quantity, 2, ',', ' ') }} {{ $r->sourceStockUnit->name }}</span>
-                                <span>&rarr;</span>
-                                <span class="text-emerald-600 font-bold">+ {{ number_format($r->target_quantity, 2, ',', ' ') }} {{ $r->targetStockUnit->name }}</span>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                <div class="hidden sm:block overflow-x-auto">
-                    <table class="w-full text-left text-xs sm:text-sm border-collapse">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs sm:text-sm border-collapse min-w-[650px]">
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
-                                <th class="py-3 px-4">Date</th>
-                                <th class="py-3 px-4">N° Reconditionnement</th>
-                                <th class="py-3 px-4">Produit</th>
-                                <th class="py-3 px-4">Unité Source (Prélevée)</th>
-                                <th class="py-3 px-4">Unité Cible (Obtenue)</th>
-                                <th class="py-3 px-4">Opérateur</th>
+                                <th class="py-3.5 px-4 whitespace-nowrap">Date</th>
+                                <th class="py-3.5 px-4 whitespace-nowrap">N° Reconditionnement</th>
+                                <th class="py-3.5 px-4 whitespace-nowrap">Produit</th>
+                                <th class="py-3.5 px-4 whitespace-nowrap">Unité Source (Prélevée)</th>
+                                <th class="py-3.5 px-4 whitespace-nowrap">Unité Cible (Obtenue)</th>
+                                <th class="py-3.5 px-4 whitespace-nowrap">Opérateur</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
@@ -84,12 +68,12 @@
                                     <td class="py-3 px-4 text-slate-600 whitespace-nowrap">
                                         {{ $r->repackaging_date->format('d/m/Y H:i') }}
                                     </td>
-                                    <td class="py-3 px-4 font-bold text-slate-900">
+                                    <td class="py-3 px-4 font-bold text-slate-900 whitespace-nowrap">
                                         <a href="{{ route('reconditionnement.show', $r) }}" class="text-emerald-600 hover:underline">
                                             {{ $r->repackaging_number }}
                                         </a>
                                     </td>
-                                    <td class="py-3 px-4 font-bold text-slate-900">
+                                    <td class="py-3 px-4 font-bold text-slate-900 whitespace-nowrap">
                                         {{ $r->product->name }}
                                     </td>
                                     <td class="py-3 px-4 text-red-600 font-semibold whitespace-nowrap">
@@ -98,7 +82,7 @@
                                     <td class="py-3 px-4 text-emerald-600 font-bold whitespace-nowrap">
                                         + {{ number_format($r->target_quantity, 2, ',', ' ') }} {{ $r->targetStockUnit->name }}
                                     </td>
-                                    <td class="py-3 px-4 text-slate-600 text-xs">
+                                    <td class="py-3 px-4 text-slate-600 text-xs whitespace-nowrap">
                                         {{ $r->createdBy->name }}
                                     </td>
                                 </tr>

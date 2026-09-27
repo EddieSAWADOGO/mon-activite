@@ -1,16 +1,16 @@
 <x-layouts.app title="Enregistrer un Achat">
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                    <x-heroicon-o-arrow-down-tray class="w-6 h-6 text-emerald-600" />
-                    <span>Nouveau Bon d'Achat</span>
+        <div class="flex items-center gap-2.5 pb-2 border-b border-slate-200/60">
+            <x-ui.back-button href="{{ route('achats.index') }}" label="Retour" />
+            <div class="min-w-0 flex-1">
+                <h2 class="text-base sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2 truncate">
+                    <x-heroicon-o-arrow-down-tray class="w-5 h-5 text-emerald-600 shrink-0" />
+                    <span class="truncate">Nouveau Bon d'Achat</span>
                 </h2>
-                <p class="hidden sm:block text-xs text-slate-500 mt-1">
+                <p class="hidden sm:block text-xs text-slate-500 mt-0.5">
                     Enregistrez une entrée de stock multi-produits auprès d'un fournisseur
                 </p>
             </div>
-            <x-ui.back-button href="{{ route('achats.index') }}" label="Retour à la liste" />
         </div>
     </x-slot>
 
@@ -32,7 +32,7 @@
         @csrf
 
         <!-- General Info Card -->
-        <x-ui.card class="p-4 sm:p-6">
+        <x-ui.card>
             <h3 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
                 <x-heroicon-o-truck class="w-5 h-5 text-emerald-600" />
                 <span>Informations Générales</span>
@@ -66,32 +66,33 @@
         </x-ui.card>
 
         <!-- Lines Card -->
-        <x-ui.card class="p-4 sm:p-6">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
-                <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <x-heroicon-o-cube class="w-5 h-5 text-emerald-600" />
+        <x-ui.card>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-slate-100 pb-3 mb-4">
+                <h3 class="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
+                    <x-heroicon-o-cube class="w-5 h-5 text-emerald-600 shrink-0" />
                     <span>Lignes de Produits Achetés</span>
                 </h3>
 
-                <x-ui.button type="button" @click="addLine()" variant="secondary" size="sm" icon="plus" class="w-full sm:w-auto">
+                <x-ui.button type="button" @click="addLine()" variant="secondary" size="sm" icon="plus" class="w-full sm:w-auto justify-center">
                     Ajouter une ligne
                 </x-ui.button>
             </div>
 
             <div class="space-y-4">
                 <template x-for="(line, index) in lines" :key="index">
-                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3 relative">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-slate-700" x-text="'Ligne #' + (index + 1)"></span>
-                            <button type="button" @click="removeLine(index)" x-show="lines.length > 1" class="text-red-500 hover:text-red-700 p-1">
+                    <div class="p-3 sm:p-4 lg:p-5 bg-slate-50/70 border border-slate-200/90 rounded-2xl space-y-3.5 relative">
+                        <div class="flex items-center justify-between pb-1 border-b border-slate-200/60">
+                            <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wide" x-text="'Ligne #' + (index + 1)"></span>
+                            <button type="button" @click="removeLine(index)" x-show="lines.length > 1" class="text-red-600 hover:text-red-800 p-1 flex items-center gap-1 text-xs font-bold">
                                 <x-heroicon-o-trash class="w-4 h-4" />
+                                <span>Supprimer</span>
                             </button>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
                             <!-- Product Select -->
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Produit <span class="text-red-500">*</span></label>
+                                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Produit <span class="text-red-500">*</span></label>
                                 <select :name="'lines['+index+'][product_id]'" x-model="line.product_id" @change="onProductChange(index)" required
                                         class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm p-2.5 focus:ring-2 focus:ring-emerald-500 bg-white">
                                     <option value="">-- Produit --</option>
@@ -103,7 +104,7 @@
 
                             <!-- Unit Select -->
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Format / Unité <span class="text-red-500">*</span></label>
+                                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Format / Unité <span class="text-red-500">*</span></label>
                                 <select :name="'lines['+index+'][stock_unit_id]'" x-model="line.stock_unit_id" required
                                         class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm p-2.5 focus:ring-2 focus:ring-emerald-500 bg-white">
                                     <option value="">-- Unité --</option>
@@ -115,21 +116,21 @@
 
                             <!-- Quantity -->
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Quantité <span class="text-red-500">*</span></label>
+                                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Quantité <span class="text-red-500">*</span></label>
                                 <input type="number" step="0.0001" min="0.0001" :name="'lines['+index+'][quantity]'" x-model.number="line.quantity" required
                                        class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm p-2.5 focus:ring-2 focus:ring-emerald-500 bg-white">
                             </div>
 
                             <!-- Unit Price -->
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Prix Unitaire D'Achat (FCFA) <span class="text-red-500">*</span></label>
+                                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Prix Unitaire D'Achat (FCFA) <span class="text-red-500">*</span></label>
                                 <input type="number" min="0" :name="'lines['+index+'][unit_price]'" x-model.number="line.unit_price" required
                                        class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm p-2.5 focus:ring-2 focus:ring-emerald-500 bg-white">
                             </div>
                         </div>
 
-                        <div class="text-right text-xs text-slate-600 pt-1">
-                            Sous-total ligne : <span class="font-bold text-slate-900" x-text="formatNumber(lineSubtotal(line)) + ' FCFA'"></span>
+                        <div class="text-right text-xs text-slate-600 pt-1 font-medium">
+                            Sous-total ligne : <span class="font-extrabold text-slate-900" x-text="formatNumber(lineSubtotal(line)) + ' FCFA'"></span>
                         </div>
                     </div>
                 </template>
@@ -137,7 +138,7 @@
         </x-ui.card>
 
         <!-- Payment & Total Summary Card -->
-        <x-ui.card class="p-4 sm:p-6 bg-slate-900 text-white">
+        <x-ui.card class="bg-slate-900 text-white">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 items-center">
                 <div>
                     <span class="block text-xs text-slate-400">Montant Total de l'Achat</span>

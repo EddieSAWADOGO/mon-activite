@@ -43,8 +43,12 @@ class PurchaseService
 
             // Generate unique purchase number ACH-YYYYMMDD-XXXX
             $datePrefix = date('Ymd', strtotime($purchaseDate));
-            $randomSuffix = strtoupper(Str::random(4));
-            $purchaseNumber = "ACH-{$datePrefix}-{$randomSuffix}";
+            $count = Purchase::whereDate('created_at', now()->today())->count() + 1;
+            $purchaseNumber = sprintf('ACH-%s-%04d', $datePrefix, $count);
+            while (Purchase::where('purchase_number', $purchaseNumber)->exists()) {
+                $count++;
+                $purchaseNumber = sprintf('ACH-%s-%04d', $datePrefix, $count);
+            }
 
             $purchase = Purchase::create([
                 'purchase_number' => $purchaseNumber,

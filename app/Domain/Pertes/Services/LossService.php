@@ -18,8 +18,12 @@ class LossService
     {
         return DB::transaction(function () use ($data, $user) {
             $dateStr = now()->format('Ymd');
-            $random = str_pad((string) random_int(1, 9999), 4, '0', STR_PAD_LEFT);
-            $lossNumber = "PRT-{$dateStr}-{$random}";
+            $count = Loss::whereDate('created_at', now()->today())->count() + 1;
+            $lossNumber = sprintf('PRT-%s-%04d', $dateStr, $count);
+            while (Loss::where('loss_number', $lossNumber)->exists()) {
+                $count++;
+                $lossNumber = sprintf('PRT-%s-%04d', $dateStr, $count);
+            }
 
             $loss = Loss::create([
                 'loss_number' => $lossNumber,

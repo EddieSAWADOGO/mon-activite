@@ -15,9 +15,9 @@
     };
 @endphp
 
-<span {{ $attributes->merge(['class' => "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border {$colorClasses}"]) }}>
+<span {{ $attributes->merge(['class' => "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-bold border {$colorClasses} shrink-0 whitespace-nowrap"]) }}>
     @if ($icon)
-        <x-dynamic-component :component="'heroicon-o-' . $icon" class="w-3.5 h-3.5 flex-shrink-0" />
+        <x-dynamic-component :component="'heroicon-o-' . $icon" class="w-4 h-4 flex-shrink-0" />
     @endif
     <span>{{ $slot }}</span>
 </span>

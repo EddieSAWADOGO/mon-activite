@@ -30,13 +30,13 @@
                         sans: ['Poppins', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
                     },
                     fontSize: {
-                        'xs':   ['0.8rem',   { lineHeight: '1.25rem' }],
-                        'sm':   ['0.9rem',   { lineHeight: '1.4rem'  }],
-                        'base': ['1rem',     { lineHeight: '1.6rem'  }],
-                        'lg':   ['1.125rem', { lineHeight: '1.75rem' }],
-                        'xl':   ['1.25rem',  { lineHeight: '1.85rem' }],
-                        '2xl':  ['1.5rem',   { lineHeight: '2rem'    }],
-                        '3xl':  ['1.875rem', { lineHeight: '2.25rem' }],
+                        'xs':   ['0.875rem', { lineHeight: '1.35rem' }],
+                        'sm':   ['0.95rem',  { lineHeight: '1.5rem'  }],
+                        'base': ['1.05rem',  { lineHeight: '1.65rem' }],
+                        'lg':   ['1.2rem',   { lineHeight: '1.8rem'  }],
+                        'xl':   ['1.35rem',  { lineHeight: '1.95rem' }],
+                        '2xl':  ['1.6rem',   { lineHeight: '2.1rem'  }],
+                        '3xl':  ['2rem',     { lineHeight: '2.35rem' }],
                     },
                     colors: {
                         emerald: {
@@ -75,9 +75,9 @@
             globalLoading: false,
             loadingText: 'Traitement en cours...',
             toast: {
-                show: {{ session('success') || session('error') ? 'true' : 'false' }},
-                type: '{{ session('error') ? 'error' : 'success' }}',
-                message: @json(session('success') ?? session('error') ?? '')
+                show: {{ session('success') || session('error') || session('info') || session('warning') ? 'true' : 'false' }},
+                type: '{{ session('error') ? 'error' : (session('warning') ? 'warning' : (session('info') ? 'info' : 'success')) }}',
+                message: @json(session('success') ?? session('error') ?? session('warning') ?? session('info') ?? '')
             },
             init() {
                 if (this.toast.show) {
@@ -111,12 +111,12 @@
 
                 let msg = form.dataset.loadingText;
                 if (!msg) {
+                    if (action.includes('login')) return;
+
                     if (action.includes('destroy') || action.includes('delete') || action.includes('discard') || submitterText.includes('supprim') || submitterText.includes('annuler')) {
                         msg = 'Suppression en cours...';
                     } else if (action.includes('reset')) {
                         msg = 'Réinitialisation en cours...';
-                    } else if (action.includes('login')) {
-                        msg = 'Connexion en cours...';
                     } else {
                         msg = 'Enregistrement en cours...';
                     }
@@ -145,6 +145,11 @@
         <template x-if="toast.type === 'error'">
             <div class="p-1 rounded-xl bg-red-100 text-red-600 shrink-0 mt-0.5">
                 <x-heroicon-o-x-circle class="w-5 h-5" />
+            </div>
+        </template>
+        <template x-if="toast.type === 'info' || toast.type === 'warning'">
+            <div class="p-1 rounded-xl bg-amber-100 text-amber-700 shrink-0 mt-0.5">
+                <x-heroicon-o-information-circle class="w-5 h-5" />
             </div>
         </template>
 
@@ -358,9 +363,9 @@
         <div class="sm:pl-64 flex flex-col min-h-screen w-full min-w-0">
 
             <!-- ── Header Mobile sticky iOS Glassmorphism style ── -->
-            <header class="sm:hidden bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 py-3 flex items-center justify-between sticky top-0 z-30 w-full">
-                <div class="flex items-center gap-2.5">
-                    <img src="/logo.webp" alt="Mon-Activité" class="w-8 h-8 object-contain shrink-0">
+            <header class="sm:hidden bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-3.5 py-2.5 flex items-center justify-between sticky top-0 z-30 w-full">
+                <div class="flex items-center gap-2">
+                    <img src="/logo.webp" alt="Mon-Activité" class="w-7 h-7 object-contain shrink-0">
                     <span class="font-extrabold text-base text-slate-900 tracking-tight">Mon-Activité</span>
                 </div>
 
@@ -380,11 +385,11 @@
                  x-transition:leave="transition ease-in duration-150"
                  x-transition:leave-start="opacity-100 translate-y-0"
                  x-transition:leave-end="opacity-0 translate-y-[-10px]"
-                 class="sm:hidden fixed inset-0 z-50 bg-white/95 backdrop-blur-xl p-5 flex flex-col overflow-y-auto">
+                 class="sm:hidden fixed inset-0 z-50 bg-white/95 backdrop-blur-xl p-4 flex flex-col overflow-y-auto">
 
-                <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
-                    <div class="flex items-center gap-2.5">
-                        <img src="/logo.webp" alt="Logo" class="w-8 h-8 object-contain shrink-0">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+                    <div class="flex items-center gap-2">
+                        <img src="/logo.webp" alt="Logo" class="w-7 h-7 object-contain shrink-0">
                         <div>
                             <p class="font-extrabold text-slate-900 text-base leading-tight">Mon-Activité</p>
                             <p class="text-xs text-slate-400">Navigation</p>
@@ -395,15 +400,15 @@
                     </button>
                 </div>
 
-                <div class="grid grid-cols-2 gap-2.5 flex-1 pb-6">
+                <div class="grid grid-cols-2 gap-2 flex-1 pb-6">
                     <a @click="mobileMenuOpen = false" href="{{ route('dashboard') }}"
-                       class="p-3.5 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
+                       class="p-3 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
                         <x-heroicon-o-squares-2x2 class="w-6 h-6 text-emerald-600" />
                         <span>Tableau de bord</span>
                     </a>
 
                     <a @click="mobileMenuOpen = false" href="{{ route('ventes.index') }}"
-                       class="p-3.5 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
+                       class="p-3 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
                         <x-heroicon-o-arrow-up-tray class="w-6 h-6 text-emerald-600" />
                         <span>Ventes</span>
                     </a>
@@ -411,7 +416,7 @@
                     @auth
                         @if (auth()->user()->isAdmin())
                             <a @click="mobileMenuOpen = false" href="{{ route('achats.index') }}"
-                               class="p-3.5 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
+                               class="p-3 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
                                 <x-heroicon-o-arrow-down-tray class="w-6 h-6 text-emerald-600" />
                                 <span>Achats</span>
                             </a>
@@ -419,37 +424,37 @@
                     @endauth
 
                     <a @click="mobileMenuOpen = false" href="{{ route('factures.index') }}"
-                       class="p-3.5 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
+                       class="p-3 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
                         <x-heroicon-o-document-text class="w-6 h-6 text-emerald-600" />
                         <span>Factures</span>
                     </a>
 
                     <a @click="mobileMenuOpen = false" href="{{ route('paiements.index') }}"
-                       class="p-3.5 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
+                       class="p-3 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
                         <x-heroicon-o-banknotes class="w-6 h-6 text-emerald-600" />
                         <span>Règlements</span>
                     </a>
 
                     <a @click="mobileMenuOpen = false" href="{{ route('produits.index') }}"
-                       class="p-3.5 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
+                       class="p-3 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
                         <x-heroicon-o-cube class="w-6 h-6 text-emerald-600" />
                         <span>Produits</span>
                     </a>
 
                     <a @click="mobileMenuOpen = false" href="{{ route('stock.index') }}"
-                       class="p-3.5 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
+                       class="p-3 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
                         <x-heroicon-o-archive-box class="w-6 h-6 text-emerald-600" />
                         <span>Stock</span>
                     </a>
 
                     <a @click="mobileMenuOpen = false" href="{{ route('clients.index') }}"
-                       class="p-3.5 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
+                       class="p-3 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
                         <x-heroicon-o-user class="w-6 h-6 text-emerald-600" />
                         <span>Clients</span>
                     </a>
 
                     <a @click="mobileMenuOpen = false" href="{{ route('fournisseurs.index') }}"
-                       class="p-3.5 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
+                       class="p-3 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
                         <x-heroicon-o-truck class="w-6 h-6 text-emerald-600" />
                         <span>Fournisseurs</span>
                     </a>
@@ -457,19 +462,19 @@
                     @auth
                         @if (auth()->user()->canManageInventoryOperations())
                             <a @click="mobileMenuOpen = false" href="{{ route('retours.index') }}"
-                               class="p-3.5 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
+                               class="p-3 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
                                 <x-heroicon-o-arrow-uturn-left class="w-6 h-6 text-emerald-600" />
                                 <span>Retours</span>
                             </a>
 
                             <a @click="mobileMenuOpen = false" href="{{ route('pertes.index') }}"
-                               class="p-3.5 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
+                               class="p-3 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
                                 <x-heroicon-o-x-circle class="w-6 h-6 text-emerald-600" />
                                 <span>Pertes</span>
                             </a>
 
                             <a @click="mobileMenuOpen = false" href="{{ route('reconditionnement.index') }}"
-                               class="p-3.5 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
+                               class="p-3 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
                                 <x-heroicon-o-arrows-right-left class="w-6 h-6 text-emerald-600" />
                                 <span>Recond.</span>
                             </a>
@@ -477,7 +482,7 @@
 
                         @if (auth()->user()->canAccessHistory())
                             <a @click="mobileMenuOpen = false" href="{{ route('historique.index') }}"
-                               class="p-3.5 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
+                               class="p-3 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
                                 <x-heroicon-o-clock class="w-6 h-6 text-emerald-600" />
                                 <span>Historique</span>
                             </a>
@@ -485,7 +490,7 @@
 
                         @if (auth()->user()->canManageUsers())
                             <a @click="mobileMenuOpen = false" href="{{ route('utilisateurs.index') }}"
-                               class="p-3.5 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
+                               class="p-3 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
                                 <x-heroicon-o-users class="w-6 h-6 text-emerald-600" />
                                 <span>Utilisateurs</span>
                             </a>
@@ -494,15 +499,15 @@
                 </div>
 
                 @auth
-                    <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <div class="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-bold text-slate-900">{{ auth()->user()->name }}</p>
-                            <p class="text-xs text-slate-500">{{ auth()->user()->role?->label() }}</p>
+                            <p class="text-xs font-bold text-slate-900">{{ auth()->user()->name }}</p>
+                            <p class="text-[11px] text-slate-500">{{ auth()->user()->role?->label() }}</p>
                         </div>
                         <form method="POST" action="{{ route('logout') }}" data-loading-text="Déconnexion en cours...">
                             @csrf
                             <button type="submit"
-                                    class="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-600 bg-slate-100 rounded-xl border border-slate-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 active:scale-95 transition">
+                                    class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 bg-slate-100 rounded-xl border border-slate-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 active:scale-95 transition">
                                 <x-heroicon-o-arrow-right-on-rectangle class="w-4 h-4" />
                                 <span>Déconnexion</span>
                             </button>
@@ -512,7 +517,7 @@
             </div>
 
             <!-- ── Zone de contenu principal ── -->
-            <main class="flex-1 p-3 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full min-w-0 overflow-x-hidden space-y-5 sm:space-y-6 pb-24 sm:pb-8">
+            <main class="flex-1 p-3.5 sm:p-6 lg:p-8 max-w-[1600px] mx-auto w-full min-w-0 overflow-x-hidden space-y-4 sm:space-y-6 pb-24 sm:pb-8">
                 @if (isset($header))
                     <div class="mb-2">{{ $header }}</div>
                 @endif

@@ -18,11 +18,11 @@
     </x-slot>
 
     <!-- Filter Card -->
-    <x-ui.card class="mb-6 p-4">
-        <form method="GET" action="{{ route('stock.movements') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <x-ui.card class="mb-6 p-3 sm:p-4">
+        <form method="GET" action="{{ route('stock.movements') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">Produit</label>
-                <select name="product_id" class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2 px-3 focus:ring-2 focus:ring-emerald-500 bg-white">
+                <select name="product_id" class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3 focus:ring-2 focus:ring-emerald-500 bg-white">
                     <option value="">Tous les produits</option>
                     @foreach($products as $product)
                         <option value="{{ $product->id }}" @selected(request('product_id') == $product->id)>
@@ -34,7 +34,7 @@
 
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">Type de Mouvement</label>
-                <select name="type" class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2 px-3 focus:ring-2 focus:ring-emerald-500 bg-white">
+                <select name="type" class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3 focus:ring-2 focus:ring-emerald-500 bg-white">
                     <option value="">Tous les types</option>
                     @foreach(App\Support\Enums\MovementType::cases() as $case)
                         <option value="{{ $case->value }}" @selected(request('type') == $case->value)>
@@ -44,21 +44,29 @@
                 </select>
             </div>
 
-            <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Date Début</label>
-                <input type="date" name="start_date" value="{{ request('start_date') }}"
-                       class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2 px-3 focus:ring-2 focus:ring-emerald-500 bg-white">
+            <div class="grid grid-cols-2 gap-2 sm:col-span-2 lg:col-span-2">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Du</label>
+                    <input type="date" name="start_date" value="{{ request('start_date') }}"
+                           class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-2.5 focus:ring-2 focus:ring-emerald-500 bg-white">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Au</label>
+                    <input type="date" name="end_date" value="{{ request('end_date') }}"
+                           class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-2.5 focus:ring-2 focus:ring-emerald-500 bg-white">
+                </div>
             </div>
 
-            <div class="flex items-end gap-2">
-                <div class="flex-1">
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Date Fin</label>
-                    <input type="date" name="end_date" value="{{ request('end_date') }}"
-                           class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2 px-3 focus:ring-2 focus:ring-emerald-500 bg-white">
-                </div>
-                <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" class="h-9">
+            <div class="flex gap-2 w-full">
+                <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" size="sm" class="w-full justify-center">
                     Filtrer
                 </x-ui.button>
+                @if(request()->hasAny(['product_id', 'type', 'start_date', 'end_date']))
+                    <a href="{{ route('stock.movements') }}" class="rounded-xl border border-slate-200 text-xs py-2 px-3 text-slate-600 hover:text-slate-900 flex items-center justify-center whitespace-nowrap bg-white">
+                        Effacer
+                    </a>
+                @endif
             </div>
         </form>
     </x-ui.card>
@@ -77,17 +85,17 @@
             icon="clock" />
     @else
         <!-- Desktop Table View -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden">
+        <div class="bg-white rounded-2xl border border-slate-200/80 overflow-x-auto shadow-xs">
             <x-ui.table>
                 <x-slot name="header">
                     <tr>
-                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-700 uppercase">Date & Heure</th>
-                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-700 uppercase">Produit</th>
-                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-700 uppercase">Format / Unité</th>
-                        <th class="px-4 py-3 text-center text-xs font-bold text-slate-700 uppercase">Type</th>
-                        <th class="px-4 py-3 text-right text-xs font-bold text-slate-700 uppercase">Quantité</th>
-                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-700 uppercase">Auteur</th>
-                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-700 uppercase">Notes</th>
+                        <th class="px-4 py-3.5 text-left text-xs font-bold text-slate-700 uppercase whitespace-nowrap">Date & Heure</th>
+                        <th class="px-4 py-3.5 text-left text-xs font-bold text-slate-700 uppercase whitespace-nowrap">Produit</th>
+                        <th class="px-4 py-3.5 text-left text-xs font-bold text-slate-700 uppercase whitespace-nowrap">Format / Unité</th>
+                        <th class="px-4 py-3.5 text-center text-xs font-bold text-slate-700 uppercase whitespace-nowrap">Type</th>
+                        <th class="px-4 py-3.5 text-right text-xs font-bold text-slate-700 uppercase whitespace-nowrap">Quantité</th>
+                        <th class="px-4 py-3.5 text-left text-xs font-bold text-slate-700 uppercase whitespace-nowrap">Auteur</th>
+                        <th class="px-4 py-3.5 text-left text-xs font-bold text-slate-700 uppercase whitespace-nowrap">Notes</th>
                     </tr>
                 </x-slot>
 
@@ -96,13 +104,13 @@
                         <td class="px-4 py-3 text-xs text-slate-600 font-mono whitespace-nowrap">
                             {{ $mvt->movement_date ? $mvt->movement_date->format('d/m/Y H:i') : $mvt->created_at->format('d/m/Y H:i') }}
                         </td>
-                        <td class="px-4 py-3 text-xs font-bold text-slate-900">
+                        <td class="px-4 py-3 text-xs font-bold text-slate-900 whitespace-nowrap">
                             {{ $mvt->product->name }}
                         </td>
-                        <td class="px-4 py-3 text-xs text-slate-600">
+                        <td class="px-4 py-3 text-xs text-slate-600 whitespace-nowrap">
                             {{ $mvt->stockUnit->name }}
                         </td>
-                        <td class="px-4 py-3 text-center">
+                        <td class="px-4 py-3 text-center whitespace-nowrap">
                             <x-ui.badge :color="$mvt->type->badgeColor()">
                                 {{ $mvt->type->label() }}
                             </x-ui.badge>
@@ -110,10 +118,10 @@
                         <td class="px-4 py-3 text-xs font-mono font-bold text-right whitespace-nowrap {{ $mvt->direction === 'in' ? 'text-emerald-700' : 'text-red-600' }}">
                             {{ $mvt->direction === 'in' ? '+' : '-' }}{{ rtrim(rtrim(number_format($mvt->quantity, 4, ',', ' '), '0'), ',') }}
                         </td>
-                        <td class="px-4 py-3 text-xs text-slate-600">
+                        <td class="px-4 py-3 text-xs text-slate-600 whitespace-nowrap">
                             {{ $mvt->createdBy->name ?? 'Système' }}
                         </td>
-                        <td class="px-4 py-3 text-xs text-slate-500 max-w-xs truncate">
+                        <td class="px-4 py-3 text-xs text-slate-500 whitespace-nowrap max-w-xs truncate">
                             {{ $mvt->notes ?? '-' }}
                         </td>
                     </tr>

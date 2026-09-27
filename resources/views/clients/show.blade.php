@@ -1,29 +1,28 @@
 <x-layouts.app title="Fiche Client — {{ $customer->name }}">
     <x-slot name="header">
-        <div class="flex flex-col sm:flex-row items-center justify-between text-center sm:text-left gap-4">
-            <div>
-                <div class="flex items-center justify-center sm:justify-start gap-2">
-                    <h2 class="text-xl font-bold text-slate-900 tracking-tight">{{ $customer->name }}</h2>
-                    <x-ui.badge :color="$customer->is_active ? 'emerald' : 'slate'">
-                        {{ $customer->is_active ? 'Actif' : 'Inactif' }}
-                    </x-ui.badge>
-                    <x-ui.badge :color="$customer->type === 'entreprise' ? 'sky' : 'slate'" class="capitalize">
-                        {{ $customer->type }}
-                    </x-ui.badge>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-200/60">
+            <div class="flex items-center gap-2.5 min-w-0">
+                <x-ui.back-button href="{{ route('clients.index') }}" label="Retour" />
+                <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h2 class="text-base sm:text-2xl font-extrabold text-slate-900 tracking-tight truncate">{{ $customer->name }}</h2>
+                        <x-ui.badge :color="$customer->is_active ? 'emerald' : 'slate'">
+                            {{ $customer->is_active ? 'Actif' : 'Inactif' }}
+                        </x-ui.badge>
+                        <x-ui.badge :color="$customer->type === 'entreprise' ? 'sky' : 'slate'" class="capitalize">
+                            {{ $customer->type }}
+                        </x-ui.badge>
+                    </div>
                 </div>
-                <p class="text-xs text-slate-500 mt-1">
-                    Fiche d'information et historique des transactions du client
-                </p>
             </div>
 
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-2 w-full sm:w-auto [&>a]:w-full [&>a]:sm:w-auto [&>button]:w-full [&>button]:sm:w-auto">
-                @can('update', $customer)
+            @can('update', $customer)
+                <div class="w-full sm:w-auto">
                     <x-ui.button href="{{ route('clients.edit', $customer) }}" variant="secondary" icon="pencil-square" size="sm" class="w-full sm:w-auto">
                         Éditer
                     </x-ui.button>
-                @endcan
-                <x-ui.back-button href="{{ route('clients.index') }}" label="Retour à la liste" class="w-full sm:w-auto justify-center" />
-            </div>
+                </div>
+            @endcan
         </div>
     </x-slot>
 
@@ -126,26 +125,26 @@
                         icon="document-text" />
                 @else
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-slate-50 text-slate-600 font-semibold uppercase text-[10px]">
+                        <table class="w-full text-left text-xs sm:text-sm min-w-[550px]">
+                            <thead class="bg-slate-50 text-slate-600 font-bold uppercase text-xs">
                                 <tr>
-                                    <th class="py-2 px-3">Date & N° Vente</th>
-                                    <th class="py-2 px-3">Montant Total</th>
-                                    <th class="py-2 px-3">Reste à payer</th>
-                                    <th class="py-2 px-3 text-right">Facture</th>
+                                    <th class="py-3 px-3.5 whitespace-nowrap">Date & N° Vente</th>
+                                    <th class="py-3 px-3.5 whitespace-nowrap">Montant Total</th>
+                                    <th class="py-3 px-3.5 whitespace-nowrap">Reste à payer</th>
+                                    <th class="py-3 px-3.5 text-right whitespace-nowrap">Facture</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100">
                                 @foreach($customer->sales as $sale)
                                     <tr class="hover:bg-slate-50/50">
-                                        <td class="py-2.5 px-3">
+                                        <td class="py-3 px-3.5 whitespace-nowrap">
                                             <div class="font-bold text-slate-800">{{ $sale->sale_number }}</div>
-                                            <div class="text-[11px] text-slate-400">{{ $sale->sale_date->format('d/m/Y H:i') }}</div>
+                                            <div class="text-xs text-slate-400 font-medium">{{ $sale->sale_date->format('d/m/Y H:i') }}</div>
                                         </td>
-                                        <td class="py-2.5 px-3 font-semibold text-slate-900">
+                                        <td class="py-3 px-3.5 font-bold text-slate-900 whitespace-nowrap">
                                             {{ number_format($sale->total_amount, 0, ',', ' ') }} FCFA
                                         </td>
-                                        <td class="py-2.5 px-3">
+                                        <td class="py-3 px-3.5 whitespace-nowrap">
                                             @if($sale->remaining_amount > 0)
                                                 <x-ui.badge color="amber">
                                                     {{ number_format($sale->remaining_amount, 0, ',', ' ') }} FCFA
@@ -154,7 +153,7 @@
                                                 <x-ui.badge color="emerald">Payé</x-ui.badge>
                                             @endif
                                         </td>
-                                        <td class="py-2.5 px-3 text-right">
+                                        <td class="py-3 px-3.5 text-right whitespace-nowrap">
                                             @if($sale->invoice)
                                                 <x-ui.button href="{{ route('factures.show', $sale->invoice) }}" variant="outline" size="sm">
                                                     {{ $sale->invoice->invoice_number }}

@@ -44,50 +44,19 @@
                 icon="banknotes">
             </x-ui.empty-state>
         @else
-            <!-- Tableau / Cartes Mobile -->
+            <!-- Tableau Unifié Scrollable Horizon -->
             <x-ui.card class="p-0 overflow-hidden">
-                <div class="block sm:hidden divide-y divide-slate-100">
-                    @foreach($payments as $payment)
-                        <div class="p-4 space-y-2">
-                            <div class="flex items-center justify-between">
-                                <a href="{{ route('factures.show', $payment->invoice_id) }}" class="font-bold text-emerald-600 hover:underline">
-                                    {{ $payment->invoice->invoice_number }}
-                                </a>
-                                <span class="text-xs text-slate-500">
-                                    {{ $payment->payment_date->format('d/m/Y H:i') }}
-                                </span>
-                            </div>
-                            <div class="flex justify-between items-center text-xs sm:text-sm">
-                                <span class="text-slate-600">Client:</span>
-                                <span class="font-medium text-slate-900">
-                                    {{ $payment->invoice->customer ? $payment->invoice->customer->name : 'Client de passage' }}
-                                </span>
-                            </div>
-                            <div class="flex justify-between items-center text-xs sm:text-sm">
-                                <span class="text-slate-600">Mode:</span>
-                                <x-ui.badge color="sky">{{ $payment->payment_method }}</x-ui.badge>
-                            </div>
-                            <div class="flex justify-between items-center pt-2 border-t border-slate-50">
-                                <span class="text-xs text-slate-400">Par {{ $payment->createdBy->name }}</span>
-                                <span class="text-base font-extrabold text-emerald-700">
-                                    + {{ number_format($payment->amount, 0, ',', ' ') }} FCFA
-                                </span>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                <div class="hidden sm:block overflow-x-auto">
-                    <table class="w-full text-left text-xs sm:text-sm border-collapse">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs sm:text-sm border-collapse min-w-[650px]">
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
-                                <th class="py-3 px-4">Date</th>
-                                <th class="py-3 px-4">Facture</th>
-                                <th class="py-3 px-4">Client</th>
-                                <th class="py-3 px-4">Mode</th>
-                                <th class="py-3 px-4">Référence</th>
-                                <th class="py-3 px-4 text-right">Montant</th>
-                                <th class="py-3 px-4">Enregistré par</th>
+                                <th class="py-3.5 px-4 whitespace-nowrap">Date</th>
+                                <th class="py-3.5 px-4 whitespace-nowrap">Facture</th>
+                                <th class="py-3.5 px-4 whitespace-nowrap">Client</th>
+                                <th class="py-3.5 px-4 whitespace-nowrap">Mode</th>
+                                <th class="py-3.5 px-4 whitespace-nowrap">Référence</th>
+                                <th class="py-3.5 px-4 text-right whitespace-nowrap">Montant</th>
+                                <th class="py-3.5 px-4 whitespace-nowrap">Enregistré par</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
@@ -96,24 +65,24 @@
                                     <td class="py-3 px-4 text-slate-600 whitespace-nowrap">
                                         {{ $payment->payment_date->format('d/m/Y H:i') }}
                                     </td>
-                                    <td class="py-3 px-4 font-bold text-slate-900">
+                                    <td class="py-3 px-4 font-bold text-slate-900 whitespace-nowrap">
                                         <a href="{{ route('factures.show', $payment->invoice_id) }}" class="text-emerald-600 hover:underline">
                                             {{ $payment->invoice->invoice_number }}
                                         </a>
                                     </td>
-                                    <td class="py-3 px-4 text-slate-800">
+                                    <td class="py-3 px-4 text-slate-800 whitespace-nowrap font-medium">
                                         {{ $payment->invoice->customer ? $payment->invoice->customer->name : 'Client de passage' }}
                                     </td>
-                                    <td class="py-3 px-4">
+                                    <td class="py-3 px-4 whitespace-nowrap">
                                         <x-ui.badge color="sky">{{ $payment->payment_method }}</x-ui.badge>
                                     </td>
-                                    <td class="py-3 px-4 text-slate-500 font-mono text-xs">
+                                    <td class="py-3 px-4 text-slate-500 font-mono text-xs whitespace-nowrap">
                                         {{ $payment->reference ?: '-' }}
                                     </td>
                                     <td class="py-3 px-4 text-right font-extrabold text-emerald-600 whitespace-nowrap">
                                         + {{ number_format($payment->amount, 0, ',', ' ') }} FCFA
                                     </td>
-                                    <td class="py-3 px-4 text-slate-500 text-xs">
+                                    <td class="py-3 px-4 text-slate-500 text-xs whitespace-nowrap">
                                         {{ $payment->createdBy->name }}
                                     </td>
                                 </tr>

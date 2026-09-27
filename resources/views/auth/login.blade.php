@@ -158,15 +158,16 @@
 
         @media (min-width: 1024px) {
             .panel-right {
-                width: 480px;
+                width: 520px;
                 flex-shrink: 0;
                 border-left: 1px solid var(--slate-100);
+                padding: 3rem 2.5rem;
             }
         }
 
         .form-container {
             width: 100%;
-            max-width: 380px;
+            max-width: 440px;
         }
 
         .mobile-logo {
@@ -363,23 +364,6 @@
 
 <div class="page" x-data="{ showPwd: false, globalLoading: false }">
 
-    <!-- Modal Loading Connexion -->
-    <div x-cloak
-         x-show="globalLoading"
-         style="position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);">
-        <div style="background: #fff; border-radius: 1.5rem; padding: 1.75rem 2rem; max-width: 320px; width: 100%; text-align: center; border: 1px solid #f1f5f9; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
-            <div style="position: relative; width: 4rem; height: 4rem; margin: 0 auto 1rem auto; display: flex; align-items: center; justify-content: center;">
-                <div style="position: absolute; inset: 0; border-radius: 9999px; border: 4px solid #ecfdf5;"></div>
-                <div style="position: absolute; inset: 0; border-radius: 9999px; border: 4px solid #059669; border-top-color: transparent; animation: spin 1s linear infinite;"></div>
-                <svg style="width: 1.75rem; height: 1.75rem; color: #059669; animation: spin 1s linear infinite;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-            </div>
-            <p style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.25rem;">Connexion en cours...</p>
-            <p style="font-size: 0.75rem; color: #64748b; font-weight: 500;">Veuillez patienter un instant...</p>
-        </div>
-    </div>
-
     <!-- ─── Panneau gauche (illustration) ──────────────────── -->
     <div class="panel-left">
         <div class="panel-left-content">
@@ -457,7 +441,7 @@
 
                 <!-- Email -->
                 <div class="field">
-                    <label for="email">Adresse e-mail</label>
+                    <label for="email">Adresse e-mail <span style="color: #ef4444;">*</span></label>
                     <div class="input-wrap">
                         <svg class="icon-left" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
@@ -477,7 +461,7 @@
 
                 <!-- Mot de passe -->
                 <div class="field">
-                    <label for="password">Mot de passe</label>
+                    <label for="password">Mot de passe <span style="color: #ef4444;">*</span></label>
                     <div class="input-wrap">
                         <svg class="icon-left" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
@@ -504,11 +488,20 @@
                 </div>
 
                 <!-- Bouton -->
-                <button type="submit" class="btn-login" style="margin-top: 1.5rem;">
-                    <span>Se connecter</span>
-                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                    </svg>
+                <button type="submit" class="btn-login" style="margin-top: 1.5rem;" :disabled="globalLoading">
+                    <span x-show="!globalLoading" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%;">
+                        <span>Se connecter</span>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </span>
+                    <span x-show="globalLoading" x-cloak style="display: flex; align-items: center; justify-content: center; gap: 0.625rem; width: 100%;">
+                        <svg style="width: 1.25rem; height: 1.25rem; animation: spin 0.8s linear infinite;" fill="none" viewBox="0 0 24 24">
+                            <circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>Connexion en cours...</span>
+                    </span>
                 </button>
             </form>
 

@@ -107,9 +107,24 @@ class UserController extends Controller
     {
         $this->authorize('delete', $user);
 
-        $user->delete();
+        if (auth()->id() === $user->id) {
+            return redirect()->route('utilisateurs.index')
+                ->with('error', 'Vous ne pouvez pas supprimer votre propre compte utilisateur.');
+        }
 
-        return redirect()->route('utilisateurs.index')
-            ->with('success', 'Utilisateur supprimé avec succès.');
+        try {
+            $userName = $user->name;
+            $user->delete();
+
+            return redirect()->route('utilisateurs.index')
+                ->with('success', "L'utilisateur '{$userName}' a été supprimé avec succès.");
+        } catch (\Illuminate\Database\QueryException $e) {
+            // L'utilisateur possède des opérations enregistrées (ventes, retours, pertes, mouvements) :
+            // Désactivation automatique pour préserver la traçabilité financière et de stock.
+            $user->update(['is_active' => false]);
+
+            return redirect()->route('utilisateurs.index')
+                ->with('info', "L'utilisateur '{$user->name}' possède un historique d'opérations enregistrées. Son compte a été désactivé pour conserver la traçabilité.");
+        }
     }
 }

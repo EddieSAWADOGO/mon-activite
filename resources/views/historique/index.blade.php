@@ -1,9 +1,17 @@
 <x-layouts.app title="Historique & Suivi d'Activité">
     <x-slot name="header">
-        <h1 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-            <x-heroicon-o-clock class="w-6 h-6 text-emerald-600" />
-            Module Historique & Suivi d'Activité
-        </h1>
+        <div class="flex items-center gap-2.5 pb-2 border-b border-slate-200/60">
+            <x-ui.back-button href="{{ route('dashboard') }}" label="Retour" />
+            <div class="min-w-0 flex-1">
+                <h1 class="text-base sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2 truncate">
+                    <x-heroicon-o-clock class="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 shrink-0" />
+                    <span class="truncate">Historique & Suivi d'Activité</span>
+                </h1>
+                <p class="hidden sm:block text-xs text-slate-500 mt-0.5">
+                    Consultez les rapports détaillés des ventes, achats, stocks et situation financière
+                </p>
+            </div>
+        </div>
     </x-slot>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

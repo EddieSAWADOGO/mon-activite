@@ -1,12 +1,12 @@
 <x-layouts.app>
     <x-slot:title>Nouveau produit</x-slot:title>
 
-    <div class="max-w-4xl mx-auto space-y-6">
+    <div class="max-w-6xl mx-auto space-y-5">
         <!-- Page Header -->
-        <div class="flex items-center gap-3">
-            <x-ui.back-button href="{{ route('produits.index') }}" />
-            <div>
-                <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Nouveau produit</h1>
+        <div class="flex items-center gap-2.5 pb-2 border-b border-slate-200/60">
+            <x-ui.back-button href="{{ route('produits.index') }}" label="Retour" />
+            <div class="min-w-0 flex-1">
+                <h1 class="text-base sm:text-2xl font-extrabold text-slate-900 tracking-tight truncate">Nouveau produit</h1>
                 <p class="hidden sm:block text-xs text-slate-500 mt-0.5">Définir les informations du produit, son unité de base et ses unités déclinaisons.</p>
             </div>
         </div>
@@ -185,7 +185,7 @@
                     </template>
 
                     <template x-for="(unit, index) in units" :key="index">
-                        <div class="p-4 bg-slate-50/80 rounded-2xl border border-slate-200 space-y-3 relative">
+                        <div class="p-3 sm:p-4 lg:p-5 bg-slate-50/80 rounded-2xl border border-slate-200 space-y-3.5 relative">
                             <div class="flex items-center justify-between border-b border-slate-200 pb-2">
                                 <span class="text-xs font-bold text-slate-700 uppercase" x-text="'Unité #' + (index + 1)"></span>
                                 <button type="button" @click="removeUnit(index)" class="text-red-600 hover:text-red-800 text-xs font-medium inline-flex items-center gap-1">
@@ -197,7 +197,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                                 <!-- Nom -->
                                 <div>
-                                    <label class="block text-xs font-medium text-slate-700 mb-1">Nom du format *</label>
+                                    <label class="block text-xs font-medium text-slate-700 mb-1">Nom du format <span class="text-red-500">*</span></label>
                                     <input type="text"
                                            :name="'additional_units[' + index + '][name]'"
                                            x-model="unit.name"
@@ -208,7 +208,7 @@
 
                                 <!-- Équivalence unité de base -->
                                 <div>
-                                    <label class="block text-xs font-medium text-slate-700 mb-1">Équivalence (en base) *</label>
+                                    <label class="block text-xs font-medium text-slate-700 mb-1">Équivalence (en base) <span class="text-red-500">*</span></label>
                                     <input type="number"
                                            step="0.0001"
                                            min="0.0001"
@@ -220,7 +220,7 @@
 
                                 <!-- Prix de vente -->
                                 <div>
-                                    <label class="block text-xs font-medium text-slate-700 mb-1">Prix de vente (FCFA) *</label>
+                                    <label class="block text-xs font-medium text-slate-700 mb-1">Prix de vente (FCFA) <span class="text-red-500">*</span></label>
                                     <input type="number"
                                            step="1"
                                            min="0"
@@ -232,7 +232,7 @@
 
                                 <!-- Seuil alerte -->
                                 <div>
-                                    <label class="block text-xs font-medium text-slate-700 mb-1">Seuil alerte *</label>
+                                    <label class="block text-xs font-medium text-slate-700 mb-1">Seuil alerte <span class="text-red-500">*</span></label>
                                     <input type="number"
                                            step="0.01"
                                            min="0"

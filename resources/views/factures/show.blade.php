@@ -1,30 +1,27 @@
 <x-layouts.app title="Facture {{ $invoice->invoice_number }}">
     <x-slot name="header">
-        <div class="flex flex-col sm:flex-row items-center justify-between text-center sm:text-left gap-4">
-            <div class="flex flex-col sm:flex-row items-center gap-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-200/60">
+            <div class="flex items-center gap-2.5 min-w-0">
                 <x-ui.back-button href="{{ route('factures.index') }}" label="Retour" />
-                <div>
-                    <div class="flex items-center justify-center sm:justify-start gap-2">
-                        <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Facture {{ $invoice->invoice_number }}</h1>
+                <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h1 class="text-base sm:text-2xl font-extrabold text-slate-900 tracking-tight truncate">Facture {{ $invoice->invoice_number }}</h1>
                         <x-ui.badge :color="$invoice->status->badgeColor()">
                             {{ $invoice->status->label() }}
                         </x-ui.badge>
                     </div>
-                    <p class="text-xs text-slate-500 mt-0.5">
-                        Émise le {{ $invoice->invoice_date->format('d/m/Y à H:i') }} par <strong class="text-slate-700">{{ $invoice->createdBy->name }}</strong>
-                    </p>
                 </div>
             </div>
 
             <!-- Header Action Buttons -->
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-2 w-full sm:w-auto [&>a]:w-full [&>a]:sm:w-auto [&>button]:w-full [&>button]:sm:w-auto">
+            <div class="flex flex-col sm:flex-row items-center justify-end gap-2 w-full sm:w-auto [&>a]:w-full [&>a]:sm:w-auto [&>button]:w-full [&>button]:sm:w-auto">
                 @if($invoice->remaining_amount > 0)
                     <x-ui.button href="{{ route('paiements.create', $invoice) }}" variant="primary" icon="banknotes" size="sm" title="Saisir un règlement pour cette facture" class="w-full sm:w-auto">
                         Régler ({{ number_format($invoice->remaining_amount, 0, ',', ' ') }} FCFA)
                     </x-ui.button>
                 @endif
 
-                <button onclick="window.print()" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-700 text-xs font-semibold hover:bg-slate-50 transition shadow-2xs cursor-pointer" title="Imprimer la facture">
+                <button onclick="window.print()" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-700 text-xs sm:text-sm font-semibold hover:bg-slate-50 transition shadow-2xs cursor-pointer" title="Imprimer la facture">
                     <x-heroicon-o-printer class="w-4 h-4 text-slate-600" />
                     <span>Imprimer</span>
                 </button>
@@ -41,7 +38,7 @@
     </x-slot>
 
     <!-- Printable Corporate Invoice Container -->
-    <div class="max-w-4xl mx-auto space-y-6">
+    <div class="max-w-5xl mx-auto space-y-6">
         <x-ui.card class="p-6 sm:p-10 bg-white shadow-sm border border-slate-200 rounded-3xl" id="printable-area">
 
             <!-- Corporate Header & Brand -->
@@ -59,11 +56,11 @@
                 </div>
 
                 <div class="sm:text-right bg-slate-50 p-4 rounded-2xl border border-slate-200/80 shrink-0 w-full sm:w-auto">
-                    <span class="inline-block text-[11px] font-bold uppercase tracking-widest text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full mb-1">
+                    <span class="inline-block text-xs font-bold uppercase tracking-widest text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full mb-1">
                         FACTURE OFFICIELLE
                     </span>
                     <h2 class="text-lg font-mono font-extrabold text-slate-900 leading-tight">N° {{ $invoice->invoice_number }}</h2>
-                    <p class="text-xs text-slate-500 mt-1">
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1">
                         Date: <strong class="text-slate-800">{{ $invoice->invoice_date->format('d/m/Y H:i') }}</strong>
                     </p>
                 </div>
@@ -75,8 +72,8 @@
                 <div class="p-4 bg-slate-50/80 rounded-2xl border border-slate-100 space-y-1">
                     <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Émetteur / Vendeur</p>
                     <p class="font-extrabold text-slate-900">MON-ACTIVITÉ SARL</p>
-                    <p class="text-slate-600 text-xs">Vendeur / Caissier : <strong class="text-slate-800">{{ $invoice->createdBy->name }}</strong></p>
-                    <p class="text-slate-500 text-xs">Email : {{ $invoice->createdBy->email }}</p>
+                    <p class="text-slate-600 text-xs sm:text-sm">Vendeur / Caissier : <strong class="text-slate-800">{{ $invoice->createdBy->name }}</strong></p>
+                    <p class="text-slate-500 text-xs sm:text-sm">Email : {{ $invoice->createdBy->email }}</p>
                 </div>
 
                 <!-- Customer Card -->
@@ -86,7 +83,7 @@
                         {{ $invoice->customer?->name ?? 'Client de passage (Comptoir)' }}
                     </p>
                     @if($invoice->customer)
-                        <div class="text-xs text-slate-600 space-y-0.5">
+                        <div class="text-xs sm:text-sm text-slate-600 space-y-0.5">
                             @if($invoice->customer->type === 'entreprise')
                                 <p><span class="font-semibold text-emerald-800">Entreprise</span> &bull; Contact: {{ $invoice->customer->contact_person ?? '-' }}</p>
                             @else
@@ -100,7 +97,7 @@
                                 <p>Adresse : {{ $invoice->customer->address }}</p>
                             @endif
                             @if($invoice->customer->type === 'entreprise' && $invoice->customer->ifu)
-                                <p class="font-mono text-xs">IFU : {{ $invoice->customer->ifu }}</p>
+                                <p class="font-mono text-xs sm:text-sm">IFU : {{ $invoice->customer->ifu }}</p>
                             @endif
                         </div>
                     @else
@@ -111,30 +108,30 @@
 
             <!-- Line Items Table -->
             <div class="overflow-x-auto mb-6">
-                <table class="w-full text-left text-xs sm:text-sm">
-                    <thead class="bg-slate-900 text-white font-bold uppercase text-[10px] sm:text-xs tracking-wider">
+                <table class="w-full text-left text-xs sm:text-sm min-w-[600px]">
+                    <thead class="bg-slate-900 text-white font-bold uppercase text-xs tracking-wider">
                         <tr>
-                            <th class="py-3 px-4 rounded-l-xl">#</th>
-                            <th class="py-3 px-4">Désignation du Produit</th>
-                            <th class="py-3 px-4">Conditionnement</th>
-                            <th class="py-3 px-4 text-right">Qté</th>
-                            <th class="py-3 px-4 text-right">P.U. (FCFA)</th>
-                            <th class="py-3 px-4 text-right rounded-r-xl">Total (FCFA)</th>
+                            <th class="py-3.5 px-4 rounded-l-xl whitespace-nowrap">#</th>
+                            <th class="py-3.5 px-4 whitespace-nowrap">Désignation du Produit</th>
+                            <th class="py-3.5 px-4 whitespace-nowrap">Conditionnement</th>
+                            <th class="py-3.5 px-4 text-right whitespace-nowrap">Qté</th>
+                            <th class="py-3.5 px-4 text-right whitespace-nowrap">P.U. (FCFA)</th>
+                            <th class="py-3.5 px-4 text-right rounded-r-xl whitespace-nowrap">Total (FCFA)</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 border-b border-slate-200">
                         @foreach($invoice->lines as $index => $line)
                             <tr class="hover:bg-slate-50/80 transition">
-                                <td class="py-3.5 px-4 font-mono text-slate-400 text-xs">{{ $index + 1 }}</td>
-                                <td class="py-3.5 px-4">
+                                <td class="py-3.5 px-4 font-mono text-slate-400 text-xs whitespace-nowrap">{{ $index + 1 }}</td>
+                                <td class="py-3.5 px-4 whitespace-nowrap">
                                     <div class="font-bold text-slate-900">{{ $line->product->name }}</div>
                                     @if($line->discount_reason)
-                                        <div class="text-xs text-amber-800 bg-amber-50 inline-block px-2 py-0.5 rounded border border-amber-200 mt-1">
-                                            Motif remise/écart : <strong>{{ $line->discount_reason }}</strong>
+                                        <div class="text-xs text-amber-800 bg-amber-50 inline-block px-2 py-0.5 rounded border border-amber-200 mt-1 font-semibold">
+                                            Motif remise/écart : {{ $line->discount_reason }}
                                         </div>
                                     @endif
                                 </td>
-                                <td class="py-3.5 px-4 text-slate-700 font-medium">
+                                <td class="py-3.5 px-4 text-slate-700 font-medium whitespace-nowrap">
                                     {{ $line->stockUnit->name }}
                                 </td>
                                 <td class="py-3.5 px-4 text-right font-extrabold text-slate-900 whitespace-nowrap">
@@ -154,10 +151,10 @@
 
             <!-- Financial Summary Box -->
             <div class="flex flex-col sm:flex-row justify-between items-start gap-6 mb-8 pt-2">
-                <div class="text-xs text-slate-500 space-y-2 max-w-sm">
-                    <p class="font-bold text-slate-700 uppercase tracking-wider text-[10px]">Conditions de règlement</p>
+                <div class="text-xs sm:text-sm text-slate-500 space-y-2 max-w-sm">
+                    <p class="font-bold text-slate-700 uppercase tracking-wider text-xs">Conditions de règlement</p>
                     <p>Paiement cash à la livraison ou selon échéances convenues. Aucun escompte accordé pour paiement anticipé.</p>
-                    <p class="text-[11px] text-slate-400 italic">Document officiel reconstruit en temps réel à partir du registre immuable des factures.</p>
+                    <p class="text-xs text-slate-400 italic">Document officiel reconstruit en temps réel à partir du registre immuable des factures.</p>
                 </div>
 
                 <div class="w-full sm:w-80 bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2.5 text-xs sm:text-sm">
@@ -183,7 +180,7 @@
                         <span class="font-bold text-emerald-600">{{ number_format($invoice->paid_amount, 0, ',', ' ') }} FCFA</span>
                     </div>
 
-                    <div class="flex justify-between text-sm font-extrabold pt-2 border-t border-slate-200/80 p-2 rounded-xl {{ $invoice->remaining_amount > 0 ? 'bg-amber-100 text-amber-900' : 'bg-emerald-100 text-emerald-900' }}">
+                    <div class="flex justify-between text-sm sm:text-base font-extrabold pt-2 border-t border-slate-200/80 p-2.5 rounded-xl {{ $invoice->remaining_amount > 0 ? 'bg-amber-100 text-amber-900' : 'bg-emerald-100 text-emerald-900' }}">
                         <span>SOLDE RESTANT</span>
                         <span>{{ number_format($invoice->remaining_amount, 0, ',', ' ') }} FCFA</span>
                     </div>
@@ -191,38 +188,38 @@
             </div>
 
             <!-- Footer Message -->
-            <div class="border-t border-slate-200 pt-6 text-center text-xs text-slate-400 space-y-1">
+            <div class="border-t border-slate-200 pt-6 text-center text-xs sm:text-sm text-slate-400 space-y-1">
                 <p class="font-bold text-slate-600">Merci de votre confiance et à bientôt !</p>
-                <p class="text-[11px]">Mon-Activité SARL — Système de Gestion Commerciale & Traçabilité</p>
+                <p class="text-xs">Mon-Activité SARL — Système de Gestion Commerciale & Traçabilité</p>
             </div>
         </x-ui.card>
 
         <!-- Payments History Block -->
         @if($invoice->payments->count() > 0)
             <x-ui.card class="p-6 rounded-3xl">
-                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center gap-2">
+                <h3 class="text-sm sm:text-base font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center gap-2">
                     <x-heroicon-o-banknotes class="w-5 h-5 text-emerald-600" />
                     <span>Historique des règlements enregistrés pour cette facture</span>
                 </h3>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs sm:text-sm">
-                        <thead class="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] border-b border-slate-100">
+                    <table class="w-full text-left text-xs sm:text-sm min-w-[550px]">
+                        <thead class="bg-slate-50 text-slate-600 font-bold uppercase text-xs border-b border-slate-100">
                             <tr>
-                                <th class="py-2.5 px-3">Date</th>
-                                <th class="py-2.5 px-3">Mode</th>
-                                <th class="py-2.5 px-3">Référence</th>
-                                <th class="py-2.5 px-3 text-right">Montant Réglé</th>
-                                <th class="py-2.5 px-3">Opérateur</th>
+                                <th class="py-2.5 px-3 whitespace-nowrap">Date</th>
+                                <th class="py-2.5 px-3 whitespace-nowrap">Mode</th>
+                                <th class="py-2.5 px-3 whitespace-nowrap">Référence</th>
+                                <th class="py-2.5 px-3 text-right whitespace-nowrap">Montant Réglé</th>
+                                <th class="py-2.5 px-3 whitespace-nowrap">Opérateur</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
                             @foreach($invoice->payments as $payment)
                                 <tr>
-                                    <td class="py-2.5 px-3 text-slate-700 font-medium">{{ $payment->payment_date->format('d/m/Y H:i') }}</td>
-                                    <td class="py-2.5 px-3"><x-ui.badge color="sky">{{ $payment->payment_method }}</x-ui.badge></td>
-                                    <td class="py-2.5 px-3 text-slate-500 font-mono text-xs">{{ $payment->reference ?: '-' }}</td>
-                                    <td class="py-2.5 px-3 text-right font-extrabold text-emerald-600">+ {{ number_format($payment->amount, 0, ',', ' ') }} FCFA</td>
-                                    <td class="py-2.5 px-3 text-slate-600">{{ $payment->createdBy->name }}</td>
+                                    <td class="py-2.5 px-3 text-slate-700 font-medium whitespace-nowrap">{{ $payment->payment_date->format('d/m/Y H:i') }}</td>
+                                    <td class="py-2.5 px-3 whitespace-nowrap"><x-ui.badge color="sky">{{ $payment->payment_method }}</x-ui.badge></td>
+                                    <td class="py-2.5 px-3 text-slate-500 font-mono text-xs whitespace-nowrap">{{ $payment->reference ?: '-' }}</td>
+                                    <td class="py-2.5 px-3 text-right font-extrabold text-emerald-600 whitespace-nowrap">+ {{ number_format($payment->amount, 0, ',', ' ') }} FCFA</td>
+                                    <td class="py-2.5 px-3 text-slate-600 whitespace-nowrap">{{ $payment->createdBy->name }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

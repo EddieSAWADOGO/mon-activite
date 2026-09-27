@@ -20,8 +20,12 @@ class CustomerReturnService
     public function recordReturn(array $data, User $user): CustomerReturn
     {
         $dateStr = now()->format('Ymd');
-        $random = str_pad((string) random_int(1, 9999), 4, '0', STR_PAD_LEFT);
-        $returnNumber = "RET-{$dateStr}-{$random}";
+        $count = CustomerReturn::whereDate('created_at', now()->today())->count() + 1;
+        $returnNumber = sprintf('RET-%s-%04d', $dateStr, $count);
+        while (CustomerReturn::where('return_number', $returnNumber)->exists()) {
+            $count++;
+            $returnNumber = sprintf('RET-%s-%04d', $dateStr, $count);
+        }
 
         return CustomerReturn::create([
             'return_number' => $returnNumber,

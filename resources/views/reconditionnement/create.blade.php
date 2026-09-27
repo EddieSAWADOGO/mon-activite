@@ -1,16 +1,18 @@
 <x-layouts.app title="Nouveau reconditionnement">
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h1 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <x-heroicon-o-arrows-right-left class="w-6 h-6 text-emerald-600" />
-                Nouveau reconditionnement d'unités
-            </h1>
-            <x-ui.back-button href="{{ route('reconditionnement.index') }}" label="Retour à la liste" />
+        <div class="flex items-center gap-2.5 pb-2 border-b border-slate-200/60">
+            <x-ui.back-button href="{{ route('reconditionnement.index') }}" label="Retour" />
+            <div class="min-w-0 flex-1">
+                <h1 class="text-base sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2 truncate">
+                    <x-heroicon-o-arrows-right-left class="w-5 h-5 text-emerald-600 shrink-0" />
+                    <span class="truncate">Nouveau reconditionnement</span>
+                </h1>
+            </div>
         </div>
     </x-slot>
 
-    <div class="max-w-2xl mx-auto">
-        <x-ui.card x-data="{
+    <div class="max-w-4xl sm:max-w-5xl mx-auto">
+        <x-ui.card class="p-3 sm:p-6" x-data="{
             submitting: false,
             products: {{ json_encode($products) }},
             selectedProductId: '{{ old('product_id') }}',
@@ -38,11 +40,11 @@
                 return u ? (parseFloat(this.targetQty || 0) * parseFloat(u.base_unit_equivalent)) : 0;
             }
         }" x-init="if(selectedProductId) updateUnits()">
-            <form action="{{ route('reconditionnement.store') }}" method="POST" @submit="submitting = true" class="space-y-5">
+            <form action="{{ route('reconditionnement.store') }}" method="POST" @submit="submitting = true" class="space-y-3.5 sm:space-y-4">
                 @csrf
 
                 <div>
-                    <label for="product_id" class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
+                    <label for="product_id" class="block text-xs font-semibold text-slate-700 mb-1">
                         Produit concerné <span class="text-red-500">*</span>
                     </label>
                     <select name="product_id"
@@ -50,7 +52,7 @@
                             x-model="selectedProductId"
                             @change="updateUnits()"
                             required
-                            class="w-full rounded-xl border border-slate-200 bg-white py-2.5 px-3.5 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
+                            class="w-full rounded-xl border border-slate-200 bg-white py-2 px-3 sm:py-2.5 sm:px-3.5 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
                         <option value="">-- Sélectionner un produit --</option>
                         <template x-for="p in products" :key="p.id">
                             <option :value="p.id" x-text="p.name"></option>
@@ -62,14 +64,14 @@
                 </div>
 
                 <!-- Unité Source (Prélèvement) -->
-                <div class="bg-red-50/50 p-4 rounded-2xl border border-red-100 space-y-3">
+                <div class="bg-red-50/50 p-3 sm:p-4 lg:p-5 rounded-2xl border border-red-100 space-y-3">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-red-700 flex items-center gap-1.5">
                         <x-heroicon-o-arrow-up-tray class="w-4 h-4 text-red-600" />
                         Source (Unité prélevée / réduite)
                     </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                            <label for="source_stock_unit_id" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                            <label for="source_stock_unit_id" class="block text-xs font-semibold text-slate-700 mb-1">
                                 Unité de départ <span class="text-red-500">*</span>
                             </label>
                             <select name="source_stock_unit_id"
@@ -88,7 +90,7 @@
                         </div>
 
                         <div>
-                            <label for="source_quantity" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                            <label for="source_quantity" class="block text-xs font-semibold text-slate-700 mb-1">
                                 Quantité à prélever <span class="text-red-500">*</span>
                             </label>
                             <input type="number"
@@ -107,14 +109,14 @@
                 </div>
 
                 <!-- Unité Cible (Destination) -->
-                <div class="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100 space-y-3">
+                <div class="bg-emerald-50/50 p-3 sm:p-4 lg:p-5 rounded-2xl border border-emerald-100 space-y-3">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-700 flex items-center gap-1.5">
                         <x-heroicon-o-arrow-down-tray class="w-4 h-4 text-emerald-600" />
                         Cible (Unité créée / augmentée)
                     </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                            <label for="target_stock_unit_id" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                            <label for="target_stock_unit_id" class="block text-xs font-semibold text-slate-700 mb-1">
                                 Unité d'arrivée <span class="text-red-500">*</span>
                             </label>
                             <select name="target_stock_unit_id"
@@ -133,7 +135,7 @@
                         </div>
 
                         <div>
-                            <label for="target_quantity" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                            <label for="target_quantity" class="block text-xs font-semibold text-slate-700 mb-1">
                                 Quantité à obtenir <span class="text-red-500">*</span>
                             </label>
                             <input type="number"
@@ -152,11 +154,11 @@
                 </div>
 
                 <!-- Live Equivalence Verification Banner -->
-                <div x-show="sourceUnitId && targetUnitId" class="p-3 rounded-2xl text-xs"
+                <div x-show="sourceUnitId && targetUnitId" class="p-3 sm:p-4 rounded-2xl text-xs"
                      :class="Math.abs(getSourceBaseTotal() - getTargetBaseTotal()) < 0.001 ? 'bg-sky-50 border border-sky-200 text-sky-900' : 'bg-amber-50 border border-amber-200 text-amber-900'">
-                    <div class="flex items-center justify-between font-medium">
-                        <span>Équivalence Source : <strong x-text="getSourceBaseTotal()"></strong> unités de base</span>
-                        <span>Équivalence Cible : <strong x-text="getTargetBaseTotal()"></strong> unités de base</span>
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-1 font-medium">
+                        <span>Source : <strong x-text="getSourceBaseTotal()"></strong> unités de base</span>
+                        <span>Cible : <strong x-text="getTargetBaseTotal()"></strong> unités de base</span>
                     </div>
                     <div class="mt-1 text-[11px]" x-show="Math.abs(getSourceBaseTotal() - getTargetBaseTotal()) >= 0.001">
                         <span class="font-bold text-amber-700">Attention : Le volume prélevé et le volume obtenu doivent être égaux.</span>
@@ -164,7 +166,7 @@
                 </div>
 
                 <div>
-                    <label for="repackaging_date" class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
+                    <label for="repackaging_date" class="block text-xs font-semibold text-slate-700 mb-1">
                         Date de l'opération <span class="text-red-500">*</span>
                     </label>
                     <input type="datetime-local"
@@ -172,20 +174,20 @@
                            id="repackaging_date"
                            value="{{ old('repackaging_date', now()->format('Y-m-d\TH:i')) }}"
                            required
-                           class="w-full rounded-xl border border-slate-200 bg-white py-2.5 px-3.5 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
+                           class="w-full rounded-xl border border-slate-200 bg-white py-2 px-3 sm:py-2.5 sm:px-3.5 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
                     @error('repackaging_date')
                         <p class="mt-1 text-xs text-red-600 flex items-center gap-1"><x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" /> {{ $message }}</p>
                     @enderror
                 </div>
 
                 <div>
-                    <label for="notes" class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
+                    <label for="notes" class="block text-xs font-semibold text-slate-700 mb-1">
                         Remarques (Optionnel)
                     </label>
-                    <textarea name="notes" id="notes" rows="2" placeholder="Ex: Regroupement de 12 vracs en 1 carton..." class="w-full rounded-xl border border-slate-200 bg-white py-2.5 px-3.5 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">{{ old('notes') }}</textarea>
+                    <textarea name="notes" id="notes" rows="2" placeholder="Ex: Regroupement de 12 vracs en 1 carton..." class="w-full rounded-xl border border-slate-200 bg-white py-2 px-3 sm:py-2.5 sm:px-3.5 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">{{ old('notes') }}</textarea>
                 </div>
 
-                <div class="pt-4 border-t border-slate-100 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 [&>a]:w-full [&>a]:sm:w-auto [&>button]:w-full [&>button]:sm:w-auto">
+                <div class="pt-3 border-t border-slate-100 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 [&>a]:w-full [&>a]:sm:w-auto [&>button]:w-full [&>button]:sm:w-auto text-center">
                     <a href="{{ route('reconditionnement.index') }}">
                         <x-ui.button type="button" variant="outline">
                             Annuler

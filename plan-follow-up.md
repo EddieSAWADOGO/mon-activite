@@ -208,3 +208,255 @@ Mise en place de l'**alignement vertical et du centrage systématique des bouton
   - Centrage des titres, sous-titres et boutons d'action dans les en-têtes de pages sur mobile (`text-center sm:text-left flex-col sm:flex-row items-center justify-center`).
 - **Tests Fonctionnels** :
   - Exécution de `php artisan test` : **100% Vert (53 tests réussis, 169 assertions, 0 échecs)**.
+
+---
+
+## Session 14 — Optimisation des Marges Intérieures des Conteneurs Mobile (Éléments Rapprochés des Bords)
+
+### 1. Tâche réalisée
+Rapprochement des éléments (champs de formulaire, boutons, cartes enfants, blocs de données) des bords de leurs conteneurs sur mobile en réduisant les rembourrages intérieurs (*paddings*) inutiles pour maximiser la surface d'interaction tactile.
+
+### 2. Corrections et Améliorations apportées
+- **Réduction des Paddings des Cartes & Conteneurs (`p-3 sm:p-6` / `p-2.5 sm:p-6`)** :
+  - Ajustement des rembourrages intérieurs des cartes et conteneurs de formulaires (`<x-ui.card>`) à `p-3 sm:p-6` sur petit écran.
+  - Les champs de saisie et boutons s'étendent plus près des bordures du conteneur en mode téléphone, exploitant au maximum la largeur de l'écran sans espace vide inutile.
+- **Resserrement des Espacements de Formulaires (`space-y-3.5 sm:space-y-4`)** :
+  - Rapprochement des champs et blocs d'actions dans les formulaires (Ventes, Achats, Produits, Clients, Fournisseurs, Règlements, Pertes, Retours, Reconditionnement, Utilisateurs).
+- **Rembourrage Général du Layout (`p-2.5 sm:p-6 lg:p-8`)** :
+  - Réduction de la marge périphérique du conteneur `<main>` sur mobile afin que les cartes s'approchent des bords de l'écran de téléphone tout en restant parfaitement alignées.
+- **Validation des Tests Fonctionnels** :
+  - Exécution de `php artisan test` : **100% Vert (53 tests réussis, 169 assertions, 0 échecs)**.
+
+---
+
+## Session 15 — Centrage Strict du Loader de Connexion & Élargissement des Champs de Formulaires
+
+### 1. Tâche réalisée
+Centrage parfait du loader lors de la connexion (modal overlay fixe 100vw/100vh centré au milieu absolu de l'écran et loader intégré dans le bouton) et élargissement de la largeur des champs de formulaires (`w-full`) avec conteneurs ajustés (`max-w-3xl sm:max-w-4xl` / `max-w-5xl`) pour rapprocher les champs des bords des cartes/conteneurs sur mobile et grands écrans.
+
+### 2. Corrections et Améliorations apportées
+- **Centrage Strict du Loader de Connexion (`auth/login.blade.php`)** :
+  - Modal overlay de chargement avec `position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999; display: flex; align-items: center; justify-content: center;` garantissant un centrage géométrique parfait au milieu de l'écran (et non en haut).
+  - Spinner SVG intégré au centre du bouton "Se connecter" pendant la soumission.
+  - Élargissement du conteneur de formulaire de connexion `.form-container` (`max-w: 440px`).
+- **Élargissement des Champs et Proximité des Conteneurs** :
+  - Ajustement des rembourrages de `<x-ui.card>` à `p-3 sm:p-4 lg:p-5`.
+  - Augmentation de la largeur maximale des cartes de formulaires (`max-w-2xl` → `max-w-3xl sm:max-w-4xl` ou `max-w-5xl` sur les Ventes, Achats, Produits, Clients, Fournisseurs, Utilisateurs, Règlements, Pertes, Retours, Reconditionnement).
+  - Les champs de saisie s'étendent pleinement (`w-full`) avec des marges réduites vers les bordures des conteneurs pour une expérience utilisateur et une saisie plus ergonomiques.
+- **Validation des Tests Fonctionnels** :
+  - Exécution de `php artisan test` : **100% Vert (53 tests réussis, 169 assertions, 0 échecs)**.
+
+---
+
+## Session 16 — Unification des En-têtes Mobile, Boutons d'Ajout & Filtre Stock Bas Harmonisé
+
+### 1. Tâche réalisée
+Refonte et harmonisation des en-têtes de pages avec bouton de retour sur mobile pour supprimer tout chevauchement ou saut de ligne inesthétique, réagencement des boutons "Ajouter une ligne" en mode mobile, et création d'un filtre de stock bas unifié et moderne sur le catalogue et la gestion des stocks.
+
+### 2. Corrections et Améliorations apportées
+- **En-têtes de Pages & Bouton Retour Mobile Fluidifiés** :
+  - Alignement horizontal natif du bouton retour (`<x-ui.back-button>`) directement sur la même ligne que les titres de page (`flex items-center gap-2.5 min-w-0 flex-1`) avec gestion de la troncation (`truncate`).
+  - Suppression des retours à la ligne inesthétiques ("le texte revient a aligne") et des télescopages sur petits écrans d'écrans tactiles.
+- **Réagencement des Boutons d'Ajout sur Mobile ("Ajouter une ligne")** :
+  - Passage en disposition empilée responsive (`flex flex-col sm:flex-row sm:items-center justify-between gap-2.5`) sur les blocs d'ajout de lignes de Vente (`ventes/create`), d'Achat (`achats/create`), et de formats de Produit (`produits/create` & `edit`).
+  - Sur mobile, le bouton s'étend sur toute la largeur (`w-full justify-center`) sous le titre de section, évitant tout débordement hors du conteneur.
+- **Unification de la Case à Coucher / Filtre "Stock Bas"** :
+  - Création d'un composant de filtrage "Stock bas uniquement" identique, réactif et élégant dans `produits/index.blade.php` et `stock/index.blade.php`.
+  - Intégration de la soumission automatique au changement (`onchange="this.form.submit()"`), avec badge/fond ambré subtil au clic et dimensions strictement alignées avec les autres champs de recherche et sélecteurs de statut.
+- **Proximité des Champs & Conteneurs Maximisée** :
+  - Réduction des rembourrages de `<x-ui.card>` à `p-2.5 sm:p-4 lg:p-5` et augmentation de la largeur maximale des conteneurs à `max-w-6xl` pour une occupation optimale de l'écran.
+- **Validation Fonctionnelle** :
+  - Exécution de `php artisan test` : **100% Vert (53 tests réussis, 169 assertions, 0 échecs)**.
+
+---
+
+## Session 17 — Standardisation des Étoiles Rouges sur l'Ensemble des Champs Obligatoires
+
+### 1. Tâche réalisée
+Vérification exhaustive de la logique de validation backend (Form Requests / Controllers) pour chaque domaine de l'application et harmonisation front-end de tous les champs de saisie obligatoires avec l'affichage systématique et clair d'une étoile rouge (`<span class="text-red-500">*</span>`) devant/à la suite de chaque libellé.
+
+### 2. Corrections et Améliorations apportées
+- **Audit des Règles de Validation Backend & Vue Front-End** :
+  - **Connexion (`auth/login.blade.php`)** : Ajout de l'étoile rouge sur `Adresse e-mail` et `Mot de passe`.
+  - **Clients (`clients/create.blade.php` & `clients/edit.blade.php`)** : Harmonisation avec `<span class="text-red-500">*</span>` sur `Type de client` et `Raison Sociale` / `Nom et Prénom`.
+  - **Fournisseurs (`fournisseurs/edit.blade.php`)** : Ajout de l'étoile rouge sur le champ requis `Statut`.
+  - **Produits (`produits/create.blade.php` & `produits/edit.blade.php`)** : Ajout de l'étoile rouge sur tous les champs de formats d'unités obligatoires (`Nom du format`, `Équivalence`, `Prix de vente`, `Seuil alerte`, `Statut catalogue`).
+  - **Ventes (`ventes/create.blade.php`)** : Ajout de l'étoile rouge sur `Date et Heure`, `Produit`, `Unité`, `Quantité`, `Prix Unitaire Facturé`, `Motif de l'écart / remise`, `Unité source à ouvrir` (cassure) et `Montant Payé immédiatement`.
+  - **Utilisateurs (`utilisateurs/create.blade.php`, `edit.blade.php` & `index.blade.php`)** : Standardisation de l'étoile rouge sur `Nom complet`, `Adresse Email`, `Mot de passe`, `Rôle d'accès` et la réinitialisation de mot de passe.
+- **Validation de la Suite de Tests** :
+  - Exécution de `php artisan test` : **100% Vert (53 tests réussis, 169 assertions, 0 échecs)**.
+
+---
+
+## Session 19 — Refonte des En-têtes Mobile des Pages Historique (Alignement Vertical & Centrage du Bouton Retour)
+
+### 1. Tâche réalisée
+Refonte complète des en-têtes des 6 pages du module Historique (`historique/index.blade.php`, `sales.blade.php`, `purchases.blade.php`, `stock-at-date.blade.php`, `top-products.blade.php`, `financial-overview.blade.php`) pour éliminer tout téléscopage, écrasement ou chevauchement entre le bouton de retour et les titres sur écran mobile (`< sm`).
+
+### 2. Corrections et Améliorations apportées
+- **Standardisation du Layout d'En-tête Mobile** :
+  - Alignement du bouton `<x-ui.back-button>` directement à gauche, sur la même ligne horizontale que le titre de la page avec disposition flex centrée verticalement (`flex items-center gap-2.5 pb-2 border-b border-slate-200/60`).
+  - Utilisation du conteneur de titre extensible `min-w-0 flex-1` avec suppression de la troncation forcée sur petit écran pour laisser le titre respirer.
+  - Libellé du bouton raccourci à `Retour` pour un encombrement minimal tout en conservant une zone de clic tactile optimale.
+  - Rendu parfaitement fluide et aligné verticalement (`items-center`), éliminant définitivement les collisions visuelles sur petit écran.
+- **Validation Fonctionnelle** :
+  - Exécution de `php artisan test` : **100% Vert (53 tests réussis, 169 assertions, 0 échecs)**.
+
+
+---
+
+## Session 18 — Optimisation Mobile des Cartes Imbriquées, Champs Conditionnels & Barres de Filtres
+
+### 1. Tâche réalisée
+Optimisation globale de l'ergonomie mobile (`< sm`) pour les cartes imbriquées (cartes enfants contenues dans des cartes parents), aération et mise en page fluide des champs conditionnels/d'exception (ex: motif d'écart de prix, cassure de stock, alertes), et refonte des barres de filtres et boutons de recherche sur l'ensemble des modules.
+
+### 2. Corrections et Améliorations apportées
+- **Aération des Cartes Imbriquées ("Cards inside Cards")** :
+  - Ajustement du rembourrage des sous-cartes (lignes de vente `ventes/create`, lignes d'achat `achats/create`, unités additionnelles `produits/create` & `edit`, blocs source/cible `reconditionnement/create`) à `p-3 sm:p-4 lg:p-5`.
+  - Gain de largeur horizontal net (+12px d'espace disponible sur petits écrans), éliminant les écrasements d'inputs et donnant de la respiration visuelle aux éléments enfants.
+- **Affichage Ergonomique des Champs Conditionnels / d'Exception** :
+  - **Motif d'écart / remise (`ventes/create.blade.php`)** : S'affiche en bloc distinct pleine largeur `w-full` avec contour ambré réactif et libellé clair.
+  - **Unité source de cassure (`ventes/create.blade.php`)** : Bloc alerte ambré pleine largeur `p-3 sm:p-4 rounded-2xl` avec menu déroulant étendu permettant la lecture complète des libellés de conditionnement.
+  - **Reconditionnement (`reconditionnement/create.blade.php`)** : Blocs Source (rouge) et Cible (émeraude) optimisés avec vérification d'équivalence en vrac responsive.
+- **Harmonisation des Barres de Filtres et Boutons sur Mobile** :
+  - Réagencement en grilles responsives (`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5`) sur toutes les pages de listes et d'historique (`achats/index`, `ventes/index`, `factures/index`, `stock/movements`, `historique/sales`, `historique/purchases`, `historique/stock-at-date`, `historique/top-products`).
+  - Alignement des sélecteurs de dates côte à côte en 2 colonnes (`grid grid-cols-2`) sur smartphone avec boutons "Filtrer" et "Effacer" occupant toute la largeur (`w-full sm:w-auto`).
+- **Validation de la Suite de Tests** :
+  - Exécution de `php artisan test` : **100% Vert (53 tests réussis, 169 assertions, 0 échecs)**.
+
+---
+
+## Session 19 — Refonte des En-têtes Mobile des Pages Historique (Alignement Vertical & Centrage du Bouton Retour)
+
+### 1. Tâche réalisée
+Refonte complète des en-têtes des 6 pages du module Historique (`historique/index.blade.php`, `sales.blade.php`, `purchases.blade.php`, `stock-at-date.blade.php`, `top-products.blade.php`, `financial-overview.blade.php`) pour éliminer tout téléscopage, écrasement ou chevauchement entre le bouton de retour et les titres sur écran mobile (`< sm`).
+
+### 2. Corrections et Améliorations apportées
+- **Standardisation du Layout d'En-tête Mobile** :
+  - Alignement du bouton `<x-ui.back-button>` directement à gauche, sur la même ligne horizontale que le titre de la page avec disposition flex centrée verticalement (`flex items-center gap-2.5 pb-2 border-b border-slate-200/60`).
+  - Utilisation du conteneur de titre extensible `min-w-0 flex-1` avec suppression de la troncation forcée sur petit écran pour laisser le titre respirer.
+  - Libellé du bouton raccourci à `Retour` pour un encombrement minimal tout en conservant une zone de clic tactile optimale.
+  - Rendu parfaitement fluide et aligné verticalement (`items-center`), éliminant définitivement les collisions visuelles sur petit écran.
+- **Validation Fonctionnelle** :
+  - Exécution de `php artisan test` : **100% Vert (53 tests réussis, 169 assertions, 0 échecs)**.
+
+---
+
+## Session 20 — Implémentation du Seeder de Démonstration XL & Population Massive de la Base de Données (40+ Éléments par Table)
+
+### 1. Tâche réalisée
+Mise à jour et exécution du seeder de données de démonstration massif (`Database\Seeders\DemoDataSeeder`) pour alimenter l'ensemble des tables de la base de données avec au minimum **40 éléments réels, cohérents et interconnectés par table**.
+
+### 2. Données et Volume par Table Générés
+- **`users` (40 utilisateurs)** : Super Admin (`superadmin@mon-activite.com`), Propriétaire Admin (`admin@mon-activite.com`), Caissier Principal (`cashier@mon-activite.com`) et 37 comptes d'agents/utilisateurs nommés avec rôles distribués (`agent1@mon-activite.com` à `agent37@mon-activite.com`). Mot de passe global : `password`.
+- **`suppliers` (40 fournisseurs)** : 40 sociétés, comptoirs et grossistes d'intrants et matériel agricole à travers le Bénin (Cotonou, Parakou, Porto-Novo, Bohicon, Natitingou, Kandi, Djougou, Lokossa, Ouidah, Malanville, etc.).
+- **`customers` (40 clients)** : 40 clients (coopératives, unions de producteurs, fermes avicoles/maraîchères, acheteurs individuels) avec coordonnées réelles, numéros IFU et adresses.
+- **`products` (40 produits)** : Catalogue exhaustif couvrant Fertilisants & Engrais (NPK, Urée, DAP, KCL, Compost), Herbicides (Glyphosate, Atrazine, 2,4-D, Paraquat, Nicosulfuron), Insecticides (Cyperméthrine, Deltaméthrine, Lambda-Cyhalothrine, Neem), Fongicides (Mancozèbe, Cuivre, Azoxystrobine), Semences certifiées (Maïs, Riz, Tomate, Piment, Gombo, Oignon, Soja) et Équipements/Outillage (Pulvérisateurs, Bottes, Gants, Masques, Tuyaux, Bâches, Sécateurs, Arrosoirs).
+- **`stock_units` (65+ unités de stock)** : Chaque produit dispose de son unité de base, et les produits à conditionnement multiple disposent d'unités d'emballage secondaires (Cartons, Tonnes, Sachets).
+- **`purchases` & `purchase_lines` (45 achats, 90+ lignes d'achat)** : Enregistrements d'approvisionnement massif auprès des fournisseurs avec dettes résiduelles et génération des mouvements d'entrée en stock.
+- **`repackagings` (40 reconditionnements)** : Déballages et conversions de conditionnements de gros en unités de détail avec équivalence stricte.
+- **`sales`, `sale_lines`, `invoices`, `invoice_lines` (50 ventes, 100+ lignes de vente, 50 factures immuables, 100+ lignes de facture)** : Transactions de vente réelles étalées sur les dernières semaines (comptant, créances partielles, crédits).
+- **`payments` (45 règlements)** : Encaissements de créances et acomptes via Espèces, Mobile Money (MTN MoMo) et Virements bancaires.
+- **`customer_returns` (40 retours clients)** : 20 retours réintégrés en stock, 15 retours déduits et mis au rebut (pertes), et 5 retours en attente.
+- **`losses` (40 pertes magasin)** : Déclarations d'avaries, fuites, sacs détrempés et produits périmés.
+- **`stock_movements` (330+ mouvements de stock)** : Traçabilité immuable automatique de tous les flux entrant/sortant.
+- **`stock_snapshots` (185+ clichés de stock)** : Photographies mensuelles automatiques des stocks sur 3 mois glissants.
+
+### 3. Fichiers créés ou modifiés
+- `database/seeders/DemoDataSeeder.php` (Enrichi)
+- `database/seeders/DatabaseSeeder.php` (Conservé)
+- `plan-follow-up.md` (Modifié)
+
+### 4. Tests et vérifications effectués
+- `php artisan migrate:fresh --seed` : Exécuté avec succès (0 erreur, 19 tables migrées et seeder exécuté en 19.1s).
+- `php artisan test` : **100% Vert (53 tests réussis, 169 assertions, 0 échecs)**.
+
+---
+
+## Session 21 — Correction du Loader de Connexion, Centrage Universel des Loaders, Boutons de Pagination & Défilement Horizontal des Tableaux
+
+### 1. Tâche réalisée
+Prise en compte globale des retours d'ergonomie et d'affichage : suppression du modal plein écran lors de la connexion au profit de l'animation intégrée dans le bouton, centrage géométrique absolu de l'indicateur de chargement global sur tous les écrans, correction des libellés de pagination (`Retour` et `Suivant`), et mise en place d'un défilement horizontal fluide (`overflow-x-auto whitespace-nowrap min-w-full`) sur l'ensemble des tableaux de listes pour supprimer tout chevauchement ou retour à la ligne forcé en mode mobile.
+
+### 2. Corrections et Améliorations apportées
+- **Bouton de Connexion & Loader d'Action (`auth/login.blade.php`)** :
+  - Suppression du modal overlay plein écran lors de la soumission du formulaire de connexion.
+  - Conservation uniquement du spinner animé et du texte réactif ("Connexion en cours...") directement à l'intérieur du bouton de connexion.
+- **Centrage Universel du Loader Global (`resources/views/layouts/app.blade.php` & `components/layouts/app.blade.php`)** :
+  - Modal overlay de chargement global configuré avec un centrage flex parfait (`fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm`).
+  - Exclusion de la soumission de connexion de l'overlay global pour éviter les doublons d'affichage.
+- **Libellés de Pagination Standardisés (`Retour` & `Suivant`)** :
+  - Création du fichier de langue `lang/fr/pagination.php` (`'previous' => 'Retour'`, `'next' => 'Suivant'`).
+  - Création des vues de pagination Tailwind dédiées (`resources/views/vendor/pagination/tailwind.blade.php`, `simple-tailwind.blade.php`) avec boutons tactiles "Retour" et "Suivant" sur desktop et mobile.
+- **Tableaux de Listes Scrollables Horizontalement sur Mobile** :
+  - Application systématique de la classe `whitespace-nowrap` sur l'ensemble des en-têtes `<th>` et cellules `<td>` des tableaux dans toutes les vues (`ventes/index`, `achats/index`, `factures/index`, `paiements/index`, `produits/index`, `stock/movements`, `retours/index`, `pertes/index`, `reconditionnement/index`, `utilisateurs/index`, `historique/sales`, `historique/purchases`, `historique/stock-at-date`, `historique/top-products`, `historique/financial-overview`).
+  - Sur smartphone, les éléments ne sont plus comprimés ni renvoyés à la ligne : les tableaux conservent leur structure originale et l'utilisateur peut défiler de gauche à droite en toute fluidité.
+
+### 3. Fichiers créés ou modifiés
+- `resources/views/auth/login.blade.php` (Modifié)
+- `resources/views/layouts/app.blade.php` & `components/layouts/app.blade.php` (Modifiés)
+- `lang/fr/pagination.php` (Créé)
+- `resources/views/vendor/pagination/tailwind.blade.php` & `simple-tailwind.blade.php` (Créés)
+- `resources/views/ventes/index.blade.php`, `achats/index.blade.php`, `factures/index.blade.php`, `paiements/index.blade.php`, `produits/index.blade.php`, `stock/movements.blade.php`, `retours/index.blade.php`, `pertes/index.blade.php`, `reconditionnement/index.blade.php`, `utilisateurs/index.blade.php`, `historique/*.blade.php` (Modifiés)
+
+### 4. Tests et vérifications effectués
+- `php artisan migrate:fresh --seed` : Exécuté avec succès (0 erreur).
+- `php artisan test` : **100% Vert (53 tests réussis, 169 assertions, 0 échecs)**.
+
+---
+
+## Session 22 — Correction des Balises Dupliquées (`ventes/index.blade.php` & `produits/show.blade.php`), Audit Blade & Nettoyage du Cache
+
+### 1. Tâche réalisée
+Résolution des erreurs `ParseError` sur les vues `ventes/index.blade.php` et `produits/show.blade.php` provoquées par des fermetures de balises en doublon (`</x-ui.button>` et `@endif`). Mise en place d'un test automatisé d'audit d'intégrité de toutes les vues Blade.
+
+### 2. Corrections apportées
+- Nettoyage des balises en doublon sur `resources/views/produits/show.blade.php` et `resources/views/ventes/index.blade.php`.
+- Création du test unitaire `tests/Unit/BladeViewsTest.php` qui vérifie automatiquement l'absence de fermetures en doublon ou d'erreurs d'imbrication Blade sur l'ensemble des templates du projet.
+- Exécution de `php artisan view:clear` pour purger les vues compilées en cache.
+- Validation intégrale de la suite de tests `php artisan test` : **100% Vert (54 tests réussis, 170 assertions)**.
+
+---
+
+## Session 23 — Agrandissement des Éléments, Typographie Plus Lisible & Tableaux Scrollables sur toutes les Vues
+
+### 1. Tâche réalisée
+Prise en compte des retours d'ergonomie visuelle : augmentation de la taille des polices de caractères et des éléments interactifs sur l'ensemble de l'application, élargissement des conteneurs principaux (`max-w-[1600px]`), et généralisation des tableaux avec défilement horizontal fluide (`overflow-x-auto whitespace-nowrap min-w-full`) sur TOUTES les vues de listes et de détails.
+
+### 2. Corrections apportées
+- **Augmentation Générale de la Typographie & des Éléments** :
+  - Mise à niveau des tailles de police dans la configuration Tailwind (`xs` = 14px, `sm` = 15.2px, `base` = 16.8px, `lg` = 19.2px, `xl` = 21.6px, `2xl` = 25.6px) dans `layouts/app.blade.php` et `components/layouts/app.blade.php`.
+  - Agrandissement des composants réutilisables : `<x-ui.badge>` (`text-xs sm:text-sm font-bold px-3 py-1`), `<x-ui.button>` (`text-xs sm:text-sm font-bold`), `<x-ui.card>` (`p-3.5 sm:p-5 lg:p-6`, titres `text-sm sm:text-lg font-extrabold`).
+  - Élargissement des marges des conteneurs de page à `max-w-[1600px]`.
+- **Généralisation des Tableaux sans Retours à la Ligne sur TOUTES les Vues** :
+  - Application systématique du conteneur `overflow-x-auto` avec `whitespace-nowrap` sur l'ensemble des tableaux de listes ET de détails (`ventes/show`, `factures/show`, `achats/show`, `produits/show`, `clients/show`, `fournisseurs/show`, `retours/show`, `pertes/show`, `reconditionnement/show`).
+  - Les lignes de tableaux ne sont plus comprimées ni renvoyées à la ligne : toutes les colonnes restent sur une seule ligne avec possibilité de faire défiler de gauche à droite sur écran mobile/tactile.
+- **Validation** :
+  - Exécution de `php artisan view:clear`.
+  - Suite de tests : `php artisan test` **100% Vert (54 tests réussis, 170 assertions)**.
+
+---
+
+## Session 24 — Gestion Sécurisée des Suppressions d'Utilisateurs & Prévention des Erreurs de Contrainte d'Intégrité (FK)
+
+### 1. Tâche réalisée
+Prise en compte de l'exception `QueryException` (FK Constraint Violation 1451) lors de la tentative de suppression d'un utilisateur possédant un historique d'opérations financières ou de stock (ventes, retours, pertes, mouvements).
+
+### 2. Améliorations apportées
+- **Sécurisation de la suppression dans `UserController::destroy`** :
+  - Interdiction explicite de la suppression de son propre compte connecté avec message d'erreur d'avertissement.
+  - Capture de l'exception d'intégrité référentielle en cas de présence de transactions associées.
+  - Désactivation automatique du compte (`is_active = false`) avec notification d'information au lieu d'une erreur 500 : *"L'utilisateur possède un historique d'opérations enregistrées. Son compte a été désactivé pour conserver la traçabilité."*
+  - Intégration du support des notifications `session('info')` et `session('warning')` dans le composant Toast.
+- **Validation** :
+  - Exécution de `php artisan test` : **100% Vert (54 tests réussis, 170 assertions)**.
+
+
+
+
+
+
+
+
+
+

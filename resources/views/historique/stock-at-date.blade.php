@@ -1,22 +1,27 @@
 <x-layouts.app title="Reconstitution du stock à une date passée">
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h1 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <x-heroicon-o-archive-box class="w-6 h-6 text-sky-600" />
-                Reconstitution du Stock à une Date Passée
-            </h1>
-            <x-ui.back-button href="{{ route('historique.index') }}" label="Retour à l'historique" />
+        <div class="flex items-center gap-2.5 pb-2 border-b border-slate-200/60">
+            <x-ui.back-button href="{{ route('historique.index') }}" label="Retour" />
+            <div class="min-w-0 flex-1">
+                <h1 class="text-base sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2 truncate">
+                    <x-heroicon-o-archive-box class="w-5 h-5 sm:w-6 sm:h-6 text-sky-600 shrink-0" />
+                    <span class="truncate">Reconstitution du Stock à une Date Passée</span>
+                </h1>
+                <p class="hidden sm:block text-xs text-slate-500 mt-0.5">
+                    Calcul récursif et rejouement de l'historique des mouvements de stock
+                </p>
+            </div>
         </div>
     </x-slot>
 
     <div class="space-y-6">
-        <x-ui.card class="p-4">
+        <x-ui.card class="p-3.5 sm:p-4">
             <form action="{{ route('historique.stock-at-date') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
                 <div>
-                    <label for="product_id" class="block text-xs font-medium text-slate-700 mb-1">
+                    <label for="product_id" class="block text-xs font-semibold text-slate-700 mb-1">
                         Sélectionner le produit <span class="text-red-500">*</span>
                     </label>
-                    <select name="product_id" id="product_id" required class="w-full py-2 border border-slate-300 rounded-lg text-sm">
+                    <select name="product_id" id="product_id" required class="w-full py-2.5 px-3.5 border border-slate-200 rounded-xl bg-slate-50 text-xs sm:text-sm focus:bg-white focus:ring-2 focus:ring-emerald-500">
                         <option value="">-- Choisir un produit --</option>
                         @foreach($products as $p)
                             <option value="{{ $p->id }}" {{ $selectedProductId == $p->id ? 'selected' : '' }}>{{ $p->name }}</option>
@@ -25,10 +30,10 @@
                 </div>
 
                 <div>
-                    <label for="date" class="block text-xs font-medium text-slate-700 mb-1">
+                    <label for="date" class="block text-xs font-semibold text-slate-700 mb-1">
                         Date cible de consultation <span class="text-red-500">*</span>
                     </label>
-                    <input type="date" name="date" id="date" value="{{ request('date', now()->format('Y-m-d')) }}" required class="w-full py-2 border border-slate-300 rounded-lg text-sm">
+                    <input type="date" name="date" id="date" value="{{ request('date', now()->format('Y-m-d')) }}" required class="w-full py-2.5 px-3.5 border border-slate-200 rounded-xl bg-slate-50 text-xs sm:text-sm focus:bg-white focus:ring-2 focus:ring-emerald-500">
                 </div>
 
                 <div>
@@ -54,27 +59,27 @@
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse">
+                    <table class="w-full text-left text-xs sm:text-sm border-collapse min-w-[500px]">
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
-                                <th class="py-3 px-4">Unité déclarée</th>
-                                <th class="py-3 px-4 text-center">Équivalence unité de base</th>
-                                <th class="py-3 px-4 text-right">Quantité en stock à cette date</th>
+                                <th class="py-3.5 px-4 whitespace-nowrap">Unité déclarée</th>
+                                <th class="py-3.5 px-4 text-center whitespace-nowrap">Équivalence unité de base</th>
+                                <th class="py-3.5 px-4 text-right whitespace-nowrap">Quantité en stock à cette date</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
                             @foreach($calculatedStock as $item)
                                 <tr class="hover:bg-slate-50">
-                                    <td class="py-3 px-4 font-bold text-slate-900">
+                                    <td class="py-3 px-4 font-bold text-slate-900 whitespace-nowrap">
                                         {{ $item['unit']->name }}
                                         @if($item['unit']->is_base_unit)
                                             <span class="text-xs font-normal text-emerald-600 ml-1">(Unité de base)</span>
                                         @endif
                                     </td>
-                                    <td class="py-3 px-4 text-center text-slate-600 font-mono">
+                                    <td class="py-3 px-4 text-center text-slate-600 font-mono whitespace-nowrap">
                                         {{ $item['unit']->base_unit_equivalent }}
                                     </td>
-                                    <td class="py-3 px-4 text-right font-extrabold text-slate-900 text-base">
+                                    <td class="py-3 px-4 text-right font-extrabold text-slate-900 text-base whitespace-nowrap">
                                         {{ number_format($item['calculated_stock'], 2, ',', ' ') }}
                                     </td>
                                 </tr>
