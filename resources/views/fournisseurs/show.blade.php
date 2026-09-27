@@ -1,8 +1,8 @@
 <x-layouts.app title="Fiche Fournisseur">
     <x-slot name="header">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex flex-col sm:flex-row items-center justify-between text-center sm:text-left gap-4">
             <div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center justify-center sm:justify-start gap-2">
                     <h2 class="text-xl font-bold text-slate-900 tracking-tight">
                         {{ $supplier->name }}
                     </h2>
@@ -15,13 +15,11 @@
                 </p>
             </div>
 
-            <div class="flex items-center gap-2">
-                <x-ui.button href="{{ route('fournisseurs.edit', $supplier) }}" variant="secondary" size="sm" icon="pencil-square">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-2 w-full sm:w-auto [&>a]:w-full [&>a]:sm:w-auto [&>button]:w-full [&>button]:sm:w-auto">
+                <x-ui.button href="{{ route('fournisseurs.edit', $supplier) }}" variant="secondary" size="sm" icon="pencil-square" class="w-full sm:w-auto">
                     Éditer
                 </x-ui.button>
-                <x-ui.button href="{{ route('fournisseurs.index') }}" variant="outline" size="sm">
-                    Retour
-                </x-ui.button>
+                <x-ui.back-button href="{{ route('fournisseurs.index') }}" label="Retour à la liste" class="w-full sm:w-auto justify-center" />
             </div>
         </div>
     </x-slot>

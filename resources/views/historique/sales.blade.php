@@ -5,9 +5,7 @@
                 <x-heroicon-o-arrow-up-tray class="w-6 h-6 text-emerald-600" />
                 Historique des Ventes
             </h1>
-            <a href="{{ route('historique.index') }}" class="text-slate-500 hover:text-slate-700 text-sm font-medium">
-                &larr; Retour à l'historique
-            </a>
+            <x-ui.back-button href="{{ route('historique.index') }}" label="Retour à l'historique" />
         </div>
     </x-slot>
 
@@ -61,7 +59,7 @@
                 value="{{ number_format($totalAmount, 0, ',', ' ') }} FCFA"
                 icon="banknotes"
                 color="emerald" />
-            
+
             <x-ui.stat-card
                 title="Période Analysée"
                 value="{{ $startDate->format('d/m/Y') }} au {{ $endDate->format('d/m/Y') }}"
@@ -71,9 +69,9 @@
 
         <!-- Tableau des Lignes de Ventes -->
         @if($lines->isEmpty())
-            <x-ui.empty-state 
-                title="Aucune vente trouvée" 
-                description="Aucune vente ne correspond aux critères sélectionnés sur cette période." 
+            <x-ui.empty-state
+                title="Aucune vente trouvée"
+                description="Aucune vente ne correspond aux critères sélectionnés sur cette période."
                 icon="arrow-up-tray">
             </x-ui.empty-state>
         @else

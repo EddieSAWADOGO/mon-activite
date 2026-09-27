@@ -3,7 +3,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <h1 class="text-xl font-bold text-slate-900 flex items-center gap-2">
                 <x-heroicon-o-banknotes class="w-6 h-6 text-emerald-600" />
-                Historique des Règlements Client
+                Règlements Client
             </h1>
         </div>
     </x-slot>
@@ -16,24 +16,31 @@
                        name="search"
                        value="{{ request('search') }}"
                        placeholder="Rechercher par N° de facture ou nom du client..."
-                       class="flex-1 rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500">
+                       class="flex-1 rounded-xl border border-slate-200 text-xs sm:text-sm py-2 px-3 focus:ring-2 focus:ring-emerald-500">
 
                 <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" class="h-9">
                     Rechercher
                 </x-ui.button>
 
                 @if(request('search'))
-                    <a href="{{ route('paiements.index') }}" class="rounded-lg border border-slate-300 text-xs py-2 px-3 text-slate-600 hover:text-slate-800 flex items-center justify-center whitespace-nowrap">
+                    <a href="{{ route('paiements.index') }}" class="rounded-xl border border-slate-200 text-xs py-2 px-3 text-slate-600 hover:text-slate-800 flex items-center justify-center whitespace-nowrap bg-white">
                         Réinitialiser
                     </a>
                 @endif
             </form>
         </x-ui.card>
 
+        <div class="mb-3 flex items-center justify-between px-1">
+            <h2 class="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
+                <x-heroicon-o-list-bullet class="w-4 h-4 text-emerald-600" />
+                <span>Historique des Paiements Reçus ({{ $payments->total() }})</span>
+            </h2>
+        </div>
+
         @if($payments->isEmpty())
-            <x-ui.empty-state 
-                title="Aucun règlement trouvé" 
-                description="Aucun règlement de facture n'a encore été enregistré." 
+            <x-ui.empty-state
+                title="Aucun règlement trouvé"
+                description="Aucun règlement de facture n'a encore été enregistré."
                 icon="banknotes">
             </x-ui.empty-state>
         @else
@@ -50,13 +57,13 @@
                                     {{ $payment->payment_date->format('d/m/Y H:i') }}
                                 </span>
                             </div>
-                            <div class="flex justify-between items-center text-sm">
+                            <div class="flex justify-between items-center text-xs sm:text-sm">
                                 <span class="text-slate-600">Client:</span>
                                 <span class="font-medium text-slate-900">
                                     {{ $payment->invoice->customer ? $payment->invoice->customer->name : 'Client de passage' }}
                                 </span>
                             </div>
-                            <div class="flex justify-between items-center text-sm">
+                            <div class="flex justify-between items-center text-xs sm:text-sm">
                                 <span class="text-slate-600">Mode:</span>
                                 <x-ui.badge color="sky">{{ $payment->payment_method }}</x-ui.badge>
                             </div>
@@ -71,7 +78,7 @@
                 </div>
 
                 <div class="hidden sm:block overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse">
+                    <table class="w-full text-left text-xs sm:text-sm border-collapse">
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
                                 <th class="py-3 px-4">Date</th>

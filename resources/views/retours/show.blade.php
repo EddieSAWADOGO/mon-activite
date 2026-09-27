@@ -11,9 +11,7 @@
                     <x-ui.badge color="red">Déclaré en perte</x-ui.badge>
                 @endif
             </div>
-            <a href="{{ route('retours.index') }}" class="text-slate-500 hover:text-slate-700 text-sm font-medium">
-                &larr; Retour à la liste
-            </a>
+            <x-ui.back-button href="{{ route('retours.index') }}" label="Retour à la liste" />
         </div>
     </x-slot>
 
@@ -82,26 +80,54 @@
                         Décision et Validation du Retour Client
                     </h3>
                     <p class="text-xs text-amber-800 mb-4">
-                        En tant qu'administrateur, veuillez choisir l'action à appliquer sur ce retour. 
+                        En tant qu'administrateur, veuillez choisir l'action à appliquer sur ce retour.
                         Cette décision est définitive et mettra à jour les compteurs de stock.
                     </p>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2" x-data="{ showRestockModal: false, showDiscardModal: false, submittingRestock: false, submittingDiscard: false }">
                         <!-- Option 1: Réintégrer en Stock -->
-                        <form action="{{ route('retours.restock', $customerReturn) }}" method="POST" onsubmit="return confirm('Confirmer la réintégration du produit en stock ?')">
-                            @csrf
-                            <x-ui.button type="submit" variant="primary" icon="check-circle" class="w-full justify-center">
+                        <div>
+                            <x-ui.button type="button" @click="showRestockModal = true" variant="primary" icon="check-circle" class="w-full justify-center">
                                 Réintégrer au stock (+{{ number_format($customerReturn->quantity, 2, ',', ' ') }} {{ $customerReturn->stockUnit->name }})
                             </x-ui.button>
-                        </form>
+
+                            <x-ui.confirm-modal
+                                name="showRestockModal"
+                                title="Réintégrer ce retour au stock ?"
+                                message="Confirmez-vous la réintégration des quantités dans les compteurs de stock ?"
+                                confirmText="Réintégrer"
+                                variant="primary"
+                                icon="check-circle">
+                                <form action="{{ route('retours.restock', $customerReturn) }}" method="POST" @submit="submittingRestock = true" class="flex-1">
+                                    @csrf
+                                    <x-ui.button type="submit" variant="primary" size="sm" class="w-full" ::loading="submittingRestock">
+                                        Confirmer
+                                    </x-ui.button>
+                                </form>
+                            </x-ui.confirm-modal>
+                        </div>
 
                         <!-- Option 2: Déclarer en Perte -->
-                        <form action="{{ route('retours.discard', $customerReturn) }}" method="POST" onsubmit="return confirm('Confirmer la déclaration de ce retour en perte (non récupérable) ?')">
-                            @csrf
-                            <x-ui.button type="submit" variant="danger" icon="x-circle" class="w-full justify-center">
+                        <div>
+                            <x-ui.button type="button" @click="showDiscardModal = true" variant="danger" icon="x-circle" class="w-full justify-center">
                                 Déclarer comme perte définitive
                             </x-ui.button>
-                        </form>
+
+                            <x-ui.confirm-modal
+                                name="showDiscardModal"
+                                title="Déclarer ce retour en perte ?"
+                                message="Confirmez-vous la déclaration de ce retour comme perte non récupérable ?"
+                                confirmText="Déclarer en perte"
+                                variant="danger"
+                                icon="x-circle">
+                                <form action="{{ route('retours.discard', $customerReturn) }}" method="POST" @submit="submittingDiscard = true" class="flex-1">
+                                    @csrf
+                                    <x-ui.button type="submit" variant="danger" size="sm" class="w-full" ::loading="submittingDiscard">
+                                        Confirmer la perte
+                                    </x-ui.button>
+                                </form>
+                            </x-ui.confirm-modal>
+                        </div>
                     </div>
                 </x-ui.card>
             @endcan

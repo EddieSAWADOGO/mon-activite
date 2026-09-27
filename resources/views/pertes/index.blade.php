@@ -1,35 +1,48 @@
 <x-layouts.app title="Gestion des Pertes">
     <x-slot name="header">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <h1 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <x-heroicon-o-x-circle class="w-6 h-6 text-red-600" />
-                Déclarations de Pertes
-            </h1>
-            <x-ui.button href="{{ route('pertes.create') }}" variant="danger" icon="plus">
-                Déclarer une perte
-            </x-ui.button>
+        <div class="flex flex-col sm:flex-row items-center justify-between text-center sm:text-left gap-4 pb-2 border-b border-slate-200/60">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center justify-center sm:justify-start gap-2">
+                    <x-heroicon-o-x-circle class="w-5 h-5 sm:w-6 sm:h-6 text-red-600" />
+                    <span>Déclarations de Pertes</span>
+                </h1>
+                <p class="text-xs text-slate-500 mt-0.5">Suivi des pertes et avaries de stock.</p>
+            </div>
+
+            <a href="{{ route('pertes.create') }}" class="inline-flex w-full sm:w-auto justify-center">
+                <x-ui.button variant="danger" icon="plus" class="w-full sm:w-auto">
+                    Déclarer une perte
+                </x-ui.button>
+            </a>
         </div>
     </x-slot>
 
     <div class="space-y-6">
         <x-ui.card class="mb-6 p-4">
-            <form action="{{ route('pertes.index') }}" method="GET" class="flex flex-col sm:flex-row gap-3">
+            <form action="{{ route('pertes.index') }}" method="GET" class="flex flex-col sm:flex-row gap-3 items-center">
                 <input type="text"
                        name="search"
                        value="{{ request('search') }}"
                        placeholder="Rechercher par N° de perte, motif, produit..."
-                       class="flex-1 rounded-lg border border-slate-300 text-xs py-2 px-3 focus:ring-2 focus:ring-emerald-500">
+                       class="w-full sm:flex-1 rounded-xl border border-slate-200 text-xs sm:text-sm py-2 px-3 focus:ring-2 focus:ring-emerald-500">
 
-                <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" class="h-9">
+                <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" class="w-full sm:w-auto">
                     Rechercher
                 </x-ui.button>
             </form>
         </x-ui.card>
 
+        <div class="mb-3 flex items-center justify-between px-1">
+            <h2 class="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
+                <x-heroicon-o-list-bullet class="w-4 h-4 text-red-600" />
+                <span>Registre des Pertes de Stock ({{ $losses->total() }})</span>
+            </h2>
+        </div>
+
         @if($losses->isEmpty())
-            <x-ui.empty-state 
-                title="Aucune perte déclarée" 
-                description="Aucune perte de stock n'a été déclarée." 
+            <x-ui.empty-state
+                title="Aucune perte déclarée"
+                description="Aucune perte de stock n'a été déclarée."
                 icon="x-circle">
             </x-ui.empty-state>
         @else
@@ -38,7 +51,7 @@
                     @foreach($losses as $loss)
                         <div class="p-4 space-y-2">
                             <div class="flex items-center justify-between">
-                                <span class="font-bold text-slate-900">{{ $loss->loss_number }}</span>
+                                <span class="font-bold text-slate-900 text-sm">{{ $loss->loss_number }}</span>
                                 <span class="text-xs text-slate-500">{{ $loss->loss_date->format('d/m/Y H:i') }}</span>
                             </div>
                             <div class="text-sm font-semibold text-slate-800">{{ $loss->product->name }}</div>
@@ -51,7 +64,7 @@
                 </div>
 
                 <div class="hidden sm:block overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse">
+                    <table class="w-full text-left text-xs sm:text-sm border-collapse">
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
                                 <th class="py-3 px-4">Date</th>

@@ -2,9 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h1 class="text-xl font-bold text-slate-900 tracking-tight">Reconditionnement N° {{ $repackaging->repackaging_number }}</h1>
-            <a href="{{ route('reconditionnement.index') }}" class="text-slate-500 hover:text-slate-700 text-sm font-medium">
-                &larr; Retour à la liste
-            </a>
+            <x-ui.back-button href="{{ route('reconditionnement.index') }}" label="Retour à la liste" />
         </div>
     </x-slot>
 

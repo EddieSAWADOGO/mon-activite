@@ -1,13 +1,11 @@
-<x-layouts.app title="Créances & Dettes Consolides">
+<x-layouts.app title="Créances & Dettes Consolidées">
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h1 class="text-xl font-bold text-slate-900 flex items-center gap-2">
                 <x-heroicon-o-banknotes class="w-6 h-6 text-purple-600" />
                 Situation globale des Créances & Dettes
             </h1>
-            <a href="{{ route('historique.index') }}" class="text-slate-500 hover:text-slate-700 text-sm font-medium">
-                &larr; Retour à l'historique
-            </a>
+            <x-ui.back-button href="{{ route('historique.index') }}" label="Retour à l'historique" />
         </div>
     </x-slot>
 
@@ -37,9 +35,9 @@
             </div>
 
             @if($customers->isEmpty() || $totalCustomerReceivables == 0)
-                <x-ui.empty-state 
-                    title="Aucune créance client" 
-                    description="Aucun client n'a de solde restant à payer actuellement." 
+                <x-ui.empty-state
+                    title="Aucune créance client"
+                    description="Aucun client n'a de solde restant à payer actuellement."
                     icon="check-circle">
                 </x-ui.empty-state>
             @else
@@ -94,9 +92,9 @@
             </div>
 
             @if($suppliers->isEmpty() || $totalSupplierDebt == 0)
-                <x-ui.empty-state 
-                    title="Aucune dette fournisseur" 
-                    description="Vous n'avez aucun impayé envers vos fournisseurs actuellement." 
+                <x-ui.empty-state
+                    title="Aucune dette fournisseur"
+                    description="Vous n'avez aucun impayé envers vos fournisseurs actuellement."
                     icon="check-circle">
                 </x-ui.empty-state>
             @else

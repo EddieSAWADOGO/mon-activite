@@ -5,9 +5,7 @@
                 <x-heroicon-o-squares-2x2 class="w-6 h-6 text-amber-600" />
                 Classement des Produits les plus vendus
             </h1>
-            <a href="{{ route('historique.index') }}" class="text-slate-500 hover:text-slate-700 text-sm font-medium">
-                &larr; Retour à l'historique
-            </a>
+            <x-ui.back-button href="{{ route('historique.index') }}" label="Retour à l'historique" />
         </div>
     </x-slot>
 
@@ -52,9 +50,9 @@
         </x-ui.card>
 
         @if($topProducts->isEmpty())
-            <x-ui.empty-state 
-                title="Aucune donnée de vente" 
-                description="Aucun produit n'a été vendu sur la période sélectionnée." 
+            <x-ui.empty-state
+                title="Aucune donnée de vente"
+                description="Aucun produit n'a été vendu sur la période sélectionnée."
                 icon="squares-2x2">
             </x-ui.empty-state>
         @else

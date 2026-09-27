@@ -144,3 +144,67 @@ Correction complète du problème de mise en page responsive mobile (alignement 
   - Création de `StockUnitFactory.php` et liaison dans `StockUnit::newFactory()`.
   - Suite de tests `php artisan test` : **100% Vert (53 tests réussis, 0 échecs)**.
 
+---
+
+## Session 11 — Harmonisation UI/UX, Boutons de Retour, Icônes Style Apple & Chargement de l'Historique Produit
+
+### 1. Tâche réalisée
+Uniformisation globale de l'interface utilisateur, création du composant `<x-ui.back-button>`, mise à jour de `<x-ui.button>` pour le support hybride `<a>` / `<button>`, nettoyage du clutter visuel avec boutons d'action compacts + bulles descriptives au survol (`title="..."`), et intégration de l'historique réel des mouvements de stock sur la fiche produit.
+
+### 2. Corrections et Améliorations apportées
+- **Boutons de retour standardisés (`<x-ui.back-button>`)** :
+  - Création d'un composant de retour unique (`resources/views/components/ui/back-button.blade.php`) au design style Apple (carte blanche, bordure subtile, icône Heroicons `arrow-left`, micro-animation au survol).
+  - Remplacement de tous les liens de retour ad-hoc (`&larr; Retour`, boutons personnalisés) sur l'ensemble des pages du projet (Produits, Clients, Fournisseurs, Achats, Ventes, Factures, Règlements, Retours, Pertes, Reconditionnement, Utilisateurs, Historique).
+- **Composant Bouton Polyvalent (`<x-ui.button>`)** :
+  - Mise à jour pour basculer automatiquement en balise `<a>` si l'attribut `href` est présent, tout en conservant le support des boutons de formulaire `<button type="submit">`.
+- **Fiche Produit (`produits/show.blade.php`) & Relation Eloquent** :
+  - Ajout de la relation `movements()` sur le modèle `Product`.
+  - Chargement et affichage dynamique des 20 derniers mouvements de stock réels sur la fiche produit (en remplacement du conteneur vide).
+- **Design Épuré & Boutons d'Action Tooltip** :
+  - Simplification des colonnes d'action dans les tableaux et cartes pour un rendu moins chargé ("moins d'écritures") avec boutons icônes épurés et info-bulles explicites au survol.
+- **Vérification des Tests** :
+  - Exécution de `php artisan test` : **100% Vert (53 tests réussis, 169 assertions)**.
+
+---
+
+## Session 12 — Refonte des Formulaires, Alignement des Containers, Loaders Dynamiques & Modaux Centrés
+
+### 1. Tâche réalisée
+Refonte complète de l'ergonomie des formulaires, nettoyage des conteneurs imbriqués, alignement strict des champs/labels/messages d'erreur, intégration systématique d'indicateurs de chargement (loaders d'action) et centrage universel des modaux de confirmation sur tous les types d'écrans.
+
+### 2. Corrections et Améliorations apportées
+- **Optimisation des Champs, Labels et Conteneurs** :
+  - Standardisation des champs de saisie (`rounded-xl border border-slate-200 bg-white py-2.5 px-3.5 text-xs sm:text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition`).
+  - Alignement direct des libellés (`label`) et messages d'erreur au-dessous de chaque champ avec icône rouge explicite.
+  - Élimination des "cases dans des cases" (sur-encadrements inutiles) pour un rendu moderne et épuré.
+  - Centrage et conteneurs ajustés selon la densité (`max-w-2xl` / `max-w-4xl` `mx-auto`).
+- **Responsive et Affichage Petit Écran (Sans Débordement Horizontal)** :
+  - Adaptation de toutes les grilles de formulaires en 1 seule colonne (`grid-cols-1`) sur smartphone (`< sm`).
+  - Défilement tactile fluide des tableaux avec conteneurs `overflow-x-auto` et masquage global du débordement sur `body`.
+- **Modaux de Confirmation Centrés (`<x-ui.confirm-modal>`)** :
+  - Refonte du composant modal pour un centrage parfait vertical/horizontal (`fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/60 backdrop-blur-xs`).
+  - Support de la fermeture par touche Échap (`@keydown.escape.window`).
+  - Application sur toutes les actions sensibles/destructives (suppression de produit, réinitialisation de mot de passe, suppression d'utilisateur, validation/perte de retour client).
+- **Indicateurs de Chargement Dynamiques (Loaders)** :
+  - Enrichissement du composant `<x-ui.button>` avec un spinner SVG animé (`animate-spin`) en cas de soumission ou d'état `:loading`.
+  - Ajout de l'état Alpine `@submit="submitting = true"` et `:loading="submitting"` sur tous les formulaires (Ventes, Achats, Produits, Clients, Fournisseurs, Règlements, Pertes, Retours, Reconditionnement, Utilisateurs, Connexion).
+- **Vérification de la suite de tests** :
+  - `php artisan test` : **100% Vert (53 tests réussis, 169 assertions)**.
+
+---
+
+## Session 13 — Alignement Vertical & Centrage des Boutons sur Mobile, Modaux & Toasts Responsive
+
+### 1. Tâche réalisée
+Mise en place de l'**alignement vertical et du centrage systématique des boutons en mode mobile** sur l'ensemble des pages de l'application (en-têtes, pieds de formulaires, modaux de confirmation, cartes d'action), avec conteneurs pleine largeur sans débordement.
+
+### 2. Corrections et Améliorations apportées
+- **Alignement Vertical & Centrage des Boutons sur Mobile (`< sm`)** :
+  - Application systématique de la disposition empilée verticale centrée (`flex flex-col sm:flex-row items-center justify-center sm:justify-end gap-3 text-center [&>a]:w-full [&>a]:sm:w-auto [&>button]:w-full [&>button]:sm:w-auto`) sur tous les blocs d'actions de formulaires, d'en-têtes et de cartes.
+  - Sur smartphone, chaque bouton occupe toute la largeur disponible (`w-full`), est centré et disposé l'un en dessous de l'autre pour une manipulation tactile optimale sans risque de clic accidentel.
+- **Harmonisation des Modaux de Confirmation (`<x-ui.confirm-modal>`)** :
+  - Alignement vertical centré des boutons d'annulation et de confirmation (`flex-col-reverse sm:flex-row items-center justify-center gap-2.5 text-center w-full`) pour une lisibilité parfaite sur smartphone.
+- **Alignement des En-têtes & Filtres** :
+  - Centrage des titres, sous-titres et boutons d'action dans les en-têtes de pages sur mobile (`text-center sm:text-left flex-col sm:flex-row items-center justify-center`).
+- **Tests Fonctionnels** :
+  - Exécution de `php artisan test` : **100% Vert (53 tests réussis, 169 assertions, 0 échecs)**.

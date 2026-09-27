@@ -15,9 +15,7 @@
                 </p>
             </div>
 
-            <x-ui.button href="{{ route('achats.index') }}" variant="secondary" size="sm">
-                Retour à la liste
-            </x-ui.button>
+            <x-ui.back-button href="{{ route('achats.index') }}" label="Retour à la liste" />
         </div>
     </x-slot>
 

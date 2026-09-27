@@ -5,9 +5,7 @@
                 <x-heroicon-o-archive-box class="w-6 h-6 text-sky-600" />
                 Reconstitution du Stock à une Date Passée
             </h1>
-            <a href="{{ route('historique.index') }}" class="text-slate-500 hover:text-slate-700 text-sm font-medium">
-                &larr; Retour à l'historique
-            </a>
+            <x-ui.back-button href="{{ route('historique.index') }}" label="Retour à l'historique" />
         </div>
     </x-slot>
 
@@ -86,9 +84,9 @@
                 </div>
             </x-ui.card>
         @else
-            <x-ui.empty-state 
-                title="Sélectionnez un produit et une date" 
-                description="Veuillez choisir un produit et la date souhaitée dans le formulaire ci-dessus pour afficher l'état reconstitué de ses compteurs de stock." 
+            <x-ui.empty-state
+                title="Sélectionnez un produit et une date"
+                description="Veuillez choisir un produit et la date souhaitée dans le formulaire ci-dessus pour afficher l'état reconstitué de ses compteurs de stock."
                 icon="archive-box">
             </x-ui.empty-state>
         @endif

@@ -74,7 +74,10 @@ class ProductController extends Controller
     {
         $this->authorize('view', $product);
 
-        $product->load(['units' => fn ($q) => $q->orderBy('is_base_unit', 'desc')->orderBy('created_at', 'asc')]);
+        $product->load([
+            'units' => fn ($q) => $q->orderBy('is_base_unit', 'desc')->orderBy('created_at', 'asc'),
+            'movements' => fn ($q) => $q->with(['stockUnit', 'createdBy'])->latest()->take(20)
+        ]);
 
         return view('produits.show', compact('product'));
     }

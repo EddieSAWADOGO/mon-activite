@@ -15,7 +15,12 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
+        [x-cloak] { display: none !important; }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
 
         :root {
             --font: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -60,7 +65,6 @@
             .panel-left { display: flex; align-items: center; justify-content: center; }
         }
 
-        /* Arrière-plan avec dégradé animé subtil */
         .panel-left::before {
             content: '';
             position: absolute;
@@ -71,7 +75,6 @@
                 var(--slate-900);
         }
 
-        /* Grille de points décoratifs */
         .panel-left::after {
             content: '';
             position: absolute;
@@ -89,21 +92,12 @@
         }
 
         .panel-logo {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.12);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 3rem;
-            backdrop-filter: blur(8px);
+            margin-bottom: 2.5rem;
         }
 
         .panel-logo img {
-            width: 36px;
-            height: 36px;
+            width: 56px;
+            height: 56px;
             object-fit: contain;
         }
 
@@ -158,7 +152,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 2rem 1.5rem;
+            padding: 2.5rem 1.5rem;
             background: #fff;
         }
 
@@ -175,12 +169,11 @@
             max-width: 380px;
         }
 
-        /* Logo mobile (visible uniquement sur mobile) */
         .mobile-logo {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 2.5rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
         }
 
         @media (min-width: 1024px) {
@@ -188,25 +181,25 @@
         }
 
         .mobile-logo img {
-            width: 40px;
-            height: 40px;
+            width: 60px;
+            height: 60px;
             object-fit: contain;
-        }
-
-        .mobile-logo-name {
-            font-size: 1.125rem;
-            font-weight: 800;
-            color: var(--slate-900);
-            letter-spacing: -0.02em;
         }
 
         .form-heading {
             margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        @media (min-width: 1024px) {
+            .form-heading {
+                text-align: left;
+            }
         }
 
         .form-heading h1 {
-            font-size: 1.9rem;
-            font-weight: 700;
+            font-size: 1.875rem;
+            font-weight: 800;
             color: var(--slate-900);
             letter-spacing: -0.03em;
             line-height: 1.2;
@@ -214,7 +207,7 @@
 
         .form-heading p {
             margin-top: 0.4rem;
-            font-size: 1rem;
+            font-size: 0.9375rem;
             color: var(--slate-500);
             font-weight: 400;
         }
@@ -256,6 +249,7 @@
             font-weight: 600;
             color: var(--slate-700);
             margin-bottom: 0.4rem;
+            text-align: left;
         }
 
         .input-wrap {
@@ -285,14 +279,13 @@
             color: var(--slate-900);
             background: var(--slate-50);
             outline: none;
-            transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+            transition: border-color 0.15s, background 0.15s;
             -webkit-appearance: none;
         }
 
         .field input:focus {
             border-color: var(--emerald);
             background: #fff;
-            box-shadow: 0 0 0 3px rgba(5,150,105,0.12);
         }
 
         .field input::placeholder {
@@ -337,14 +330,12 @@
             justify-content: center;
             gap: 0.5rem;
             margin-top: 0.25rem;
-            transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-            box-shadow: 0 4px 12px rgba(5,150,105,0.25);
+            transition: background 0.15s, transform 0.1s;
             letter-spacing: -0.01em;
         }
 
         .btn-login:hover {
             background: var(--emerald-dark);
-            box-shadow: 0 6px 18px rgba(5,150,105,0.3);
         }
 
         .btn-login:active {
@@ -370,7 +361,24 @@
 </head>
 <body>
 
-<div class="page">
+<div class="page" x-data="{ showPwd: false, globalLoading: false }">
+
+    <!-- Modal Loading Connexion -->
+    <div x-cloak
+         x-show="globalLoading"
+         style="position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);">
+        <div style="background: #fff; border-radius: 1.5rem; padding: 1.75rem 2rem; max-width: 320px; width: 100%; text-align: center; border: 1px solid #f1f5f9; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+            <div style="position: relative; width: 4rem; height: 4rem; margin: 0 auto 1rem auto; display: flex; align-items: center; justify-content: center;">
+                <div style="position: absolute; inset: 0; border-radius: 9999px; border: 4px solid #ecfdf5;"></div>
+                <div style="position: absolute; inset: 0; border-radius: 9999px; border: 4px solid #059669; border-top-color: transparent; animation: spin 1s linear infinite;"></div>
+                <svg style="width: 1.75rem; height: 1.75rem; color: #059669; animation: spin 1s linear infinite;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+            </div>
+            <p style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.25rem;">Connexion en cours...</p>
+            <p style="font-size: 0.75rem; color: #64748b; font-weight: 500;">Veuillez patienter un instant...</p>
+        </div>
+    </div>
 
     <!-- ─── Panneau gauche (illustration) ──────────────────── -->
     <div class="panel-left">
@@ -411,12 +419,11 @@
 
     <!-- ─── Panneau droit (formulaire) ──────────────────────── -->
     <div class="panel-right">
-        <div class="form-container" x-data="{ showPwd: false }">
+        <div class="form-container">
 
             <!-- Logo mobile -->
             <div class="mobile-logo">
-                <img src="/logo.webp" alt="Mon-Activité">
-                <span class="mobile-logo-name">Mon-Activité</span>
+                <img src="/logo.webp" alt="Logo">
             </div>
 
             <!-- Titre -->
@@ -445,7 +452,7 @@
             @endif
 
             <!-- Formulaire -->
-            <form method="POST" action="{{ route('login.store') }}">
+            <form method="POST" action="{{ route('login.store') }}" @submit="globalLoading = true">
                 @csrf
 
                 <!-- Email -->

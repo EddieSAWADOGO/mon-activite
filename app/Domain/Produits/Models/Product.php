@@ -63,6 +63,14 @@ class Product extends Model
     }
 
     /**
+     * Get all stock movements for the product.
+     */
+    public function movements(): HasMany
+    {
+        return $this->hasMany(\App\Domain\Stock\Models\StockMovement::class)->latest();
+    }
+
+    /**
      * Scope to filter active products.
      */
     public function scopeActive(Builder $query): Builder

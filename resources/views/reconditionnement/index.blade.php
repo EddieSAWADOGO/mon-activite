@@ -1,37 +1,50 @@
 <x-layouts.app title="Reconditionnement de stock">
     <x-slot name="header">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <h1 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <x-heroicon-o-arrows-right-left class="w-6 h-6 text-emerald-600" />
-                Reconditionnement d'Unités
-            </h1>
-            <x-ui.button href="{{ route('reconditionnement.create') }}" variant="primary" icon="plus">
-                Nouveau reconditionnement
-            </x-ui.button>
+        <div class="flex flex-col sm:flex-row items-center justify-between text-center sm:text-left gap-4 pb-2 border-b border-slate-200/60">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center justify-center sm:justify-start gap-2">
+                    <x-heroicon-o-arrows-right-left class="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600" />
+                    <span>Reconditionnement d'Unités</span>
+                </h1>
+                <p class="text-xs text-slate-500 mt-0.5">Regroupement et conversion d'unités de stock.</p>
+            </div>
+
+            <a href="{{ route('reconditionnement.create') }}" class="inline-flex w-full sm:w-auto justify-center">
+                <x-ui.button variant="primary" icon="plus" class="w-full sm:w-auto">
+                    Nouveau reconditionnement
+                </x-ui.button>
+            </a>
         </div>
     </x-slot>
 
     <div class="space-y-6">
         <x-ui.card class="p-4">
-            <form action="{{ route('reconditionnement.index') }}" method="GET" class="flex flex-col sm:flex-row gap-3">
-                <div class="relative flex-1">
+            <form action="{{ route('reconditionnement.index') }}" method="GET" class="flex flex-col sm:flex-row gap-3 items-center">
+                <div class="relative w-full sm:flex-1">
                     <x-heroicon-o-magnifying-glass class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input type="text" 
-                           name="search" 
-                           value="{{ request('search') }}" 
-                           placeholder="Rechercher par N° de reconditionnement ou produit..." 
-                           class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                    <input type="text"
+                           name="search"
+                           value="{{ request('search') }}"
+                           placeholder="Rechercher par N° de reconditionnement ou produit..."
+                           class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 text-xs sm:text-sm">
                 </div>
-                <x-ui.button type="submit" variant="primary" icon="magnifying-glass">
+                <x-ui.button type="submit" variant="primary" icon="magnifying-glass" class="w-full sm:w-auto">
                     Rechercher
                 </x-ui.button>
             </form>
         </x-ui.card>
 
+        <div class="mb-3 flex items-center justify-between px-1">
+            <h2 class="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
+                <x-heroicon-o-list-bullet class="w-4 h-4 text-emerald-600" />
+                <span>Registre des Reconditionnements ({{ $repackagings->total() }})</span>
+            </h2>
+        </div>
+
         @if($repackagings->isEmpty())
-            <x-ui.empty-state 
-                title="Aucun reconditionnement" 
-                description="Aucune opération de reconditionnement / regroupement d'unités n'a été réalisée." 
+            <x-ui.empty-state
+                title="Aucun reconditionnement"
+                description="Aucune opération de reconditionnement / regroupement d'unités n'a été réalisée."
                 icon="arrows-right-left">
             </x-ui.empty-state>
         @else
@@ -40,7 +53,7 @@
                     @foreach($repackagings as $r)
                         <div class="p-4 space-y-2">
                             <div class="flex items-center justify-between">
-                                <span class="font-bold text-slate-900">{{ $r->repackaging_number }}</span>
+                                <span class="font-bold text-slate-900 text-sm">{{ $r->repackaging_number }}</span>
                                 <span class="text-xs text-slate-500">{{ $r->repackaging_date->format('d/m/Y H:i') }}</span>
                             </div>
                             <div class="text-sm font-semibold text-slate-800">{{ $r->product->name }}</div>
@@ -54,7 +67,7 @@
                 </div>
 
                 <div class="hidden sm:block overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse">
+                    <table class="w-full text-left text-xs sm:text-sm border-collapse">
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
                                 <th class="py-3 px-4">Date</th>

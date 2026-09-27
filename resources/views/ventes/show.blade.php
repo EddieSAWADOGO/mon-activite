@@ -1,8 +1,8 @@
 <x-layouts.app title="Détail Vente — {{ $sale->sale_number }}">
     <x-slot name="header">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex flex-col sm:flex-row items-center justify-between text-center sm:text-left gap-4">
             <div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center justify-center sm:justify-start gap-2">
                     <h2 class="text-xl font-bold text-slate-900 tracking-tight">{{ $sale->sale_number }}</h2>
                     <x-ui.badge :color="$sale->remaining_amount > 0 ? 'amber' : 'emerald'">
                         {{ $sale->remaining_amount > 0 ? 'Partiellement payée' : 'Soldée' }}
@@ -13,15 +13,13 @@
                 </p>
             </div>
 
-            <div class="flex items-center gap-2">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-2 w-full sm:w-auto [&>a]:w-full [&>a]:sm:w-auto [&>button]:w-full [&>button]:sm:w-auto">
                 @if($sale->invoice)
-                    <x-ui.button href="{{ route('factures.show', $sale->invoice) }}" variant="primary" icon="document-text" size="sm">
+                    <x-ui.button href="{{ route('factures.show', $sale->invoice) }}" variant="primary" icon="document-text" size="sm" class="w-full sm:w-auto">
                         Consulter la Facture ({{ $sale->invoice->invoice_number }})
                     </x-ui.button>
                 @endif
-                <x-ui.button href="{{ route('ventes.index') }}" variant="outline" size="sm">
-                    Retour
-                </x-ui.button>
+                <x-ui.back-button href="{{ route('ventes.index') }}" label="Retour à la liste" class="w-full sm:w-auto justify-center" />
             </div>
         </div>
     </x-slot>
