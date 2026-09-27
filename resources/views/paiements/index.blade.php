@@ -9,24 +9,25 @@
     </x-slot>
 
     <div class="space-y-6">
-        <!-- Barre de recherche -->
-        <x-ui.card class="mb-6 p-4">
-            <form action="{{ route('paiements.index') }}" method="GET" class="flex flex-col sm:flex-row gap-3">
+        <x-ui.card class="mb-6 p-3.5 sm:p-4">
+            <form action="{{ route('paiements.index') }}" method="GET" class="flex flex-col sm:flex-row gap-2.5 items-center">
                 <input type="text"
                        name="search"
                        value="{{ request('search') }}"
                        placeholder="Rechercher par N° de facture ou nom du client..."
-                       class="flex-1 rounded-xl border border-slate-200 text-xs sm:text-sm py-2 px-3 focus:ring-2 focus:ring-emerald-500">
+                       class="w-full sm:flex-1 rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 focus:ring-2 focus:ring-emerald-500">
 
-                <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" class="h-9">
-                    Rechercher
-                </x-ui.button>
+                <div class="flex gap-2 w-full sm:w-auto [&>a]:flex-1 [&>button]:flex-1 sm:[&>a]:flex-none sm:[&>button]:flex-none">
+                    <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" size="sm" class="w-full sm:w-auto">
+                        Rechercher
+                    </x-ui.button>
 
-                @if(request('search'))
-                    <a href="{{ route('paiements.index') }}" class="rounded-xl border border-slate-200 text-xs py-2 px-3 text-slate-600 hover:text-slate-800 flex items-center justify-center whitespace-nowrap bg-white">
-                        Réinitialiser
-                    </a>
-                @endif
+                    @if(request('search'))
+                        <a href="{{ route('paiements.index') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center justify-center whitespace-nowrap bg-white min-h-[42px] transition active:scale-98">
+                            Effacer
+                        </a>
+                    @endif
+                </div>
             </form>
         </x-ui.card>
 

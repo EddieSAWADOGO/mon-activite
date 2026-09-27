@@ -70,7 +70,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 border-b border-slate-200 pb-6 mb-6 text-xs sm:text-sm">
                 <!-- Seller Card -->
                 <div class="p-4 bg-slate-50/80 rounded-2xl border border-slate-100 space-y-1">
-                    <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Émetteur / Vendeur</p>
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Émetteur / Vendeur</p>
                     <p class="font-extrabold text-slate-900">MON-ACTIVITÉ SARL</p>
                     <p class="text-slate-600 text-xs sm:text-sm">Vendeur / Caissier : <strong class="text-slate-800">{{ $invoice->createdBy->name }}</strong></p>
                     <p class="text-slate-500 text-xs sm:text-sm">Email : {{ $invoice->createdBy->email }}</p>
@@ -78,7 +78,7 @@
 
                 <!-- Customer Card -->
                 <div class="p-4 bg-emerald-50/40 rounded-2xl border border-emerald-100/80 space-y-1 sm:text-right">
-                    <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-700 mb-1">Facturé à (Client)</p>
+                    <p class="text-xs font-bold uppercase tracking-widest text-emerald-700 mb-1">Facturé à (Client)</p>
                     <p class="font-extrabold text-slate-900 text-base">
                         {{ $invoice->customer?->name ?? 'Client de passage (Comptoir)' }}
                     </p>

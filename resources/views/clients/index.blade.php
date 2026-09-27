@@ -30,9 +30,16 @@
                 <option value="entreprise" {{ request('type') === 'entreprise' ? 'selected' : '' }}>Entreprises</option>
             </select>
 
-            <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" size="sm" class="w-full sm:w-auto">
-                Filtrer
-            </x-ui.button>
+            <div class="flex gap-2 w-full sm:w-auto [&>a]:flex-1 [&>button]:flex-1 sm:[&>a]:flex-none sm:[&>button]:flex-none">
+                <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" size="sm" class="w-full sm:w-auto justify-center">
+                    Filtrer
+                </x-ui.button>
+                @if(request()->hasAny(['search', 'type']))
+                    <a href="{{ route('clients.index') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center justify-center whitespace-nowrap bg-white min-h-[42px] transition active:scale-98">
+                        Effacer
+                    </a>
+                @endif
+            </div>
         </form>
     </x-ui.card>
 

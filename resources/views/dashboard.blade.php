@@ -3,10 +3,10 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2 border-b border-slate-200/60">
             <div>
                 <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Tableau de bord</h1>
-                <p class="text-xs text-slate-500 mt-0.5 flex items-center gap-2">
+                <p class="text-xs sm:text-sm text-slate-500 mt-0.5 flex items-center gap-2">
                     <span>Bonjour <strong class="text-slate-800">{{ $user->name }}</strong></span>
                     <span>&bull;</span>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                         {{ $user->role?->label() }}
                     </span>
                 </p>
@@ -80,10 +80,10 @@
                             </div>
                             <div>
                                 <h2 class="font-bold text-slate-900 text-sm sm:text-base">Alertes de Stock</h2>
-                                <p class="text-[11px] text-slate-400">Seuil d'alerte atteint</p>
+                                <p class="text-xs text-slate-400">Seuil d'alerte atteint</p>
                             </div>
                         </div>
-                        <a href="{{ route('stock.index') }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-semibold inline-flex items-center gap-1">
+                        <a href="{{ route('stock.index') }}" class="text-xs sm:text-sm text-emerald-600 hover:text-emerald-700 font-semibold inline-flex items-center gap-1">
                             <span>Stock</span>
                             <x-heroicon-o-arrow-right class="w-3.5 h-3.5" />
                         </a>
@@ -95,7 +95,7 @@
                                 <x-heroicon-o-check-circle class="w-5 h-5" />
                             </div>
                             <p class="font-semibold text-slate-700">Stock optimal</p>
-                            <p class="text-[11px] text-slate-400">Aucun produit sous le seuil d'alerte.</p>
+                            <p class="text-xs text-slate-400">Aucun produit sous le seuil d'alerte.</p>
                         </div>
                     @else
                         <div class="divide-y divide-slate-100">
@@ -105,10 +105,10 @@
                                         <a href="{{ route('produits.show', $unit->product_id) }}" class="font-bold text-slate-800 text-xs sm:text-sm hover:text-emerald-600 transition truncate block">
                                             {{ $unit->product?->name }}
                                         </a>
-                                        <p class="text-[11px] text-slate-400 truncate">Unité : <span class="font-medium text-slate-600">{{ $unit->name }}</span></p>
+                                        <p class="text-xs text-slate-400 truncate">Unité : <span class="font-medium text-slate-600">{{ $unit->name }}</span></p>
                                     </div>
                                     <div class="text-right shrink-0">
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200/80">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200/80">
                                             <span>Restant : {{ number_format($unit->current_stock, 0, ',', ' ') }}</span>
                                             <span class="text-amber-400">&bull;</span>
                                             <span class="font-medium text-amber-700">Seuil : {{ number_format($unit->low_stock_threshold, 0, ',', ' ') }}</span>
@@ -129,10 +129,10 @@
                             </div>
                             <div>
                                 <h2 class="font-bold text-slate-900 text-sm sm:text-base">Dernières Factures</h2>
-                                <p class="text-[11px] text-slate-400">Récemment émises</p>
+                                <p class="text-xs text-slate-400">Récemment émises</p>
                             </div>
                         </div>
-                        <a href="{{ route('factures.index') }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-semibold inline-flex items-center gap-1">
+                        <a href="{{ route('factures.index') }}" class="text-xs sm:text-sm text-emerald-600 hover:text-emerald-700 font-semibold inline-flex items-center gap-1">
                             <span>Toutes</span>
                             <x-heroicon-o-arrow-right class="w-3.5 h-3.5" />
                         </a>
@@ -146,36 +146,36 @@
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs sm:text-sm">
                                 <thead>
-                                    <tr class="text-[10px] sm:text-xs font-bold text-slate-400 border-b border-slate-100 uppercase tracking-wider">
-                                        <th class="py-2 px-2">Facture</th>
-                                        <th class="py-2 px-2">Client</th>
-                                        <th class="py-2 px-2">Montant</th>
-                                        <th class="py-2 px-2">Statut</th>
-                                        <th class="py-2 px-2 text-right">Action</th>
+                                    <tr class="text-xs font-bold text-slate-400 border-b border-slate-100 uppercase tracking-wider">
+                                        <th class="py-2 px-2 whitespace-nowrap">Facture</th>
+                                        <th class="py-2 px-2 whitespace-nowrap">Client</th>
+                                        <th class="py-2 px-2 whitespace-nowrap">Montant</th>
+                                        <th class="py-2 px-2 whitespace-nowrap">Statut</th>
+                                        <th class="py-2 px-2 text-right whitespace-nowrap">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-slate-100">
                                     @foreach ($recentInvoices as $invoice)
                                         <tr class="hover:bg-slate-50/70 transition-colors">
-                                            <td class="py-2.5 px-2 font-bold text-slate-900 text-xs truncate max-w-[100px]">{{ $invoice->invoice_number }}</td>
-                                            <td class="py-2.5 px-2 text-slate-600 font-medium text-xs truncate max-w-[120px]">{{ $invoice->customer?->name ?? 'Comptant' }}</td>
-                                            <td class="py-2.5 px-2 font-extrabold text-slate-900 text-xs whitespace-nowrap">{{ number_format($invoice->total_amount, 0, ',', ' ') }} FCFA</td>
+                                            <td class="py-2.5 px-2 font-bold text-slate-900 text-xs sm:text-sm whitespace-nowrap">{{ $invoice->invoice_number }}</td>
+                                            <td class="py-2.5 px-2 text-slate-600 font-medium text-xs sm:text-sm whitespace-nowrap">{{ $invoice->customer?->name ?? 'Comptant' }}</td>
+                                            <td class="py-2.5 px-2 font-extrabold text-slate-900 text-xs sm:text-sm whitespace-nowrap">{{ number_format($invoice->total_amount, 0, ',', ' ') }} FCFA</td>
                                             <td class="py-2.5 px-2 whitespace-nowrap">
                                                 @if ($invoice->status?->value === 'paid')
-                                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Payée
                                                     </span>
                                                 @elseif ($invoice->status?->value === 'partially_paid')
-                                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
                                                         <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Partielle
                                                     </span>
                                                 @else
-                                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
                                                         <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Impayée
                                                     </span>
                                                 @endif
                                             </td>
-                                            <td class="py-2.5 px-2 text-right">
+                                            <td class="py-2.5 px-2 text-right whitespace-nowrap">
                                                 <a href="{{ route('factures.show', $invoice->id) }}"
                                                    class="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition inline-flex items-center justify-center"
                                                    title="Consulter la facture">
@@ -204,7 +204,7 @@
                             </div>
                             <h2 class="font-bold text-slate-900 text-sm sm:text-base">Activité Récente</h2>
                         </div>
-                        <a href="{{ route('stock.movements') }}" class="text-xs text-emerald-600 hover:underline font-semibold">Historique</a>
+                        <a href="{{ route('stock.movements') }}" class="text-xs sm:text-sm text-emerald-600 hover:underline font-semibold">Historique</a>
                     </div>
 
                     @if ($recentMovements->isEmpty())
@@ -217,16 +217,16 @@
                                 <div class="p-2.5 bg-slate-50/80 rounded-xl flex items-start justify-between gap-2 border border-slate-100 transition">
                                     <div class="space-y-0.5 min-w-0 flex-1">
                                         <div class="flex items-center gap-1.5">
-                                            <span class="inline-block text-[9px] font-bold px-1.5 py-0.2 rounded uppercase tracking-wider
+                                            <span class="inline-block text-xs font-bold px-1.5 py-0.2 rounded uppercase tracking-wider
                                                 {{ $mv->direction === 'in' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' }}">
                                                 {{ $mv->direction === 'in' ? '+' : '-' }}
                                             </span>
-                                            <span class="text-[10px] font-semibold text-slate-500 truncate">{{ $mv->type?->label() ?? $mv->type?->value }}</span>
+                                            <span class="text-xs font-semibold text-slate-500 truncate">{{ $mv->type?->label() ?? $mv->type?->value }}</span>
                                         </div>
-                                        <p class="text-xs font-bold text-slate-800 truncate">{{ $mv->product?->name }}</p>
-                                        <p class="text-[11px] text-slate-500 truncate"><strong class="text-slate-700">{{ number_format($mv->quantity, 0, ',', ' ') }} {{ $mv->stockUnit?->name }}</strong></p>
+                                        <p class="text-xs sm:text-sm font-bold text-slate-800 truncate">{{ $mv->product?->name }}</p>
+                                        <p class="text-xs text-slate-500 truncate"><strong class="text-slate-700">{{ number_format($mv->quantity, 0, ',', ' ') }} {{ $mv->stockUnit?->name }}</strong></p>
                                     </div>
-                                    <span class="text-[10px] font-semibold text-slate-400 shrink-0 mt-0.5">{{ $mv->movement_date?->format('H:i') ?? $mv->created_at->format('H:i') }}</span>
+                                    <span class="text-xs font-semibold text-slate-400 shrink-0 mt-0.5">{{ $mv->movement_date?->format('H:i') ?? $mv->created_at->format('H:i') }}</span>
                                 </div>
                             @endforeach
                         </div>
@@ -237,22 +237,22 @@
                 <div class="bg-slate-900 text-white rounded-2xl p-4 sm:p-5 space-y-3 border border-slate-800">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
                         <h3 class="font-bold text-xs sm:text-sm text-slate-200">Raccourcis</h3>
-                        <span class="text-[10px] text-emerald-400 font-semibold">Accès Rapide</span>
+                        <span class="text-xs text-emerald-400 font-semibold">Accès Rapide</span>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
-                        <a href="{{ route('ventes.create') }}" class="p-2.5 bg-slate-800/80 hover:bg-emerald-600 rounded-xl font-semibold text-slate-200 hover:text-white flex items-center gap-2 transition text-xs border border-slate-700/50">
+                        <a href="{{ route('ventes.create') }}" class="p-2.5 bg-slate-800/80 hover:bg-emerald-600 rounded-xl font-semibold text-slate-200 hover:text-white flex items-center gap-2 transition text-xs sm:text-sm border border-slate-700/50">
                             <x-heroicon-o-arrow-up-tray class="w-4 h-4 text-emerald-400" />
                             <span>Vente</span>
                         </a>
-                        <a href="{{ route('produits.index') }}" class="p-2.5 bg-slate-800/80 hover:bg-slate-800 rounded-xl font-semibold text-slate-200 flex items-center gap-2 transition text-xs border border-slate-700/50">
+                        <a href="{{ route('produits.index') }}" class="p-2.5 bg-slate-800/80 hover:bg-slate-800 rounded-xl font-semibold text-slate-200 flex items-center gap-2 transition text-xs sm:text-sm border border-slate-700/50">
                             <x-heroicon-o-cube class="w-4 h-4 text-emerald-400" />
                             <span>Produits</span>
                         </a>
-                        <a href="{{ route('clients.index') }}" class="p-2.5 bg-slate-800/80 hover:bg-slate-800 rounded-xl font-semibold text-slate-200 flex items-center gap-2 transition text-xs border border-slate-700/50">
+                        <a href="{{ route('clients.index') }}" class="p-2.5 bg-slate-800/80 hover:bg-slate-800 rounded-xl font-semibold text-slate-200 flex items-center gap-2 transition text-xs sm:text-sm border border-slate-700/50">
                             <x-heroicon-o-user class="w-4 h-4 text-emerald-400" />
                             <span>Clients</span>
                         </a>
-                        <a href="{{ route('stock.index') }}" class="p-2.5 bg-slate-800/80 hover:bg-slate-800 rounded-xl font-semibold text-slate-200 flex items-center gap-2 transition text-xs border border-slate-700/50">
+                        <a href="{{ route('stock.index') }}" class="p-2.5 bg-slate-800/80 hover:bg-slate-800 rounded-xl font-semibold text-slate-200 flex items-center gap-2 transition text-xs sm:text-sm border border-slate-700/50">
                             <x-heroicon-o-archive-box class="w-4 h-4 text-emerald-400" />
                             <span>Stock</span>
                         </a>

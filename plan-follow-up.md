@@ -451,12 +451,68 @@ Prise en compte de l'exception `QueryException` (FK Constraint Violation 1451) l
 - **Validation** :
   - Exécution de `php artisan test` : **100% Vert (54 tests réussis, 170 assertions)**.
 
+---
 
+## Session 25 — Agrandissement des Formulaires sur Mobile, Éléments Conditionnels & Refonte du Modal de Mot de Passe
 
+### 1. Tâche réalisée
+Refonte approfondie et harmonisation globale des formulaires, champs de saisie, conteneurs de cartes, éléments conditionnels d'exception et modaux pour un affichage mobile (`< sm`) fluide, aéré, uniforme et parfaitement lisible.
 
+### 2. Corrections et Améliorations apportées
+- **Agrandissement & Uniformisation des Champs de Formulaire sur Mobile** :
+  - Augmentation des marges intérieures et des rembourrages des champs de saisie (`input`, `select`, `textarea`) sur petits écrans (`py-2.5 px-3.5 sm:py-3 sm:px-4 text-xs sm:text-sm` / `py-3 px-4 text-sm sm:text-base` dans les modaux).
+  - Élargissement des conteneurs de formulaires et cartes (`p-4 sm:p-6 lg:p-7`) avec espacement vertical homogène (`space-y-4 sm:space-y-5`).
+  - Standardisation de l'alignement des libellés (`mb-1.5` ou `mb-2`) pour une expérience tactile confortable.
+- **Affichage Optimisé des Éléments Conditionnels / d'Exception** :
+  - **Boutons "Effacer" / Réinitialisation dans les barres de filtres** : Harmonisation de tous les boutons d'effacement sur toutes les pages de listes (`utilisateurs`, `ventes`, `achats`, `produits`, `clients`, `fournisseurs`, `retours`, `pertes`, `reconditionnement`, `paiements`, `factures`, `stock`, `historique/*`). Sur mobile, les boutons "Filtrer" et "Effacer" sont disposés côte-à-côte de manière uniforme avec la même hauteur tactile (`min-h-[42px]`) et les mêmes bordures.
+  - **Motif d'écart de prix / Remise (`ventes/create.blade.php`)** : Bloc alerte ambré pleine largeur (`p-3.5 sm:p-4 rounded-2xl bg-amber-50 border-2 border-amber-300`) affiché de manière très lisible dès que le prix s'écarte du tarif catalogue normal.
+  - **Cassure de stock (`ventes/create.blade.php`)** : Encadré alerte ambré d'exception `p-4 sm:p-5 rounded-2xl bg-amber-50 border-2 border-amber-300` avec sélecteur d'unité source à ouvrir de grande taille.
+  - **Informations Entreprises (`clients/create.blade.php` & `edit.blade.php`)** : Encadré responsive dédié `p-4 sm:p-5 rounded-2xl bg-slate-50/90 border border-slate-200/80` qui s'affiche proprement lors du choix "Entreprise".
+  - **Reconditionnement (`reconditionnement/create.blade.php`)** : Cartes Source (rouge) et Cible (émeraude) aérées avec bannière de vérification d'équivalence en vrac réactive.
+- **Refonte Complète du Modal de Mot de Passe (`utilisateurs/index.blade.php`)** :
+  - Élargissement du modal sur mobile (`w-full max-w-lg sm:max-w-xl p-5 sm:p-7 rounded-3xl`).
+  - Alignement à gauche du formulaire, champ de mot de passe agrandi avec rembourrage généreux (`px-4 py-3 text-sm sm:text-base rounded-2xl focus:ring-2 focus:ring-emerald-500/20`), texte d'aide explicite et boutons d'action empilés en mobile (`flex-col-reverse sm:flex-row gap-3`).
+- **Validation Intégrale de la Suite de Tests** :
+  - Exécution de `php artisan view:clear` & `php artisan test` : **100% Vert (54 tests réussis, 170 assertions, 0 échecs)**.
 
+---
 
+## Session 26 — Uniformisation de la Typographie et des Tailles de Polices sur Tous les Écrans (Desktop & Mobile)
 
+### 1. Tâche réalisée
+Standardisation complète de la typographie, élimination des polices illisibles ou trop petites (`10px` et `11px`), et harmonisation globale des échelles de texte sur l'ensemble des écrans (desktop et mobile).
 
+### 2. Corrections et Améliorations apportées
+- **Échelle Typographique Tailwind Unique (`layouts/app.blade.php` & `components/layouts/app.blade.php`)** :
+  - Configuration stricte des tailles de police : `2xs` (12px), `xs` (14px), `sm` = 15px, `base` = 16px, `lg` = 18px, `xl` = 20px, `2xl` = 24px, `3xl` = 30px avec des hauteurs de ligne (*line-heights*) confortables.
+- **Élimination des Textes Micro-Tailles (`text-[10px]` & `text-[11px]`)** :
+  - Suppression de toutes les classes `text-[10px]` et `text-[11px]` sur tous les composants, cartes, tableaux et navigation.
+  - Uniformisation des en-têtes de tableaux (`<thead>`) : `text-xs font-bold uppercase tracking-wider text-slate-500` sur TOUS les tableaux.
+  - Uniformisation des cellules de tableaux (`<tbody>`) : `text-xs sm:text-sm` pour la lisibilité sur smartphone et ordinateur.
+  - Uniformisation des catégories de navigation dans la sidebar : `text-xs font-bold text-slate-400 uppercase tracking-widest`.
+  - Uniformisation de la barre de navigation tactile inférieure mobile : `text-xs font-semibold`.
+  - Uniformisation des sous-titres des cartes statistiques (`<x-ui.stat-card>`) : `text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-500`.
+- **Validation Intégrale de la Suite de Tests** :
+  - Purge des vues compilées : `php artisan view:clear`.
+  - Suite de tests : `php artisan test` **100% Vert (54 tests réussis, 170 assertions, 0 échecs)**.
+
+---
+
+## Session 27 — Optimisation de l'Affichage des Cartes Statistiques et Chiffres Rapides du Tableau de Bord sur Écran Mobile
+
+### 1. Tâche réalisée
+Ajustement ciblé du composant de carte statistique `<x-ui.stat-card>` et de la grille du tableau de bord pour garantir que les montants financiers élevés (ex: `1 500 000 FCFA`, `12 500 000 FCFA`) s'affichent intégralement, sans tronquage ni chevauchement, sur petit écran mobile en disposition 2 colonnes.
+
+### 2. Corrections et Améliorations apportées
+- **Optimisation des Tailles de Texte de Valeur (`<x-ui.stat-card>`)** :
+  - Ajustement de l'échelle réactive des montants : `text-sm sm:text-xl lg:text-2xl font-extrabold text-slate-900 tracking-tight leading-snug break-words`.
+  - Les grands chiffres restent lisibles et rentrent confortablement dans les blocs de 2 colonnes sur smartphone.
+- **Réduction des Encombrements d'Icônes sur Mobile** :
+  - Rembourrage ajusté à `p-3.5 sm:p-5` et boîte d'icône compacte `p-2 sm:p-3` avec icône `w-4 h-4 sm:w-6 sm:h-6` pour libérer un maximum de largeur horizontale pour les chiffres.
+- **Titres et Sous-titres Adaptatifs** :
+  - Titres avec tronquage propre `text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-500 line-clamp-1`.
+- **Validation** :
+  - Purge des vues compilées : `php artisan view:clear`.
+  - Exécution de `php artisan test` : **100% Vert (54 tests réussis, 170 assertions, 0 échecs)**.
 
 

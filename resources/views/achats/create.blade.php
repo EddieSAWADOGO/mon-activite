@@ -32,16 +32,16 @@
         @csrf
 
         <!-- General Info Card -->
-        <x-ui.card>
-            <h3 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
+        <x-ui.card class="p-4 sm:p-6 lg:p-7">
+            <h3 class="text-sm sm:text-base font-bold text-slate-900 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
                 <x-heroicon-o-truck class="w-5 h-5 text-emerald-600" />
                 <span>Informations Générales</span>
             </h3>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Fournisseur <span class="text-red-500">*</span></label>
-                    <select name="supplier_id" required class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm p-2.5 focus:ring-2 focus:ring-emerald-500 bg-white">
+                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Fournisseur <span class="text-red-500">*</span></label>
+                    <select name="supplier_id" required class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 sm:py-3 sm:px-4 focus:ring-2 focus:ring-emerald-500 bg-white">
                         <option value="">-- Sélectionner un fournisseur --</option>
                         @foreach($suppliers as $supplier)
                             <option value="{{ $supplier->id }}" @selected(old('supplier_id') == $supplier->id)>
@@ -52,21 +52,21 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Date de l'achat <span class="text-red-500">*</span></label>
+                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Date de l'achat <span class="text-red-500">*</span></label>
                     <input type="date" name="purchase_date" value="{{ old('purchase_date', date('Y-m-d')) }}" required
-                           class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm p-2.5 focus:ring-2 focus:ring-emerald-500 bg-white">
+                           class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 sm:py-3 sm:px-4 focus:ring-2 focus:ring-emerald-500 bg-white">
                 </div>
 
                 <div class="sm:col-span-2 lg:col-span-1">
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Notes / Référence commande</label>
+                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Notes / Référence commande</label>
                     <input type="text" name="notes" value="{{ old('notes') }}" placeholder="Ex: Livré selon bon de livraison N° 123"
-                           class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm p-2.5 focus:ring-2 focus:ring-emerald-500 bg-white">
+                           class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 sm:py-3 sm:px-4 focus:ring-2 focus:ring-emerald-500 bg-white">
                 </div>
             </div>
         </x-ui.card>
 
         <!-- Lines Card -->
-        <x-ui.card>
+        <x-ui.card class="p-4 sm:p-6 lg:p-7">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-slate-100 pb-3 mb-4">
                 <h3 class="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
                     <x-heroicon-o-cube class="w-5 h-5 text-emerald-600 shrink-0" />
@@ -78,23 +78,23 @@
                 </x-ui.button>
             </div>
 
-            <div class="space-y-4">
+            <div class="space-y-4 sm:space-y-5">
                 <template x-for="(line, index) in lines" :key="index">
-                    <div class="p-3 sm:p-4 lg:p-5 bg-slate-50/70 border border-slate-200/90 rounded-2xl space-y-3.5 relative">
-                        <div class="flex items-center justify-between pb-1 border-b border-slate-200/60">
-                            <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wide" x-text="'Ligne #' + (index + 1)"></span>
-                            <button type="button" @click="removeLine(index)" x-show="lines.length > 1" class="text-red-600 hover:text-red-800 p-1 flex items-center gap-1 text-xs font-bold">
+                    <div class="p-4 sm:p-5 lg:p-6 bg-slate-50/70 border border-slate-200/90 rounded-2xl space-y-4 relative shadow-xs">
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-200/80">
+                            <span class="text-xs sm:text-sm font-extrabold text-slate-800 uppercase tracking-wide" x-text="'Ligne #' + (index + 1)"></span>
+                            <button type="button" @click="removeLine(index)" x-show="lines.length > 1" class="text-red-600 hover:text-red-800 p-1 flex items-center gap-1 text-xs sm:text-sm font-bold">
                                 <x-heroicon-o-trash class="w-4 h-4" />
                                 <span>Supprimer</span>
                             </button>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                             <!-- Product Select -->
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Produit <span class="text-red-500">*</span></label>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Produit <span class="text-red-500">*</span></label>
                                 <select :name="'lines['+index+'][product_id]'" x-model="line.product_id" @change="onProductChange(index)" required
-                                        class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm p-2.5 focus:ring-2 focus:ring-emerald-500 bg-white">
+                                        class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 sm:py-3 focus:ring-2 focus:ring-emerald-500 bg-white">
                                     <option value="">-- Produit --</option>
                                     <template x-for="p in availableProducts" :key="p.id">
                                         <option :value="p.id" x-text="p.name"></option>
@@ -104,9 +104,9 @@
 
                             <!-- Unit Select -->
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Format / Unité <span class="text-red-500">*</span></label>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Format / Unité <span class="text-red-500">*</span></label>
                                 <select :name="'lines['+index+'][stock_unit_id]'" x-model="line.stock_unit_id" required
-                                        class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm p-2.5 focus:ring-2 focus:ring-emerald-500 bg-white">
+                                        class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 sm:py-3 focus:ring-2 focus:ring-emerald-500 bg-white">
                                     <option value="">-- Unité --</option>
                                     <template x-for="u in getUnitsForProduct(line.product_id)" :key="u.id">
                                         <option :value="u.id" x-text="u.name + (u.is_base_unit ? ' (Base)' : '')"></option>
@@ -116,20 +116,20 @@
 
                             <!-- Quantity -->
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Quantité <span class="text-red-500">*</span></label>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Quantité <span class="text-red-500">*</span></label>
                                 <input type="number" step="0.0001" min="0.0001" :name="'lines['+index+'][quantity]'" x-model.number="line.quantity" required
-                                       class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm p-2.5 focus:ring-2 focus:ring-emerald-500 bg-white">
+                                       class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 sm:py-3 focus:ring-2 focus:ring-emerald-500 bg-white font-bold">
                             </div>
 
                             <!-- Unit Price -->
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Prix Unitaire D'Achat (FCFA) <span class="text-red-500">*</span></label>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Prix Unitaire D'Achat (FCFA) <span class="text-red-500">*</span></label>
                                 <input type="number" min="0" :name="'lines['+index+'][unit_price]'" x-model.number="line.unit_price" required
-                                       class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm p-2.5 focus:ring-2 focus:ring-emerald-500 bg-white">
+                                       class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 sm:py-3 focus:ring-2 focus:ring-emerald-500 bg-white font-bold">
                             </div>
                         </div>
 
-                        <div class="text-right text-xs text-slate-600 pt-1 font-medium">
+                        <div class="text-right text-xs sm:text-sm text-slate-600 pt-1 font-medium">
                             Sous-total ligne : <span class="font-extrabold text-slate-900" x-text="formatNumber(lineSubtotal(line)) + ' FCFA'"></span>
                         </div>
                     </div>

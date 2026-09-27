@@ -49,7 +49,12 @@
                     </div>
                 </div>
 
-                <div class="col-span-1 sm:col-span-2 lg:col-span-4 flex flex-col-reverse sm:flex-row justify-end gap-2 pt-2 border-t border-slate-100 [&>button]:w-full [&>button]:sm:w-auto">
+                <div class="col-span-1 sm:col-span-2 lg:col-span-4 flex flex-col-reverse sm:flex-row justify-end gap-2.5 pt-3 border-t border-slate-100 [&>a]:w-full [&>a]:sm:w-auto [&>button]:w-full [&>button]:sm:w-auto">
+                    @if(request()->hasAny(['product_id', 'period', 'start_date', 'end_date']))
+                        <a href="{{ route('historique.sales') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center justify-center whitespace-nowrap bg-white min-h-[42px] transition active:scale-98">
+                            Effacer
+                        </a>
+                    @endif
                     <x-ui.button type="submit" variant="primary" icon="magnifying-glass" class="w-full sm:w-auto justify-center">
                         Appliquer les filtres
                     </x-ui.button>

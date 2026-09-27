@@ -30,13 +30,14 @@
                         sans: ['Poppins', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
                     },
                     fontSize: {
-                        'xs':   ['0.875rem', { lineHeight: '1.35rem' }],
-                        'sm':   ['0.95rem',  { lineHeight: '1.5rem'  }],
-                        'base': ['1.05rem',  { lineHeight: '1.65rem' }],
-                        'lg':   ['1.2rem',   { lineHeight: '1.8rem'  }],
-                        'xl':   ['1.35rem',  { lineHeight: '1.95rem' }],
-                        '2xl':  ['1.6rem',   { lineHeight: '2.1rem'  }],
-                        '3xl':  ['2rem',     { lineHeight: '2.35rem' }],
+                        '2xs':  ['0.75rem',   { lineHeight: '1rem' }],
+                        'xs':   ['0.875rem',  { lineHeight: '1.25rem' }],
+                        'sm':   ['0.9375rem', { lineHeight: '1.375rem' }],
+                        'base': ['1rem',      { lineHeight: '1.5rem' }],
+                        'lg':   ['1.125rem',  { lineHeight: '1.75rem' }],
+                        'xl':   ['1.25rem',   { lineHeight: '1.875rem' }],
+                        '2xl':  ['1.5rem',    { lineHeight: '2rem' }],
+                        '3xl':  ['1.875rem',  { lineHeight: '2.25rem' }],
                     },
                     colors: {
                         emerald: {
@@ -214,7 +215,7 @@
 
                 <!-- Commercial -->
                 <div class="space-y-0.5">
-                    <p class="px-3 pb-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Commercial</p>
+                    <p class="px-3 pb-1 text-xs font-bold text-slate-400 uppercase tracking-widest">Commercial</p>
 
                     <a href="{{ route('ventes.index') }}"
                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all active:scale-98
@@ -251,7 +252,7 @@
 
                 <!-- Catalogue & Stock -->
                 <div class="space-y-0.5">
-                    <p class="px-3 pb-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Catalogue & Stock</p>
+                    <p class="px-3 pb-1 text-xs font-bold text-slate-400 uppercase tracking-widest">Catalogue & Stock</p>
 
                     <a href="{{ route('produits.index') }}"
                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all active:scale-98
@@ -295,7 +296,7 @@
 
                 <!-- Partenaires -->
                 <div class="space-y-0.5">
-                    <p class="px-3 pb-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Partenaires & Suivi</p>
+                    <p class="px-3 pb-1 text-xs font-bold text-slate-400 uppercase tracking-widest">Partenaires & Suivi</p>
 
                     <a href="{{ route('clients.index') }}"
                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all active:scale-98
@@ -531,27 +532,27 @@
     <!-- ── Barre de navigation mobile tactile iOS Glassmorphism style ── -->
     <nav class="sm:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200/80 flex items-center justify-around py-2 px-1">
         <a href="{{ route('dashboard') }}"
-           class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xl transition active:scale-95 {{ request()->routeIs('dashboard') ? 'text-emerald-600 font-bold' : 'text-slate-400' }} text-[10px]">
+           class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xl transition active:scale-95 {{ request()->routeIs('dashboard') ? 'text-emerald-600 font-bold' : 'text-slate-400' }} text-xs">
             <x-heroicon-o-squares-2x2 class="w-5 h-5" />
             <span>Accueil</span>
         </a>
         <a href="{{ route('ventes.index') }}"
-           class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xl transition active:scale-95 {{ request()->routeIs('ventes.*') ? 'text-emerald-600 font-bold' : 'text-slate-400' }} text-[10px]">
+           class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xl transition active:scale-95 {{ request()->routeIs('ventes.*') ? 'text-emerald-600 font-bold' : 'text-slate-400' }} text-xs">
             <x-heroicon-o-arrow-up-tray class="w-5 h-5" />
             <span>Ventes</span>
         </a>
         <a href="{{ route('produits.index') }}"
-           class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xl transition active:scale-95 {{ request()->routeIs('produits.*') ? 'text-emerald-600 font-bold' : 'text-slate-400' }} text-[10px]">
+           class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xl transition active:scale-95 {{ request()->routeIs('produits.*') ? 'text-emerald-600 font-bold' : 'text-slate-400' }} text-xs">
             <x-heroicon-o-cube class="w-5 h-5" />
             <span>Produits</span>
         </a>
         <a href="{{ route('stock.index') }}"
-           class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xl transition active:scale-95 {{ request()->routeIs('stock.*') ? 'text-emerald-600 font-bold' : 'text-slate-400' }} text-[10px]">
+           class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xl transition active:scale-95 {{ request()->routeIs('stock.*') ? 'text-emerald-600 font-bold' : 'text-slate-400' }} text-xs">
             <x-heroicon-o-archive-box class="w-5 h-5" />
             <span>Stock</span>
         </a>
         <a href="{{ route('factures.index') }}"
-           class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xl transition active:scale-95 {{ request()->routeIs('factures.*') ? 'text-emerald-600 font-bold' : 'text-slate-400' }} text-[10px]">
+           class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xl transition active:scale-95 {{ request()->routeIs('factures.*') ? 'text-emerald-600 font-bold' : 'text-slate-400' }} text-xs">
             <x-heroicon-o-document-text class="w-5 h-5" />
             <span>Factures</span>
         </a>

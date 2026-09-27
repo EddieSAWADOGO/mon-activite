@@ -25,12 +25,12 @@
                 <option value="unpaid" {{ request('status') === 'unpaid' ? 'selected' : '' }}>Impayée</option>
             </select>
 
-            <div class="flex gap-2 w-full sm:w-auto">
+            <div class="flex gap-2 w-full sm:w-auto [&>a]:flex-1 [&>button]:flex-1 sm:[&>a]:flex-none sm:[&>button]:flex-none">
                 <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" size="sm" class="w-full sm:w-auto justify-center">
                     Filtrer
                 </x-ui.button>
                 @if(request()->hasAny(['search', 'status']))
-                    <a href="{{ route('factures.index') }}" class="rounded-xl border border-slate-200 text-xs py-2 px-3 text-slate-600 hover:text-slate-900 flex items-center justify-center whitespace-nowrap bg-white">
+                    <a href="{{ route('factures.index') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center justify-center whitespace-nowrap bg-white min-h-[42px] transition active:scale-98">
                         Effacer
                     </a>
                 @endif
@@ -54,7 +54,7 @@
         <!-- Table Unifiée Scrollable Horizon -->
         <div class="bg-white rounded-2xl border border-slate-200/80 overflow-x-auto shadow-xs">
             <table class="w-full text-left text-xs sm:text-sm min-w-[640px]">
-                <thead class="bg-slate-50/80 text-slate-500 font-bold uppercase text-[10px] sm:text-xs tracking-wider border-b border-slate-200/80">
+                <thead class="bg-slate-50/80 text-slate-500 font-bold uppercase text-xs tracking-wider border-b border-slate-200/80">
                     <tr>
                         <th class="py-3.5 px-3.5 sm:px-4 whitespace-nowrap">N° Facture & Date</th>
                         <th class="py-3.5 px-3.5 sm:px-4 whitespace-nowrap">Client</th>

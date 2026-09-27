@@ -222,8 +222,8 @@
                 />
             @else
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs">
-                        <thead class="bg-slate-50 text-slate-400 font-bold uppercase text-[10px] tracking-wider border-b border-slate-100">
+                    <table class="w-full text-left text-xs sm:text-sm">
+                        <thead class="bg-slate-50 text-slate-500 font-bold uppercase text-xs tracking-wider border-b border-slate-100">
                             <tr>
                                 <th class="py-2.5 px-4">Date</th>
                                 <th class="py-2.5 px-4">Type</th>

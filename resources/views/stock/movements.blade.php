@@ -58,12 +58,12 @@
                 </div>
             </div>
 
-            <div class="flex gap-2 w-full">
+            <div class="flex gap-2 w-full [&>a]:flex-1 [&>button]:flex-1 sm:[&>a]:flex-none sm:[&>button]:flex-none">
                 <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" size="sm" class="w-full justify-center">
                     Filtrer
                 </x-ui.button>
                 @if(request()->hasAny(['product_id', 'type', 'start_date', 'end_date']))
-                    <a href="{{ route('stock.movements') }}" class="rounded-xl border border-slate-200 text-xs py-2 px-3 text-slate-600 hover:text-slate-900 flex items-center justify-center whitespace-nowrap bg-white">
+                    <a href="{{ route('stock.movements') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center justify-center whitespace-nowrap bg-white min-h-[42px] transition active:scale-98">
                         Effacer
                     </a>
                 @endif

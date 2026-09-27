@@ -23,9 +23,16 @@
             <input type="text" name="search" value="{{ request('search') }}"
                    placeholder="Rechercher par nom, téléphone..."
                    class="w-full sm:flex-1 rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500">
-            <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" size="sm" class="w-full sm:w-auto">
-                Filtrer
-            </x-ui.button>
+            <div class="flex gap-2 w-full sm:w-auto [&>a]:flex-1 [&>button]:flex-1 sm:[&>a]:flex-none sm:[&>button]:flex-none">
+                <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" size="sm" class="w-full sm:w-auto">
+                    Filtrer
+                </x-ui.button>
+                @if(request('search'))
+                    <a href="{{ route('fournisseurs.index') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center justify-center whitespace-nowrap bg-white min-h-[42px] transition active:scale-98">
+                        Effacer
+                    </a>
+                @endif
+            </div>
         </form>
     </x-ui.card>
 

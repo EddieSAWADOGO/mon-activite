@@ -34,7 +34,7 @@
             @method('PUT')
 
             <!-- Informations Générales -->
-            <x-ui.card title="1. Informations générales" subtitle="Nom, description et statut d'activité du produit.">
+            <x-ui.card title="1. Informations générales" subtitle="Nom, description et statut d'activité du produit." class="p-4 sm:p-6 lg:p-7">
                 <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
                     <!-- Nom du produit -->
                     <div class="sm:col-span-8">
@@ -46,7 +46,7 @@
                                id="name"
                                value="{{ old('name', $product->name) }}"
                                required
-                               class="w-full py-2.5 px-3.5 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('name') border-red-500 @enderror">
+                               class="w-full py-2.5 px-3.5 sm:py-3 sm:px-4 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('name') border-red-500 @enderror">
                         @error('name')
                             <p class="text-xs text-red-600 mt-1 flex items-center gap-1">
                                 <x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" />
@@ -60,7 +60,7 @@
                         <label for="is_active" class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
                             Statut catalogue <span class="text-red-500">*</span>
                         </label>
-                        <select name="is_active" id="is_active" class="w-full py-2.5 px-3.5 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-white transition">
+                        <select name="is_active" id="is_active" class="w-full py-2.5 px-3.5 sm:py-3 sm:px-4 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-white transition">
                             <option value="1" @selected(old('is_active', $product->is_active) == 1)>Actif (Proposé aux ventes)</option>
                             <option value="0" @selected(old('is_active', $product->is_active) == 0)>Inactif (Masqué des ventes)</option>
                         </select>
@@ -74,7 +74,7 @@
                         <textarea name="description"
                                   id="description"
                                   rows="3"
-                                  class="w-full py-2.5 px-3.5 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('description') border-red-500 @enderror">{{ old('description', $product->description) }}</textarea>
+                                  class="w-full py-2.5 px-3.5 sm:py-3 sm:px-4 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('description') border-red-500 @enderror">{{ old('description', $product->description) }}</textarea>
                         @error('description')
                             <p class="text-xs text-red-600 mt-1 flex items-center gap-1">
                                 <x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" />

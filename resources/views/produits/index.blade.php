@@ -49,12 +49,12 @@
                     <span>Stock bas uniquement</span>
                 </label>
 
-                <div class="flex items-center justify-center gap-2 shrink-0 w-full sm:w-auto">
+                <div class="flex items-center justify-center gap-2 shrink-0 w-full sm:w-auto [&>a]:flex-1 [&>button]:flex-1 sm:[&>a]:flex-none sm:[&>button]:flex-none">
                     <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" size="md" class="w-full sm:w-auto">
                         Filtrer
                     </x-ui.button>
                     @if(request()->anyFilled(['search', 'status', 'low_stock']))
-                        <a href="{{ route('produits.index') }}" class="text-slate-500 hover:text-slate-800 text-xs font-semibold whitespace-nowrap px-2.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition">
+                        <a href="{{ route('produits.index') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center justify-center whitespace-nowrap bg-white min-h-[42px] transition active:scale-98">
                             Effacer
                         </a>
                     @endif
@@ -88,7 +88,7 @@
                 <!-- Table Unifiée Scrollable Horizon -->
             <div class="bg-white rounded-2xl border border-slate-200/80 overflow-x-auto shadow-xs">
                 <table class="w-full text-left text-xs sm:text-sm min-w-[650px]">
-                    <thead class="bg-slate-50/80 text-slate-500 font-bold uppercase text-[10px] sm:text-xs tracking-wider border-b border-slate-200/80">
+                    <thead class="bg-slate-50/80 text-slate-500 font-bold uppercase text-xs tracking-wider border-b border-slate-200/80">
                         <tr>
                             <th class="py-3.5 px-4 whitespace-nowrap">Produit</th>
                             <th class="py-3.5 px-4 whitespace-nowrap">Unité de base</th>

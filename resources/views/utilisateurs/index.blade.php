@@ -33,12 +33,12 @@
                     @endforeach
                 </select>
 
-                <div class="flex gap-2 w-full sm:w-auto">
+                <div class="flex gap-2 w-full sm:w-auto [&>a]:flex-1 [&>button]:flex-1 sm:[&>a]:flex-none sm:[&>button]:flex-none">
                     <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" size="sm" class="w-full sm:w-auto">
                         Filtrer
                     </x-ui.button>
                     @if (request()->hasAny(['search', 'role']))
-                        <a href="{{ route('utilisateurs.index') }}" class="rounded-xl border border-slate-200 text-xs py-2 px-3 text-slate-600 hover:text-slate-900 flex items-center justify-center whitespace-nowrap bg-white">
+                        <a href="{{ route('utilisateurs.index') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center justify-center whitespace-nowrap bg-white min-h-[42px] transition active:scale-98">
                             Effacer
                         </a>
                     @endif
@@ -63,7 +63,7 @@
             <!-- Table Unifiée Scrollable Horizon -->
             <div class="bg-white rounded-2xl border border-slate-200/80 overflow-x-auto shadow-xs">
                 <table class="w-full text-left text-xs sm:text-sm min-w-[650px]">
-                    <thead class="bg-slate-50/80 text-slate-400 text-[10px] sm:text-xs font-bold uppercase tracking-wider border-b border-slate-100">
+                    <thead class="bg-slate-50/80 text-slate-500 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
                         <tr>
                             <th class="py-3.5 px-4 whitespace-nowrap">Utilisateur</th>
                             <th class="py-3.5 px-4 whitespace-nowrap">Rôle</th>
@@ -145,7 +145,7 @@
                  x-transition:leave-start="opacity-100"
                  x-transition:leave-end="opacity-0"
                  @keydown.escape.window="showResetModal = false"
-                 class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
+                 class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
                 <div x-show="showResetModal"
                      x-transition:enter="transition ease-out duration-200"
                      x-transition:enter-start="opacity-0 scale-95 translate-y-2"
@@ -154,33 +154,41 @@
                      x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                      x-transition:leave-end="opacity-0 scale-95 translate-y-2"
                      @click.away="showResetModal = false"
-                     class="bg-white rounded-3xl max-w-md w-[calc(100%-2rem)] sm:w-full p-6 shadow-2xl space-y-4 border border-slate-100 relative my-auto mx-auto transform text-center">
-                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                        <h3 class="text-base font-bold text-slate-900">Réinitialiser le mot de passe</h3>
-                        <button type="button" @click="showResetModal = false" class="p-1 text-slate-400 hover:text-slate-600 rounded-lg">
+                     class="bg-white rounded-3xl max-w-lg sm:max-w-xl w-full p-5 sm:p-7 shadow-2xl space-y-5 border border-slate-100 relative my-auto mx-auto transform text-left">
+                    <div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
+                        <div class="flex items-center gap-2.5">
+                            <div class="p-2 rounded-xl bg-amber-100 text-amber-700 shrink-0">
+                                <x-heroicon-o-key class="w-5 h-5 sm:w-6 sm:h-6" />
+                            </div>
+                            <h3 class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">Réinitialiser le mot de passe</h3>
+                        </div>
+                        <button type="button" @click="showResetModal = false" class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition">
                             <x-heroicon-o-x-mark class="w-5 h-5" />
                         </button>
                     </div>
 
-                    <p class="text-xs text-slate-500">
-                        Saisissez le nouveau mot de passe pour <strong class="text-slate-900 font-bold" x-text="selectedUser?.name"></strong> :
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        Saisissez le nouveau mot de passe d'accès pour l'utilisateur <strong class="text-slate-900 font-extrabold" x-text="selectedUser?.name"></strong> :
                     </p>
 
-                    <form :action="resetAction" method="POST" @submit="submittingReset = true" class="space-y-4">
+                    <form :action="resetAction" method="POST" @submit="submittingReset = true" class="space-y-5">
                         @csrf
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1.5 text-left">Nouveau mot de passe <span class="text-red-500">*</span></label>
+                            <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2 text-left">
+                                Nouveau mot de passe <span class="text-red-500">*</span>
+                            </label>
                             <input type="password" name="password" required minlength="8"
-                                   class="w-full bg-white border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 transition"
+                                   class="w-full bg-white border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-2xl px-4 py-3 text-sm sm:text-base text-slate-900 transition shadow-xs"
                                    placeholder="Minimum 8 caractères">
+                            <p class="text-xs text-slate-400 mt-1.5">Le mot de passe doit comporter au moins 8 caractères.</p>
                         </div>
 
-                        <div class="flex flex-col-reverse sm:flex-row items-center justify-center sm:justify-end gap-2 pt-2 border-t border-slate-100 [&>button]:w-full [&>button]:sm:w-auto">
-                            <button type="button" @click="showResetModal = false" class="w-full sm:w-auto px-4 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-xl text-xs font-semibold transition active:scale-98">
+                        <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 pt-3 border-t border-slate-100 [&>button]:w-full [&>button]:sm:w-auto">
+                            <button type="button" @click="showResetModal = false" class="w-full sm:w-auto px-5 py-2.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-xl text-xs sm:text-sm font-semibold transition active:scale-98 min-h-[42px]">
                                 Annuler
                             </button>
-                            <x-ui.button type="submit" variant="primary" size="sm" ::loading="submittingReset" class="w-full sm:w-auto">
-                                Enregistrer
+                            <x-ui.button type="submit" variant="primary" size="md" icon="check-circle" ::loading="submittingReset" class="w-full sm:w-auto">
+                                Enregistrer le mot de passe
                             </x-ui.button>
                         </div>
                     </form>

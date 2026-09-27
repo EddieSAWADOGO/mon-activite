@@ -33,7 +33,7 @@
             @csrf
 
             <!-- Informations Générales -->
-            <x-ui.card title="1. Informations générales" subtitle="Identification du produit dans le catalogue.">
+            <x-ui.card title="1. Informations générales" subtitle="Identification du produit dans le catalogue." class="p-4 sm:p-6 lg:p-7">
                 <div class="grid grid-cols-1 gap-4">
                     <!-- Nom du produit -->
                     <div>
@@ -46,7 +46,7 @@
                                value="{{ old('name') }}"
                                required
                                placeholder="ex: Pesticide Delta, Maïs Jaune, Huile Végétale..."
-                               class="w-full py-2.5 px-3.5 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('name') border-red-500 @enderror">
+                               class="w-full py-2.5 px-3.5 sm:py-3 sm:px-4 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('name') border-red-500 @enderror">
                         @error('name')
                             <p class="text-xs text-red-600 mt-1 flex items-center gap-1">
                                 <x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" />
@@ -64,7 +64,7 @@
                                   id="description"
                                   rows="3"
                                   placeholder="Notes ou spécifications sur le produit..."
-                                  class="w-full py-2.5 px-3.5 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('description') border-red-500 @enderror">{{ old('description') }}</textarea>
+                                  class="w-full py-2.5 px-3.5 sm:py-3 sm:px-4 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('description') border-red-500 @enderror">{{ old('description') }}</textarea>
                         @error('description')
                             <p class="text-xs text-red-600 mt-1 flex items-center gap-1">
                                 <x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" />
@@ -76,7 +76,7 @@
             </x-ui.card>
 
             <!-- Unité de Base -->
-            <x-ui.card title="2. Unité de base (Unité indivisible)" subtitle="C'est la plus petite unité de comptage pour ce produit (ex: Bidon, Kilogramme, Bouteille, Pièce).">
+            <x-ui.card title="2. Unité de base (Unité indivisible)" subtitle="C'est la plus petite unité de comptage pour ce produit (ex: Bidon, Kilogramme, Bouteille, Pièce)." class="p-4 sm:p-6 lg:p-7">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <!-- Nom de l'unité de base -->
                     <div>
@@ -89,7 +89,7 @@
                                value="{{ old('base_unit_name') }}"
                                required
                                placeholder="ex: Bidon, KG, Pièce..."
-                               class="w-full py-2.5 px-3.5 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('base_unit_name') border-red-500 @enderror">
+                               class="w-full py-2.5 px-3.5 sm:py-3 sm:px-4 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('base_unit_name') border-red-500 @enderror">
                         @error('base_unit_name')
                             <p class="text-xs text-red-600 mt-1 flex items-center gap-1">
                                 <x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" />
@@ -110,7 +110,7 @@
                                id="base_unit_price"
                                value="{{ old('base_unit_price', 0) }}"
                                required
-                               class="w-full py-2.5 px-3.5 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('base_unit_price') border-red-500 @enderror">
+                               class="w-full py-2.5 px-3.5 sm:py-3 sm:px-4 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('base_unit_price') border-red-500 @enderror">
                         @error('base_unit_price')
                             <p class="text-xs text-red-600 mt-1 flex items-center gap-1">
                                 <x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" />
@@ -131,7 +131,7 @@
                                id="base_unit_low_stock_threshold"
                                value="{{ old('base_unit_low_stock_threshold', 10) }}"
                                required
-                               class="w-full py-2.5 px-3.5 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('base_unit_low_stock_threshold') border-red-500 @enderror">
+                               class="w-full py-2.5 px-3.5 sm:py-3 sm:px-4 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('base_unit_low_stock_threshold') border-red-500 @enderror">
                         @error('base_unit_low_stock_threshold')
                             <p class="text-xs text-red-600 mt-1 flex items-center gap-1">
                                 <x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" />
@@ -151,7 +151,7 @@
                                name="base_unit_initial_stock"
                                id="base_unit_initial_stock"
                                value="{{ old('base_unit_initial_stock', 0) }}"
-                               class="w-full py-2.5 px-3.5 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('base_unit_initial_stock') border-red-500 @enderror">
+                               class="w-full py-2.5 px-3.5 sm:py-3 sm:px-4 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('base_unit_initial_stock') border-red-500 @enderror">
                         @error('base_unit_initial_stock')
                             <p class="text-xs text-red-600 mt-1 flex items-center gap-1">
                                 <x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" />

@@ -18,19 +18,26 @@
     </x-slot>
 
     <div class="space-y-6">
-        <x-ui.card class="p-4">
-            <form action="{{ route('reconditionnement.index') }}" method="GET" class="flex flex-col sm:flex-row gap-3 items-center">
+        <x-ui.card class="p-3.5 sm:p-4">
+            <form action="{{ route('reconditionnement.index') }}" method="GET" class="flex flex-col sm:flex-row gap-2.5 items-center">
                 <div class="relative w-full sm:flex-1">
-                    <x-heroicon-o-magnifying-glass class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <x-heroicon-o-magnifying-glass class="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                     <input type="text"
                            name="search"
                            value="{{ request('search') }}"
                            placeholder="Rechercher par N° de reconditionnement ou produit..."
                            class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 text-xs sm:text-sm">
                 </div>
-                <x-ui.button type="submit" variant="primary" icon="magnifying-glass" class="w-full sm:w-auto">
-                    Rechercher
-                </x-ui.button>
+                <div class="flex gap-2 w-full sm:w-auto [&>a]:flex-1 [&>button]:flex-1 sm:[&>a]:flex-none sm:[&>button]:flex-none">
+                    <x-ui.button type="submit" variant="primary" icon="magnifying-glass" size="sm" class="w-full sm:w-auto">
+                        Rechercher
+                    </x-ui.button>
+                    @if(request('search'))
+                        <a href="{{ route('reconditionnement.index') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center justify-center whitespace-nowrap bg-white min-h-[42px] transition active:scale-98">
+                            Effacer
+                        </a>
+                    @endif
+                </div>
             </form>
         </x-ui.card>
 

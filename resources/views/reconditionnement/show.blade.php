@@ -20,7 +20,7 @@
                         <span class="text-base font-extrabold text-red-600 block">
                             - {{ number_format($repackaging->source_quantity, 2, ',', ' ') }} {{ $repackaging->sourceStockUnit->name }}
                         </span>
-                        <span class="text-[11px] text-slate-500">Équivalence : {{ $repackaging->sourceStockUnit->base_unit_equivalent }} unité(s) de base</span>
+                        <span class="text-xs text-slate-500">Équivalence : {{ $repackaging->sourceStockUnit->base_unit_equivalent }} unité(s) de base</span>
                     </div>
 
                     <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-100">
@@ -28,7 +28,7 @@
                         <span class="text-base font-extrabold text-emerald-600 block">
                             + {{ number_format($repackaging->target_quantity, 2, ',', ' ') }} {{ $repackaging->targetStockUnit->name }}
                         </span>
-                        <span class="text-[11px] text-slate-500">Équivalence : {{ $repackaging->targetStockUnit->base_unit_equivalent }} unité(s) de base</span>
+                        <span class="text-xs text-slate-500">Équivalence : {{ $repackaging->targetStockUnit->base_unit_equivalent }} unité(s) de base</span>
                     </div>
                 </div>
 

@@ -17,16 +17,16 @@
     };
 @endphp
 
-<div {{ $attributes->merge(['class' => 'bg-white rounded-2xl border border-slate-200/80 p-3.5 sm:p-5 flex items-start justify-between gap-2.5 sm:gap-4 transition-all']) }}>
+<div {{ $attributes->merge(['class' => 'bg-white rounded-2xl border border-slate-200/80 p-3.5 sm:p-5 flex items-start justify-between gap-2.5 sm:gap-4 transition-all shadow-xs min-w-0']) }}>
     <div class="space-y-0.5 sm:space-y-1 min-w-0 flex-1">
-        <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 truncate">{{ $title }}</p>
-        <p class="text-base sm:text-2xl font-extrabold text-slate-900 tracking-tight truncate">{{ $value }}</p>
+        <p class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-500 line-clamp-1">{{ $title }}</p>
+        <p class="text-sm sm:text-xl lg:text-2xl font-extrabold text-slate-900 tracking-tight leading-snug break-words">{{ $value }}</p>
         @if ($subtitle)
-            <p class="text-[10px] sm:text-xs text-slate-500 font-medium truncate">{{ $subtitle }}</p>
+            <p class="text-xs text-slate-500 font-medium truncate">{{ $subtitle }}</p>
         @endif
     </div>
 
-    <div class="p-2 sm:p-3 rounded-xl sm:rounded-2xl border flex-shrink-0 {{ $bgIconClasses }}">
+    <div class="p-2 sm:p-3 rounded-xl sm:rounded-2xl border shrink-0 {{ $bgIconClasses }}">
         <x-dynamic-component :component="'heroicon-o-' . $icon" class="w-4 h-4 sm:w-6 sm:h-6" />
     </div>
 </div>
