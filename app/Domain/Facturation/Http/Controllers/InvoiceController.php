@@ -3,6 +3,7 @@
 namespace App\Domain\Facturation\Http\Controllers;
 
 use App\Domain\Facturation\Models\Invoice;
+use App\Domain\Settings\Models\CompanySetting;
 use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
@@ -48,8 +49,9 @@ class InvoiceController extends Controller
         $this->authorize('view', $invoice);
 
         $invoice->load(['customer', 'createdBy', 'sale', 'lines.product', 'lines.stockUnit']);
+        $company = CompanySetting::getSettings();
 
-        return view('factures.show', compact('invoice'));
+        return view('factures.show', compact('invoice', 'company'));
     }
 
     public function pdf(Invoice $invoice)
@@ -57,8 +59,9 @@ class InvoiceController extends Controller
         $this->authorize('view', $invoice);
 
         $invoice->load(['customer', 'createdBy', 'lines.product', 'lines.stockUnit']);
+        $company = CompanySetting::getSettings();
 
-        $pdf = Pdf::loadView('factures.pdf', compact('invoice'))
+        $pdf = Pdf::loadView('factures.pdf', compact('invoice', 'company'))
             ->setPaper('a4', 'portrait');
 
         return $pdf->download("Facture_{$invoice->invoice_number}.pdf");
@@ -71,11 +74,13 @@ class InvoiceController extends Controller
         $customerPhone = $invoice->customer?->whatsapp ?? $invoice->customer?->phone;
         $cleanPhone = $customerPhone ? preg_replace('/[^0-9]/', '', $customerPhone) : '';
 
+        $company = CompanySetting::getSettings();
         $message = sprintf(
-            "Bonjour %s, voici votre facture n° %s du %s d'un montant total de %s FCFA (Reste à payer : %s FCFA). Merci pour votre confiance !",
+            "Bonjour %s, voici votre facture n° %s du %s émise par %s d'un montant total de %s FCFA (Reste à payer : %s FCFA). Merci pour votre confiance !",
             $invoice->customer?->name ?? 'Client',
             $invoice->invoice_number,
             $invoice->invoice_date->format('d/m/Y'),
+            $company->name,
             number_format($invoice->total_amount, 0, ',', ' '),
             number_format($invoice->remaining_amount, 0, ',', ' ')
         );

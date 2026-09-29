@@ -79,7 +79,7 @@ class PurchaseController extends Controller
     {
         $this->authorize('view', $purchase);
 
-        $purchase->load(['supplier', 'createdBy', 'lines.product', 'lines.stockUnit']);
+        $purchase->load(['supplier', 'createdBy', 'lines.product', 'lines.stockUnit', 'payments.createdBy']);
 
         return view('achats.show', compact('purchase'));
     }

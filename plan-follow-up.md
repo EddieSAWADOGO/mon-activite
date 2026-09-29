@@ -262,7 +262,7 @@ Refonte et harmonisation des en-têtes de pages avec bouton de retour sur mobile
   - Sur mobile, le bouton s'étend sur toute la largeur (`w-full justify-center`) sous le titre de section, évitant tout débordement hors du conteneur.
 - **Unification de la Case à Coucher / Filtre "Stock Bas"** :
   - Création d'un composant de filtrage "Stock bas uniquement" identique, réactif et élégant dans `produits/index.blade.php` et `stock/index.blade.php`.
-  - Intégration de la soumission automatique au changement (`onchange="this.form.submit()"`), avec badge/fond ambré subtil au clic et dimensions strictement alignées avec les autres champs de recherche et sélecteurs de statut.
+  - Intégration de la soumission automatique au changement (`onchange="this.form.submit()"`), avec badge/fond ambré subtil au clic et dimensions strictly alignées avec les autres champs de recherche et sélecteurs de statut.
 - **Proximité des Champs & Conteneurs Maximisée** :
   - Réduction des rembourrages de `<x-ui.card>` à `p-2.5 sm:p-4 lg:p-5` et augmentation de la largeur maximale des conteneurs à `max-w-6xl` pour une occupation optimale de l'écran.
 - **Validation Fonctionnelle** :
@@ -288,23 +288,6 @@ Vérification exhaustive de la logique de validation backend (Form Requests / Co
 
 ---
 
-## Session 19 — Refonte des En-têtes Mobile des Pages Historique (Alignement Vertical & Centrage du Bouton Retour)
-
-### 1. Tâche réalisée
-Refonte complète des en-têtes des 6 pages du module Historique (`historique/index.blade.php`, `sales.blade.php`, `purchases.blade.php`, `stock-at-date.blade.php`, `top-products.blade.php`, `financial-overview.blade.php`) pour éliminer tout téléscopage, écrasement ou chevauchement entre le bouton de retour et les titres sur écran mobile (`< sm`).
-
-### 2. Corrections et Améliorations apportées
-- **Standardisation du Layout d'En-tête Mobile** :
-  - Alignement du bouton `<x-ui.back-button>` directement à gauche, sur la même ligne horizontale que le titre de la page avec disposition flex centrée verticalement (`flex items-center gap-2.5 pb-2 border-b border-slate-200/60`).
-  - Utilisation du conteneur de titre extensible `min-w-0 flex-1` avec suppression de la troncation forcée sur petit écran pour laisser le titre respirer.
-  - Libellé du bouton raccourci à `Retour` pour un encombrement minimal tout en conservant une zone de clic tactile optimale.
-  - Rendu parfaitement fluide et aligné verticalement (`items-center`), éliminant définitivement les collisions visuelles sur petit écran.
-- **Validation Fonctionnelle** :
-  - Exécution de `php artisan test` : **100% Vert (53 tests réussis, 169 assertions, 0 échecs)**.
-
-
----
-
 ## Session 18 — Optimisation Mobile des Cartes Imbriquées, Champs Conditionnels & Barres de Filtres
 
 ### 1. Tâche réalisée
@@ -320,7 +303,7 @@ Optimisation globale de l'ergonomie mobile (`< sm`) pour les cartes imbriquées 
   - **Reconditionnement (`reconditionnement/create.blade.php`)** : Blocs Source (rouge) et Cible (émeraude) optimisés avec vérification d'équivalence en vrac responsive.
 - **Harmonisation des Barres de Filtres et Boutons sur Mobile** :
   - Réagencement en grilles responsives (`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5`) sur toutes les pages de listes et d'historique (`achats/index`, `ventes/index`, `factures/index`, `stock/movements`, `historique/sales`, `historique/purchases`, `historique/stock-at-date`, `historique/top-products`).
-  - Alignement des sélecteurs de dates côte à côte en 2 colonnes (`grid grid-cols-2`) sur smartphone avec boutons "Filtrer" et "Effacer" occupant toute la largeur (`w-full sm:w-auto`).
+  - Alignement des sélecteurs de dates côte à côte en 2 colonnes (`grid grid-cols-2`) sur smartphone avec boutons "Filtrer" et "Effacer" occupying toute la largeur (`w-full sm:w-auto`).
 - **Validation de la Suite de Tests** :
   - Exécution de `php artisan test` : **100% Vert (53 tests réussis, 169 assertions, 0 échecs)**.
 
@@ -483,7 +466,7 @@ Refonte approfondie et harmonisation globale des formulaires, champs de saisie, 
 Standardisation complète de la typographie, élimination des polices illisibles ou trop petites (`10px` et `11px`), et harmonisation globale des échelles de texte sur l'ensemble des écrans (desktop et mobile).
 
 ### 2. Corrections et Améliorations apportées
-- **Échelle Typographique Tailwind Unique (`layouts/app.blade.php` & `components/layouts/app.blade.php`)** :
+- **Ééchelle Typographique Tailwind Unique (`layouts/app.blade.php` & `components/layouts/app.blade.php`)** :
   - Configuration stricte des tailles de police : `2xs` (12px), `xs` (14px), `sm` = 15px, `base` = 16px, `lg` = 18px, `xl` = 20px, `2xl` = 24px, `3xl` = 30px avec des hauteurs de ligne (*line-heights*) confortables.
 - **Élimination des Textes Micro-Tailles (`text-[10px]` & `text-[11px]`)** :
   - Suppression de toutes les classes `text-[10px]` et `text-[11px]` sur tous les composants, cartes, tableaux et navigation.
@@ -514,5 +497,366 @@ Ajustement ciblé du composant de carte statistique `<x-ui.stat-card>` et de la 
 - **Validation** :
   - Purge des vues compilées : `php artisan view:clear`.
   - Exécution de `php artisan test` : **100% Vert (54 tests réussis, 170 assertions, 0 échecs)**.
+
+---
+
+## Session 28 — Implémentation Complète des Règlements Fournisseurs & Suivi des Dettes d'Achat
+
+### 1. Tâche réalisée
+Prise en compte de la demande de gestion du paiement différé / complémentaire des achats auprès des fournisseurs : extension de la table `payments` pour supporter les bons d'achat (`purchase_id`), création de l'écran et du formulaire de règlement fournisseur, mise à jour dynamique des soldes (`paid_amount` et `remaining_amount`), intégration des boutons de règlement et de l'historique sur la fiche d'achat, le répertoire fournisseur et le journal unifié des règlements.
+
+### 2. Fonctionnalités et Améliorations Implémentées
+- **Base de Données & Modèles (`database/migrations/` & `Domain/`)** :
+  - Migration `2026_01_01_000018_add_purchase_id_to_payments_table.php` pour rendre `invoice_id` optionnel et ajouter la colonne `purchase_id` liée en clé étrangère à `purchases` avec suppression en cascade.
+  - Modèle `Payment` mis à jour avec `$fillable` (`purchase_id`) et relation `purchase()`.
+  - Modèle `Purchase` enrichi avec la relation `payments()`.
+- **Logique Métier & Service (`PaymentService::recordPurchasePayment`)** :
+  - Implémentation de `recordPurchasePayment(array $data, User $user)` dans `PaymentService` : vérification stricte du reste à payer, verrouillage de ligne DB, enregistrement du règlement, mise à jour automatique des montants `paid_amount` et `remaining_amount` de l'achat.
+  - Mise à jour de `PurchaseService::registerPurchase` pour générer automatiquement l'enregistrement de règlement initial lorsque l'achat est créé avec acompte.
+- **Contrôleur, Validation & Securité (`PaymentController` & `StorePurchasePaymentRequest`)** :
+  - Ajout des méthodes `createForPurchase(Purchase $purchase)` et `storeForPurchase(StorePurchasePaymentRequest $request)` réservées aux administrateurs.
+  - Form Request `StorePurchasePaymentRequest` avec messages d'erreur explicites en français.
+- **Interface Utilisateur & Expérience Mobile (Design System Conforme)** :
+  - **Écran de Saisie du Règlement Fournisseur (`resources/views/paiements/create-purchase.blade.php`)** : Design 100% identique au règlement facture avec récapitulatif du bon d'achat, reliquat en alerte ambrée, choix du mode de paiement, référence transactionnelle, remarques et loaders d'action Alpine.js.
+  - **Détail du Bon d'Achat (`resources/views/achats/show.blade.php`)** : Bouton d'action direct "Enregistrer un règlement" dans l'en-tête et sur la carte financière lorsque `remaining_amount > 0`, plus carte "Historique des Règlements au Fournisseur" récapitulant tous les versements effectués.
+  - **Fiche Fournisseur (`resources/views/fournisseurs/show.blade.php`)** : Bouton d'action direct "Régler" à côté du bouton "Voir" sur chaque bon d'achat présentant un solde restant dû.
+  - **Registre des Achats (`resources/views/achats/index.blade.php`)** : Icône rapide de règlement direct dans la colonne des actions.
+  - **Historique Unifié des Paiements (`resources/views/paiements/index.blade.php`)** : Vue globale réunissant à la fois les règlements clients (Factures) et fournisseurs (Achats) avec badges sémantiques distincts (`emerald` / `purple`).
+- **Tests Fonctionnels Automatisés (`tests/Feature/PurchasePaymentTest.php`)** :
+  - Création de 6 nouveaux tests d'intégration couvrant l'accès, le règlement partiel, le règlement solde total, le rejet de sur-paiement, et le contrôle d'accès strict pour les caissiers (403).
+  - Exécution globale : `php artisan test` **100% Vert (60 tests réussis, 188 assertions, 0 échecs)**.
+  - Re-seeding global : `php artisan migrate:fresh --seed` (succès total).
+
+---
+
+## Session 29 — Seeder XXL (100+ Éléments par Table) & Alignement 100% Burkina Faso
+
+### 1. Tâche réalisée
+Refonte complète du seeder de démonstration (`Database\Seeders\DemoDataSeeder`) pour générer une volumétrie massive et parfaitement cohérente de **minimum 100 éléments réels par table**, avec contextualisation intégrale pour le **Burkina Faso** (Ouagadougou, Bobo-Dioulasso, Koudougou, Orange Money, Moov Money, Wave, numéros +226, IFU Burkina).
+
+### 2. Données et Volume par Table Générés
+- **`users` (100 utilisateurs)** : Super Admin, Propriétaire Admin, Caissier Principal + 97 comptes nommés d'agents burkinabè (SAWADOGO, OUEDRAOGO, KABORE, COMPAORE, ZONGO, SANOU, BADO, TAPSOBA, NIKIEMA, TRAORE, COULIBALY, GUIGMA, ILBOUDO, etc.).
+- **`suppliers` (100 fournisseurs)** : 100 sociétés, comptoirs et grossistes d'intrants et matériel agricole à travers tout le Burkina Faso (SOFITEX Intrants, Tropica Agro-Burkina, Ets SAWADOGO, Comptoir Agricole du Faso, SBIA, Agropharma Faso, etc.).
+- **`customers` (100 clients)** : 100 coopératives, fermes et acheteurs individuels (Coopérative Relwendé, Union des Producteurs du Mouhoun, Coopérative Maraîchère de Loumbila, Ferme Wendkouni, Groupement Coton Houndé, etc.).
+- **`products` & `stock_units` (100 produits, ~160 unités de stock)** : Catalogue complet de 100 produits agricoles (Engrais NPK/Urée/DAP/KCL/Compost, Herbicides Glyphosate/Atrazine/2,4-D/Nicosulfuron, Insecticides Cyperméthrine/Deltaméthrine/Neem/Abamectine, Fongicides Mancozèbe/Cuivre/Azoxystrobine, Semences Maïs/Riz/Tomate/Piment/Gombo/Oignon/Coton/Soja, Matériel, Irrigation, Bottes, Gants, Machettes, Motopompes, Sacs).
+- **`purchases` & `purchase_lines` (100 achats, ~250 lignes)** : Approvisionnements massifs auprès des fournisseurs garantissant des stocks toujours abondants.
+- **`repackagings` (100 reconditionnements)** : 100 conversions d'unités de gros (Cartons, Tonnes, Balles) vers unités de détail (Sacs, Flacons, Sachets).
+- **`sales`, `sale_lines`, `invoices`, `invoice_lines` (100 ventes, ~250 lignes, 100 factures)** : Ventes au comptoir et commandes clients étalées sur les derniers mois.
+- **`payments` (100 règlements)** : 50 encaissements de factures clients + 50 décaissements vers les fournisseurs via Orange Money, Moov Money, Wave, Espèces, Chèques et Virements.
+- **`customer_returns` (100 retours clients)** : 50 retours restockés, 40 retours mis au rebut, 10 retours en attente.
+- **`losses` (100 pertes magasin)** : Declarations d'avaries, fuites et humidité.
+- **`stock_movements` (800+ mouvements)** : Traçabilité immuable automatique de tous les flux.
+- **`stock_snapshots` (480+ clichés)** : Photographies mensuelles automatiques des stocks sur 3 mois glissants.
+
+### 3. Fichiers modifiés
+- `database/seeders/DemoDataSeeder.php` (Généré & Enrichi à 100+ items par table)
+- `plan-follow-up.md` (Mis à jour)
+
+### 4. Validation et Tests
+- `php artisan migrate:fresh --seed` : Exécuté avec succès (100% vert, 19 tables créées, 100+ enregistrements par table en 45.2s).
+- `php artisan test` : **100% Vert (60 tests réussis, 188 assertions, 0 échecs)**.
+
+---
+
+## Session 30 — Refonte Professionnelle des Factures (Entreprise Émettrice Configurable, Filigrane de Fond, Logo WhatsApp & Mentions Fiscales)
+
+### 1. Tâche réalisée
+Prise en compte intégrale des exigences sur la facture : dissociation du branding logiciel "Mon-Activité" et création d'une configuration dédiée pour l'entreprise émettrice (`config/company.php`), intégration d'un filigrane de fond officiel sur papier à en-tête, réorganisation fiscale et légale stricte (IFU, RCCM, montants bruts, remises, net à payer TTC, solde dû), déplacement du nom de l'agent en note secondaire au pied de page, bouton d'envoi WhatsApp doté du véritable logo officiel WhatsApp, et garanties de réactivité et de mise en page d'impression.
+
+### 2. Fonctionnalités et Améliorations Apportées
+- **Configuration Dédiée à l'Entreprise Émettrice (`config/company.php`)** :
+  - Fichier de configuration dynamique pour paramétrer les coordonnées de la société utilisant le logiciel : `COMPANY_NAME`, `COMPANY_TAGLINE`, `COMPANY_IFU`, `COMPANY_RCCM`, `COMPANY_ADDRESS`, `COMPANY_PHONE`, `COMPANY_EMAIL`, `COMPANY_LOGO_PATH`, `COMPANY_BANK_DETAILS`.
+  - Suppression totale du branding "Mon-Activité SARL" en tant que vendeur sur la facture.
+- **Design de Facture Professionnel & Filigrane de Fond (`factures/show.blade.php` & `pdf.blade.php`)** :
+  - **Filigrane de fond officiel** : Filigrane stylisé "FACTURE - [NOM ENTREPRISE]" positionné en arrière-plan avec opacité subtile pour un rendu officiel sur écran et à l'impression.
+  - **En-tête entreprise émettrice** : Logo de la société ou badge symbole, Nom commercial, Secteur d'activité, Adresse, Tél, IFU, RCCM et Email.
+  - **En-tête facture & immuabilité** : N° de facture immuable, Date et heure d'émission, Badge de statut de paiement.
+  - **Bloc Client (Facturé à)** : Raison sociale ou nom du client, qualification (Particulier ou Entreprise B2B), Représentant, Téléphone, Adresse, et mise en valeur du N° IFU client pour la conformité fiscale des impôts.
+  - **Tableau des articles** : Table responsive scrollable sans retour à la ligne avec numérotation, désignation du produit, conditionnement/unité, quantité, prix unitaire et total FCFA.
+  - **Décompte financier rigoureux** : Sous-total brut, remises éventuelles, NET À PAYER (TTC), Montant déjà réglé, et SOLDE RESTANT DÛ mis en avant.
+  - **Déplacement discret de l'agent** : Nom du vendeur/caissier déplacé au pied de la facture (`Facturé / Enregistré par : [Nom]`) en élément secondaire d'identification interne, libérant les blocs principaux.
+- **Bouton WhatsApp avec Logo Officiel (`resources/views/components/ui/whatsapp-icon.blade.php`)** :
+  - Création du composant SVG du logo officiel WhatsApp (`<x-ui.whatsapp-icon>`) intégré avec la couleur verte `#25D366` dans le bouton "Envoyer via WhatsApp".
+  - Message texte prérempli enrichi mentionnant la société émettrice, le numéro de facture, les montants et le reliquat.
+- **Impression Dédiée (`@media print`)** :
+  - Styles d'impression masquant les barres de navigation et boutons d'action pour imprimer exclusivement la facture.
+
+---
+
+## Session 31 — Page GUI de Paramètres Entreprise & Refonte Classique de la Facture (Sans Éléments Surchargés)
+
+### 1. Tâche réalisée
+Prise en compte directe et intégrale du retour utilisateur : création d'une **interface graphique dédiée de configuration de l'entreprise émettrice (`/parametres/entreprise`)** permettant à l'administrateur de modifier les coordonnées de sa société et de téléverser son propre logo, et refonte complète du design de la facture vers un **style entreprise classique, sobre et épuré** (suppression du grand filigrane texte incliné et des gros blocs de texte légal surchargés).
+
+### 2. Fonctionnalités et Améliorations Apportées
+- **Page de Configuration de l'Entreprise Émettrice (`/parametres/entreprise`)** :
+  - Migration DB `2026_01_01_000019_create_company_settings_table.php` et modèle Eloquent `CompanySetting`.
+  - Contrôleur `CompanySettingController` (`edit` & `update`) et Form Request `UpdateCompanySettingRequest`.
+  - Interface Blade ergonomique (`resources/views/settings/company.blade.php`) avec aperçu du logo actuel, téléversement de fichier image (PNG, JPEG, WEBP, SVG), champs modifiables (Nom, Sigle/Activité, IFU, RCCM, Adresse, Téléphones, E-mail, Compte bancaire) et boutons d'enregistrement avec spinners Alpine.js.
+  - Ajout du lien "Paramètres Entreprise" dans la barre de navigation latérale et le tiroir mobile réservé aux Administrateurs.
+- **Design de Facture Entreprise Classique, Sobre & Épuré (`factures/show.blade.php` & `pdf.blade.php`)** :
+  - **Suppression du style surchargé** : Suppression du grand mot filigrane incliné en arrière-plan et élimination des gros pavés de "Conditions & Mentions Légales".
+  - **En-tête classique d'entreprise** : Logo de la société (jusqu'à 180px de large), Nom commercial en typographie noire imposante, Sigle/Domaine d'activité en émeraude, Adresse, Contacts, N° IFU et N° RCCM.
+  - **Bloc Destinataire épuré** : Raison sociale/Nom du client, téléphone, adresse et N° IFU du client.
+  - **Tableau d'articles épuré** : Table sobre avec en-tête sombre, numérotation de ligne, désignation, conditionnement, quantité, prix unitaire et sous-total FCFA.
+  - **Décompte financier net** : Sous-total, Remises éventuelles, NET À PAYER, Montant Réglé et Solde Restant Dû.
+  - **Pied de page discret** : Ligne discrète au bas de la page rappelant la société et l'agent enregistreur (`Facturé par : [Nom de l'agent]`).
+- **Nouveaux Tests Fonctionnels (`tests/Feature/CompanySettingTest.php`)** :
+  - Accès réservé aux Administrateurs (200), interdiction aux Caissiers (403) et mise à jour réussie avec persistance en base de données.
+
+---
+
+## Session 32 — Fixation des Pieds & En-têtes PDF multipages & Élimination des Éléments Inutiles (Facture Vente Pure)
+
+### 1. Tâche réalisée
+Ajustement ciblé du modèle PDF et de la facture d'après les directives précises de l'utilisateur : fixation absolue des pieds de page (`position: fixed; bottom: -35px`) et en-têtes (`position: fixed; top: -100px`) sur **toutes les pages lors de l'impression multipages** (PDF de 1, 2 ou plus de pages), et suppression intégrale des informations de gestion interne de la facture (coordonnées bancaires, montants réglés, reste à payer).
+
+### 2. Modifications apportées
+- **Positionnement Fixe des En-têtes & Pieds de Page PDF Multipages (`factures/pdf.blade.php`)** :
+  - Configuration CSS de la page d'impression `@page { margin-top: 120px; margin-bottom: 50px; margin-left: 35px; margin-right: 35px; }`.
+  - Fixation de l'en-tête `.pdf-header` (`position: fixed; top: -100px; left: 0; right: 0; height: 90px;`).
+  - Fixation du pied de page `.pdf-footer` (`position: fixed; bottom: -35px; left: 0; right: 0; height: 30px;`).
+  - Résultat : Peu importe le nombre d'articles ou si la facture s'étend sur 2 pages ou plus, l'en-tête reste en haut et le pied de page reste scellé tout en bas de chaque page sans chevauchement avec le tableau des articles.
+- **Simplification Pure de la Facture de Vente Commerciale** :
+  - **Suppression du bloc compte bancaire** : Retiré de la facture pour un document de vente direct et épuré.
+  - **Suppression des lignes de gestion interne ("Montant Réglé" & "Solde Restant Dû")** : Seuls figurent sur la facture commerciale le **Sous-total HT**, la **Remise** (si accordée) et le **TOTAL À PAYER (FCFA)**.
+  - **Conservation du bloc de suivi en caisse externe** : Le suivi de caisse reste visible uniquement à l'écran sous la carte de facture imprimable pour la gestion interne des encaissements.
+- **Validation** :
+  - `php artisan view:clear` : Vues purgées.
+  - `php artisan test` : **100% Vert (63 tests réussis, 196 assertions, 0 échecs)**.
+
+---
+
+## Session 33 — Agrandissement des Éléments, En-tête Document Centré en Haut, Suppression des Cards-Cadres & Filigrane Logo XXL
+
+### 1. Tâche réalisée
+Prise en compte directe des demandes d'alignement et de mise en page : centrage obligatoire de l'intitulé de la facture et de son numéro tout en haut du document, suppression complète des sous-cartes/cadres gris arrondis autour du bloc client et des totaux, mise en valeur du logo de l'entreprise en grand filigrane d'arrière-plan centré, et agrandissement de la typographie générale pour une lisibilité parfaite.
+
+### 2. Modifications apportées
+- **En-tête Document Centré au Sommet ("FACTURE", N° & Date)** :
+  - Positionnement obligatoire centré tout en haut du document (`text-center pb-6 border-b-2 border-slate-900`) affichant l'intitulé "FACTURE", le numéro de facture et la date d'émission.
+- **Incrustation du Logo en Grand en Fond (`opacity-[0.07]` / `opacity: 0.08`)** :
+  - Affichage en grand du logo de l'entreprise (ou du sigle officiel si pas d'image) au centre géométrique du document en arrière-plan filigrane semi-transparent pour valoriser l'entreprise sans gêner la lecture des textes.
+- **Suppression Complète des Cadres/Cards Imbriqués (Client & Totaux)** :
+  - Suppression des conteneurs gris arrondis avec bordures (`p-4 bg-slate-50 rounded-2xl border border-slate-200`) autour des informations clients et des totaux.
+  - Affichage direct, épuré et aligné sur le papier principal avec de simples lignes de séparation (`border-b border-slate-300`).
+- **Agrandissement de la Typographie & Lisibilité Élevée** :
+  - Augmentation des tailles de caractères sur les désignations d'articles, les quantités, les prix unitaires et le **TOTAL À PAYER (FCFA)**.
+- **Validation** :
+  - Purge des vues compilées : `php artisan view:clear`.
+  - Exécution de `php artisan test` : **100% Vert (63 tests réussis, 196 assertions, 0 échecs)**.
+
+---
+
+## Session 34 — Retours à la Ligne de l'Entreprise, Libellé "Montant Total" & Polices PDF Agrandies
+
+### 1. Tâche réalisée
+Prise en compte ciblée des retours d'affichage sur la facture : retours à la ligne obligatoires pour chaque coordonnée de l'entreprise émettrice, modification du libellé du total vers "Montant Total", et agrandissement général des polices de caractères sur le PDF pour une lisibilité maximale.
+
+### 2. Modifications apportées
+- **Retours à la Ligne Systématiques pour l'Entreprise Émettrice** :
+  - Chaque information de l'entreprise figure désormais sur sa propre ligne dédiée (Nom, Domaine d'activité, Adresse, Téléphone, E-mail, N° IFU, N° RCCM).
+- **Libellé du Total Simplifié ("Montant Total")** :
+  - Remplacement de "TOTAL À PAYER" / "NET À PAYER" par la mention exacte **Montant Total** sur la facture écran et le PDF.
+- **Agrandissement Général des Polices PDF** :
+  - Augmentation des tailles de police dans la feuille de style du PDF (titres 24px, sous-titres/n° 15px, corps de texte et lignes de tableau 11px, total 15px bold).
+- **Validation** :
+  - `php artisan view:clear` : Exécuté avec succès.
+  - `php artisan test` : **100% Vert (63 tests réussis, 196 assertions, 0 échecs)**.
+
+---
+
+## Session 35 — Agrandissement du Logo Filigrane XXL en Arrière-Plan PDF
+
+### 1. Tâche réalisée
+Agrandissement de la taille du logo de l'entreprise émettrice en filigrane d'arrière-plan dans le modèle PDF (`factures/pdf.blade.php`) pour occuper une dimension très importante (`width: 520px`, `max-width: 90%`) au centre géométrique du document.
+
+### 2. Modifications apportées
+- **Logo Filigrane XXL (`.pdf-watermark`)** :
+  - Extension de la largeur de l'image du logo à **520px** (90% de la largeur de la page PDF) avec un centrage parfait et une opacité adaptée (`0.08`).
+  - Pour le texte de repli (initiales si pas d'image), passage en taille massive à **130px** avec bordure épaisse de 8px.
+- **Validation** :
+  - Purge du cache des vues : `php artisan view:clear`.
+  - Exécution de la suite de tests : `php artisan test` **100% Vert (63 tests réussis, 196 assertions, 0 échecs)**.
+
+---
+
+## Session 36 — Polices Géantes & En Gras, Logo Filigrane Exponentiel Incliné & Suppression du Sous-Total
+
+### 1. Tâche réalisée
+Prise en compte stricte des instructions d'agrandissement et de simplification financière : passage de toutes les polices du PDF en très grands caractères avec gras renforcé (`font-weight: 900`), agrandissement exponentiel et inclinaison du logo filigrane d'arrière-plan (`transform: rotate(-15deg)` / `width: 650px`), et suppression définitive de la ligne "Sous-total HT" pour ne conserver que la ligne **Montant Total**.
+
+### 2. Modifications apportées
+- **Polices Géantes & Mise en Gras Systématique** :
+  - Titres et sous-titres du document portés à **28px** et **18px** en gras noir intense.
+  - Noms de l'entreprise, coordonnées, client, désignation des articles, quantités et prix unitaires portés à **12px - 16px** en caractères gras.
+- **Logo Filigrane Exponentiel & Incliné (`-15deg`)** :
+  - Extension de la taille du logo en filigrane d'arrière-plan à **650px** (occupant la quasi-totalité de la page) avec inclinaison de **-15 degrés** (`transform: rotate(-15deg)`).
+  - Pour le texte de repli, initiales en taille massive à **160px** avec bordure épaisse de 12px et inclinaison dynamique.
+- **Suppression du "Sous-Total HT"** :
+  - Retrait de la ligne "Sous-total HT" dans le bloc des montants. La seule ligne affichée est désormais **Montant Total : [X FCFA]** en taille **18px bold**.
+- **Validation** :
+  - `php artisan view:clear` : Vues purgées.
+  - `php artisan test` : **100% Vert (63 tests réussis, 196 assertions, 0 échecs)**.
+
+---
+
+## Session 37 — Composant Combobox / Sélecteur Recherche au Saisie (Saisie Prédictive Clients, Fournisseurs & Produits)
+
+### 1. Tâche réalisée
+Prise en compte intégrale de la demande d'ergonomie pour la saisie des Ventes et des Achats (ainsi que les Retours, Pertes et Reconditionnements) : création d'un composant de sélection recherche dynamique par saisie (`<x-ui.select-searchable>`) permettant à l'utilisateur de commencer à taper le nom ou le téléphone d'un client, d'un fournisseur ou d'un produit pour voir les propositions s'afficher et filtrer instantanément, tant sur grand écran que sur smartphone.
+
+### 2. Fonctionnalités et Améliorations Apportées
+- **Composant UI Réutilisable `<x-ui.select-searchable>` (`components/ui/select-searchable.blade.php`)** :
+  - Design réactif avec champ de saisie directe, icône loupe de recherche, icône chevron d'état et bouton "X" de réinitialisation rapide.
+  - Menu déroulant popup réactif (`z-50 shadow-xl max-h-60 overflow-y-auto`) avec feedback tactile sur mobile (`active:bg-emerald-100`) et mise en valeur de l'option actuellement sélectionnée (`bg-emerald-50 border-l-4 border-emerald-600` avec coche verte).
+  - Prise en charge automatique des collections Blade PHP et des tableaux dynamiques Alpine.js (`lines`).
+  - Déclenchement automatique des événements DOM natifs (`input` & `change`) garantissant la synchronisation immédiate avec `x-model` et les fonctions d'incrémentation/mise à jour d'unités (`onProductChange`, `updateUnits`).
+- **Intégration dans les Modules Ventes & Achats** :
+  - **Saisie Ventes (`ventes/create.blade.php`)** :
+    - Recherche prédictive de clients (par nom, téléphone, nom d'entreprise) avec choix du client de passage (anonyme).
+    - Recherche prédictive des produits sur chaque ligne de vente (`lines[index]`).
+  - **Saisie Achats (`achats/create.blade.php`)** :
+    - Recherche prédictive des fournisseurs (par nom, téléphone, société).
+    - Recherche prédictive des produits sur chaque ligne d'achat (`lines[index]`).
+- **Généralisation aux Autres Formulaires** :
+  - **Retours Clients (`retours/create.blade.php`)** : Sélecteur recherche pour le produit retourné et le client.
+  - **Pertes de Stock (`pertes/create.blade.php`)** : Sélecteur recherche pour le produit concerné.
+  - **Reconditionnement (`reconditionnement/create.blade.php`)** : Sélecteur recherche pour le produit à reconditionner.
+- **Validation & Tests** :
+  - Standardisation des attributs Alpine en `x-bind:class` et `x-bind:name` dans `<x-ui.select-searchable>` pour éviter tout conflit avec le compilateur de composants PHP Blade.
+  - Suppression de `overflow-hidden` sur le composant `<x-ui.card>` et ajout de l'élévation dynamique de superposition (`z-50` / `z-[100]`) pour empêcher tout rognage des menus déroulants.
+  - Synchronisation synchrone immédiate de l'ID sélectionné et interception de la fermeture prématurée via `@mousedown.prevent="select(opt)"` pour garantir que le clic enregistre et affiche directement l'élément choisi dans le champ.
+  - `php artisan view:clear` & `php artisan test` : **100% Vert (63 tests réussis, 196 assertions, 0 échecs)**.
+
+---
+
+## Session 38 — Audit Général de Cohérence Métier, Sécurité, Validations & Plafonds Financiers
+
+### 1. Tâche réalisée
+Audit exhaustif et renforcement systématique des règles de validation front-end (Alpine.js / HTML5) et back-end (Form Requests, Services Domain, Verrous DB) sur l'ensemble des modules du projet afin de garantir une étanchéité totale, la prévention des montants négatifs, le plafonnement des règlements et la cohérence stricte des données métier.
+
+### 2. Contrôles et Améliorations Apportés
+- **Règlements & Paiements (Factures & Achats)** :
+  - **Interdiction des valeurs négatives/nulles** : Plafond minimal `gt:0` (serveur) et `min="1"` (interface).
+  - **Plafonnement strict au reste à payer** : Bloquage systématique de tout règlement supérieur au solde restant dû (`amount <= remaining_amount`). Message d'erreur explicite en FCFA.
+  - **Alerte réactive front-end** : Message d'avertissement rouge sous le champ et interception à la soumission Alpine `@submit`.
+- **Ventes (`ventes/create.blade.php` & `StoreSaleRequest.php`)** :
+  - **Plafonnement de l'acompte/paiement immédiatement versé** : Bloquage de tout versement dépassant le total général de la vente (`paid_amount <= grandTotal`).
+  - **Vérification de stock & cassure** : Contrôle du stock disponible pour l'unité choisie ou vérification du carton source en vrac.
+  - **Justification d'écart de prix** : Motif de remise ou déviation obligatoire dès que le tarif diffère du catalogue.
+- **Achats (`achats/create.blade.php` & `StorePurchaseRequest.php`)** :
+  - **Plafonnement de l'acompte fournisseur** : Versement initial limité au montant total de la commande (`paid_amount <= totalAmount`).
+  - **Cohérence des unités** : Invalidation serveur si une unité d'achat n'appartient pas au produit de la ligne.
+- **Pertes de Stock (`pertes/create.blade.php` & `StoreLossRequest.php`)** :
+  - **Limitation au stock physique** : Bloquage serveur si la quantité perdue déclarée dépasse le stock actuellement disponible (`quantity <= current_stock`).
+- **Reconditionnement (`reconditionnement/create.blade.php` & `StoreRepackagingRequest.php`)** :
+  - **Vérification d'équivalence stricte** : Contrôle d'égalité en vrac unité de base entre le lot source prélevé et le lot cible généré.
+  - **Disponibilité source** : Prélèvement limité au stock source existant.
+- **Sécurité & Rôles** :
+  - Vérification systématique des autorisations via Laravel Policies (`authorize('create', ...)`).
+  - Protection CSRF et nettoyage des entrées sur tous les formulaires.
+- **Validation Globale** :
+  - `php artisan view:clear` & `php artisan test` : **100% Vert (63 tests réussis, 196 assertions, 0 échecs)**.
+
+---
+
+## Session 39 — Alignement Intégral du Design de la Facture Écran Web sur le Modèle PDF
+
+### 1. Tâche réalisée
+Prise en compte intégrale de la demande d'uniformisation du rendu de la facture écran web (`factures/show.blade.php`) pour correspondre strictement au design, à la structure et aux éléments de la facture PDF (`factures/pdf.blade.php`), avec adaptation de la typographie pour un rendu optimal et lisible sur smartphone (`< sm`).
+
+### 2. Modifications apportées
+- **Structure de la Facture Web Conforme au PDF (`factures/show.blade.php`)** :
+  - **En-tête centré** : Intitulé `FACTURE N° [invoice_number]` centré avec date d'émission au-dessous.
+  - **Bloc Émetteur (Société)** : Affichage du logo de l'entreprise (ou badge initiales), Nom commercial, Sigle/Activité, Adresse, Tél, E-mail, N° IFU et N° RCCM.
+  - **Bloc Client (Facturé à)** : Libellé `FACTURÉ À :`, Raison sociale ou nom du client, Tél, Adresse, Représentant, N° IFU Client et N° RCCM Client.
+  - **Tableau des articles** : Table sobre avec en-tête sombre (`bg-slate-900 text-white`), colonnes `#`, `Désignation`, `Conditionnement / Unité`, `Qté`, `P.U. (FCFA)` et `Total FCFA`.
+  - **Décompte financier** : Total général (`Montant Total : [X] FCFA`) et remise éventuelle en haut à droite.
+  - **Pied de page scellé** : Ligne de séparation supérieure avec coordonnées société à gauche et `Facturé par : [Agent]` à droite.
+- **Incrustation du Logo Filigrane XXL en Arrière-Plan** :
+  - Incrustation du logo ou badge initiales au centre géométrique du document avec rotation de `-12deg` et opacité à `0.08`.
+- **Adaptation Typographique Responsive sur Mobile (`< sm`)** :
+  - Échelle typographique ajustée (`text-xs` à `text-sm` pour le corps et les cellules de tableau, `text-xl` pour les titres) afin d'éviter tout débordement sur petit écran tout en conservant le centrage et la clarté du document.
+  - Conservation du défilement horizontal `overflow-x-auto whitespace-nowrap` sur le tableau pour préserver l'alignement des colonnes sur mobile.
+- **Validation** :
+  - Correction du nom du composant d'icône Heroicons v2 vers `<x-heroicon-o-arrow-top-right-on-square>`.
+  - `php artisan view:clear` & `php artisan test` : **100% Vert (63 tests réussis, 196 assertions, 0 échecs)**.
+
+
+---
+
+## Session 41 — Refonte du Design & Harmonisation de la Page de Détails des Retours Clients (`retours/show.blade.php`)
+
+### 1. Tâche réalisée
+Refonte complète et harmonisation de la page de détail d'un retour client (`resources/views/retours/show.blade.php`) selon la charte graphique et la structure à 2 colonnes des autres pages de détails (ventes, achats, factures, clients, fournisseurs).
+
+### 2. Améliorations et Corrections apportées
+- **En-tête Responsive Standardisé** :
+  - Alignement du bouton `<x-ui.back-button>`, du titre de la fiche retour, des badges de statut (`amber` / `emerald` / `red`) et du bouton d'accès rapide à la facture d'origine.
+- **Barre de Cartes Statistiques Métriques (`<x-ui.stat-card>`)** :
+  - Cartes synthétiques récapitulant les informations clés : *Quantité Retournée*, *Produit Concerné*, *Client*, et *Statut Décision*.
+- **Mise en Page Responsive Moderne (Grille 2 Colonnes + Sidebar)** :
+  - **Colonne principale (`lg:col-span-2`)** :
+    - Carte détaillée du produit retourné avec quantité, conditionnement, et motif mis en valeur dans un encadré ambré très lisible avec icônes.
+    - Carte d'action d'administration révisée (si en attente de validation) avec 2 grands blocs d'action tactiles bien distincts (Réintégration au stock vs Perte définitive) et modaux de confirmation centrés.
+    - Bannière de confirmation stylisée lorsque le retour a déjà été validé (Émeraude pour réintégration ou Rouge pour perte définitive avec lien direct vers la fiche de perte générée).
+  - **Colonne latérale (`lg:col-span-1`)** :
+    - Carte Client & Facture d'Origine (liens cliquables vers la fiche client et la facture).
+    - Carte Traçabilité (qui a enregistré le retour, qui l'a validé, dates et heures).
+- **Validation** :
+  - Correction du nom du composant d'icône Heroicons v2 vers `<x-heroicon-o-arrow-top-right-on-square>`.
+  - `php artisan view:clear` & `php artisan test` : **100% Vert (63 tests réussis, 196 assertions, 0 échecs)**.
+
+
+
+---
+
+## Session 40 — Dynamisation des Boutons de Retour (Retour Réel à la Page Précédente / Historique Navigateur)
+
+### 1. Tâche réalisée
+Prise en compte intégrale de la demande d'amélioration de la navigation : correction du composant de retour (`<x-ui.back-button>`) pour qu'il retourne dynamiquement à la **page précédente réelle dans l'historique du navigateur** (`window.history.back()`) au lieu de suivre un lien statique fixe, tout en conservant un repli (*fallback*) sécurisé vers le lien par défaut.
+
+### 2. Modifications apportées
+- **Intégration du Retour Dynamique (`resources/views/components/ui/back-button.blade.php`)** :
+  - Ajout d'une directive d'interception Alpine.js `@click` qui vérifie la présence et l'origine de `document.referrer`.
+  - Si l'utilisateur provient d'une page précédente du même domaine (`ref.startsWith(window.location.origin)`) et qu'il ne s'agit pas d'une redirection post-formulaire (`/create` ou `/edit`) ni de la page de connexion (`/login`), l'événement clic est intercepté et déclenche `window.history.back()`.
+  - Preserves exact de la pagination, des filtres de recherche, du niveau de défilement et du contexte de navigation d'origine (ex: retour vers la fiche client depuis une facture, ou vers le tableau de bord depuis un détail produit).
+  - Repli sécurisé (*fallback*) vers `$href` (ou `url()->previous()`) en cas d'accès direct par lien/marque-page sans historique.
+- **Validation** :
+  - Correction du nom du composant d'icône Heroicons v2 vers `<x-heroicon-o-arrow-top-right-on-square>`.
+  - `php artisan view:clear` & `php artisan test` : **100% Vert (63 tests réussis, 196 assertions, 0 échecs)**.
+
+
+---
+
+## Session 41 — Refonte du Design & Harmonisation de la Page de Détails des Retours Clients (`retours/show.blade.php`)
+
+### 1. Tâche réalisée
+Refonte complète et harmonisation de la page de détail d'un retour client (`resources/views/retours/show.blade.php`) selon la charte graphique et la structure à 2 colonnes des autres pages de détails (ventes, achats, factures, clients, fournisseurs).
+
+### 2. Améliorations et Corrections apportées
+- **En-tête Responsive Standardisé** :
+  - Alignement du bouton `<x-ui.back-button>`, du titre de la fiche retour, des badges de statut (`amber` / `emerald` / `red`) et du bouton d'accès rapide à la facture d'origine.
+- **Barre de Cartes Statistiques Métriques (`<x-ui.stat-card>`)** :
+  - Cartes synthétiques récapitulant les informations clés : *Quantité Retournée*, *Produit Concerné*, *Client*, et *Statut Décision*.
+- **Mise en Page Responsive Moderne (Grille 2 Colonnes + Sidebar)** :
+  - **Colonne principale (`lg:col-span-2`)** :
+    - Carte détaillée du produit retourné avec quantité, conditionnement, et motif mis en valeur dans un encadré ambré très lisible avec icônes.
+    - Carte d'action d'administration révisée (si en attente de validation) avec 2 grands blocs d'action tactiles bien distincts (Réintégration au stock vs Perte définitive) et modaux de confirmation centrés.
+    - Bannière de confirmation stylisée lorsque le retour a déjà été validé (Émeraude pour réintégration ou Rouge pour perte définitive avec lien direct vers la fiche de perte générée).
+  - **Colonne latérale (`lg:col-span-1`)** :
+    - Carte Client & Facture d'Origine (liens cliquables vers la fiche client et la facture).
+    - Carte Traçabilité (qui a enregistré le retour, qui l'a validé, dates et heures).
+- **Validation** :
+  - Correction du nom du composant d'icône Heroicons v2 vers `<x-heroicon-o-arrow-top-right-on-square>`.
+  - `php artisan view:clear` & `php artisan test` : **100% Vert (63 tests réussis, 196 assertions, 0 échecs)**.
+
+
+
+
+
+
+
 
 

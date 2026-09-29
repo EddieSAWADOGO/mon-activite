@@ -4,6 +4,7 @@ namespace App\Domain\Achats\Services;
 
 use App\Domain\Achats\Models\Purchase;
 use App\Domain\Achats\Models\PurchaseLine;
+use App\Domain\Paiements\Models\Payment;
 use App\Domain\Stock\Services\StockMovementService;
 use App\Support\Enums\MovementType;
 use Illuminate\Support\Facades\DB;
@@ -60,6 +61,19 @@ class PurchaseService
                 'created_by_user_id' => $userId,
                 'notes' => $data['notes'] ?? null,
             ]);
+
+            if ($paidAmount > 0) {
+                Payment::create([
+                    'purchase_id' => $purchase->id,
+                    'invoice_id' => null,
+                    'amount' => $paidAmount,
+                    'payment_date' => $purchaseDate . ' ' . now()->format('H:i:s'),
+                    'payment_method' => $data['payment_method'] ?? 'Espèces',
+                    'reference' => 'Acompte initial',
+                    'notes' => 'Paiement à l\'enregistrement du bon d\'achat',
+                    'created_by_user_id' => $userId,
+                ]);
+            }
 
             foreach ($linesToProcess as $lineData) {
                 $purchaseLine = $purchase->lines()->create($lineData);

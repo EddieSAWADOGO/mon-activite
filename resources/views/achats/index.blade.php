@@ -128,11 +128,22 @@
                                 </x-ui.badge>
                             </td>
                             <td class="py-3 px-3.5 sm:px-4 whitespace-nowrap text-right">
-                                <a href="{{ route('achats.show', $purchase) }}"
-                                   class="p-1.5 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition inline-flex items-center"
-                                   title="Consulter le bon d'achat">
-                                    <x-heroicon-o-eye class="w-4 h-4" />
-                                </a>
+                                <div class="flex items-center justify-end gap-1">
+                                    @if($purchase->remaining_amount > 0)
+                                        @can('create', App\Domain\Paiements\Models\Payment::class)
+                                            <a href="{{ route('paiements.create-purchase', $purchase) }}"
+                                               class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition inline-flex items-center"
+                                               title="Enregistrer un règlement">
+                                                <x-heroicon-o-banknotes class="w-4 h-4" />
+                                            </a>
+                                        @endcan
+                                    @endif
+                                    <a href="{{ route('achats.show', $purchase) }}"
+                                       class="p-1.5 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition inline-flex items-center"
+                                       title="Consulter le bon d'achat">
+                                        <x-heroicon-o-eye class="w-4 h-4" />
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

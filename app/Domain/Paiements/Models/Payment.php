@@ -2,6 +2,7 @@
 
 namespace App\Domain\Paiements\Models;
 
+use App\Domain\Achats\Models\Purchase;
 use App\Domain\Facturation\Models\Invoice;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +15,7 @@ class Payment extends Model
 
     protected $fillable = [
         'invoice_id',
+        'purchase_id',
         'amount',
         'payment_date',
         'payment_method',
@@ -33,6 +35,11 @@ class Payment extends Model
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class);
+    }
+
+    public function purchase(): BelongsTo
+    {
+        return $this->belongsTo(Purchase::class);
     }
 
     public function createdBy(): BelongsTo

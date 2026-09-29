@@ -144,9 +144,18 @@
                                         {{ number_format($purchase->remaining_amount, 0, ',', ' ') }} FCFA
                                     </td>
                                     <td class="px-3.5 py-3 text-center whitespace-nowrap">
-                                        <x-ui.button href="{{ route('achats.show', $purchase) }}" variant="outline" size="sm">
-                                            Voir
-                                        </x-ui.button>
+                                        <div class="flex items-center justify-center gap-1.5">
+                                            <x-ui.button href="{{ route('achats.show', $purchase) }}" variant="outline" size="sm">
+                                                Voir
+                                            </x-ui.button>
+                                            @if($purchase->remaining_amount > 0)
+                                                @can('create', App\Domain\Paiements\Models\Payment::class)
+                                                    <x-ui.button href="{{ route('paiements.create-purchase', $purchase) }}" variant="primary" size="sm" icon="banknotes">
+                                                        Régler
+                                                    </x-ui.button>
+                                                @endcan
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

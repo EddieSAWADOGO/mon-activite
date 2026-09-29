@@ -3,6 +3,7 @@
 namespace App\Domain\Achats\Models;
 
 use App\Domain\Fournisseurs\Models\Supplier;
+use App\Domain\Paiements\Models\Payment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -47,5 +48,10 @@ class Purchase extends Model
     public function lines(): HasMany
     {
         return $this->hasMany(PurchaseLine::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 }

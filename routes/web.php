@@ -48,6 +48,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('utilisateurs/{user}/reset-password', [UserController::class, 'resetPassword'])
         ->name('utilisateurs.reset-password');
 
+    // Company Settings
+    Route::get('parametres/entreprise', [\App\Domain\Settings\Http\Controllers\CompanySettingController::class, 'edit'])
+        ->name('settings.company.edit');
+    Route::put('parametres/entreprise', [\App\Domain\Settings\Http\Controllers\CompanySettingController::class, 'update'])
+        ->name('settings.company.update');
+
     // Products
     Route::resource('produits', ProductController::class)->parameters([
         'produits' => 'product',
@@ -125,6 +131,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('paiements', [PaymentController::class, 'index'])->name('paiements.index');
     Route::get('factures/{invoice}/regler', [PaymentController::class, 'create'])->name('paiements.create');
     Route::post('paiements', [PaymentController::class, 'store'])->name('paiements.store');
+    Route::get('achats/{purchase}/regler', [PaymentController::class, 'createForPurchase'])->name('paiements.create-purchase');
+    Route::post('achats/{purchase}/regler', [PaymentController::class, 'storeForPurchase'])->name('paiements.store-purchase');
 
     // Customer Returns
     Route::resource('retours', CustomerReturnController::class)->parameters([

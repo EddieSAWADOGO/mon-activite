@@ -112,7 +112,9 @@
             }
          }">
 
-        <form method="POST" action="{{ route('ventes.store') }}" @submit="submitting = true" class="space-y-6">
+        <form method="POST" action="{{ route('ventes.store') }}"
+              @submit="if(parseFloat(paidAmount || 0) > parseFloat(grandTotal || 0)) { $event.preventDefault(); alert('Le montant payé immédiatement ne peut pas dépasser le total général de la vente (' + grandTotal.toLocaleString('fr-FR') + ' FCFA).'); return false; }; submitting = true"
+              class="space-y-6">
             @csrf
 
             <!-- Sale Header Card -->
@@ -124,12 +126,14 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                     <div>
                         <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Client (Optionnel)</label>
-                        <select name="customer_id" x-model="customerId" class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 sm:py-3 sm:px-4 focus:ring-2 focus:ring-emerald-500 bg-white">
-                            <option value="">Client de passage (Anonyme)</option>
-                            @foreach($customers as $customer)
-                                <option value="{{ $customer->id }}">{{ $customer->name }} ({{ $customer->phone ?? 'Sans tél' }})</option>
-                            @endforeach
-                        </select>
+                        <x-ui.select-searchable
+                            name="customer_id"
+                            :options="$customers"
+                            :value="old('customer_id', '')"
+                            placeholder="Commencer à taper le nom ou tél du client..."
+                            emptyLabel="Client de passage (Anonyme)"
+                            model="customerId"
+                        />
                         @error('customer_id') <p class="text-red-600 text-[11px] mt-1 flex items-center gap-1"><x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" /> {{ $message }}</p> @enderror
                     </div>
 
@@ -169,15 +173,15 @@
                                 <!-- Product selection -->
                                 <div class="sm:col-span-2">
                                     <label class="block text-xs font-semibold text-slate-700 mb-1.5">Produit <span class="text-red-500">*</span></label>
-                                    <select :name="'lines[' + index + '][product_id]'"
-                                            x-model="line.product_id"
-                                            @change="onProductChange(index)" required
-                                            class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 sm:py-3 focus:ring-2 focus:ring-emerald-500 bg-white">
-                                        <option value="">-- Sélectionner un produit --</option>
-                                        <template x-for="p in products" :key="p.id">
-                                            <option :value="p.id" x-text="p.name"></option>
-                                        </template>
-                                    </select>
+                                    <x-ui.select-searchable
+                                        name="'lines[' + index + '][product_id]'"
+                                        options="products"
+                                        placeholder="Commencer à taper le nom du produit..."
+                                        emptyLabel="-- Sélectionner un produit --"
+                                        :required="true"
+                                        model="line.product_id"
+                                        onChange="onProductChange(index)"
+                                    />
                                 </div>
 
                                 <!-- Unit selection -->
@@ -290,8 +294,11 @@
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">Montant Payé immédiatement <span class="text-red-500">*</span></label>
-                        <input type="number" step="1" min="0" name="paid_amount" x-model="paidAmount" required
+                        <input type="number" step="1" min="0" :max="grandTotal" name="paid_amount" x-model.number="paidAmount" required
                                class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 focus:ring-2 focus:ring-emerald-500 bg-white">
+                        <p x-show="parseFloat(paidAmount || 0) > parseFloat(grandTotal || 0)" class="mt-1 text-xs text-red-600 font-semibold flex items-center gap-1">
+                            <x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" /> Le montant payé ne peut pas dépasser le total de la vente.
+                        </p>
                         <div class="text-[10px] text-slate-500 mt-1">
                             Laissez à 0 si vente entièrement à crédit.
                         </div>

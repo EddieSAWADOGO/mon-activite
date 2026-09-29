@@ -10,7 +10,8 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('invoice_id')->constrained('invoices')->cascadeOnDelete();
+            $table->foreignId('invoice_id')->nullable()->constrained('invoices')->cascadeOnDelete();
+            $table->foreignId('purchase_id')->nullable()->constrained('purchases')->cascadeOnDelete();
             $table->decimal('amount', 15, 2);
             $table->dateTime('payment_date');
             $table->string('payment_method'); // cash, mobile_money, bank_transfer, check, etc.

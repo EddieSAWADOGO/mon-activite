@@ -126,6 +126,112 @@
             }
         };
     }
+
+    if (typeof window.searchableCombobox !== 'function') {
+        window.searchableCombobox = function(config = {}) {
+            return {
+                isOpen: false,
+                searchQuery: '',
+                selectedId: config.value !== undefined ? String(config.value) : '',
+                options: config.options || [],
+                placeholder: config.placeholder || 'Commencer à taper pour rechercher...',
+                emptyLabel: config.emptyLabel || '',
+                allowEmpty: config.allowEmpty !== false,
+
+                init() {
+                    this.$nextTick(() => {
+                        if (this.$refs.hiddenInput && this.$refs.hiddenInput.value !== undefined) {
+                            this.selectedId = String(this.$refs.hiddenInput.value);
+                        }
+                    });
+                },
+
+                get displayLabel() {
+                    const list = Array.isArray(this.options) ? this.options : [];
+                    const found = list.find(o => String(o.id) === String(this.selectedId));
+                    if (found) {
+                        let txt = found.name || found.label || '';
+                        if (found.phone) {
+                            txt += ' (' + found.phone + ')';
+                        }
+                        return txt;
+                    }
+                    if (this.allowEmpty && this.emptyLabel && (this.selectedId === '' || this.selectedId === null)) {
+                        return this.emptyLabel;
+                    }
+                    return '';
+                },
+
+                get filteredOptions() {
+                    const list = Array.isArray(this.options) ? this.options : [];
+                    const q = (this.searchQuery || '').toLowerCase().trim();
+                    if (!q) return list;
+
+                    return list.filter(o => {
+                        const searchStr = (
+                            (o.name || o.label || '') + ' ' +
+                            (o.phone || '') + ' ' +
+                            (o.company_name || '') + ' ' +
+                            (o.code || '') + ' ' +
+                            (o.category_name || '') + ' ' +
+                            (o.subtext || '')
+                        ).toLowerCase();
+                        return searchStr.includes(q);
+                    });
+                },
+
+                select(option) {
+                    const newId = option ? String(option.id) : '';
+                    if (this.$refs.hiddenInput) {
+                        this.$refs.hiddenInput.value = newId;
+                    }
+                    this.selectedId = newId;
+                    this.searchQuery = '';
+                    this.isOpen = false;
+                    if (this.$refs.hiddenInput) {
+                        this.$refs.hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
+                        this.$refs.hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                },
+
+                clear() {
+                    if (this.$refs.hiddenInput) {
+                        this.$refs.hiddenInput.value = '';
+                    }
+                    this.selectedId = '';
+                    this.searchQuery = '';
+                    this.isOpen = false;
+                    if (this.$refs.hiddenInput) {
+                        this.$refs.hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
+                        this.$refs.hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                },
+                    this.isOpen = false;
+                    this.$nextTick(() => {
+                        if (this.$refs.hiddenInput) {
+                            this.$refs.hiddenInput.value = '';
+                            this.$refs.hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
+                            this.$refs.hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                    });
+                },
+
+                onFocus() {
+                    this.isOpen = true;
+                    if (this.$refs.searchInput) {
+                        this.$refs.searchInput.select();
+                    }
+                },
+
+                onBlur() {
+                    setTimeout(() => {
+                        this.isOpen = false;
+                        this.updateSearchQuery();
+                    }, 200);
+                }
+            };
+        };
+    }
 </script>
 
     <!-- ── Toast Notification Adaptatif Mobile-First ── -->
@@ -329,6 +435,13 @@
                                 <x-heroicon-o-users class="w-5 h-5 {{ request()->routeIs('utilisateurs.*') ? 'text-white' : 'text-slate-400' }}" />
                                 <span>Utilisateurs</span>
                             </a>
+
+                            <a href="{{ route('settings.company.edit') }}"
+                               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all active:scale-98
+                                      {{ request()->routeIs('settings.*') ? 'bg-emerald-600 text-white font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                                <x-heroicon-o-building-office-2 class="w-5 h-5 {{ request()->routeIs('settings.*') ? 'text-white' : 'text-slate-400' }}" />
+                                <span>Paramètres Entreprise</span>
+                            </a>
                         @endif
                     @endauth
                 </div>
@@ -494,6 +607,12 @@
                                class="p-3 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
                                 <x-heroicon-o-users class="w-6 h-6 text-emerald-600" />
                                 <span>Utilisateurs</span>
+                            </a>
+
+                            <a @click="mobileMenuOpen = false" href="{{ route('settings.company.edit') }}"
+                               class="p-3 bg-slate-50/80 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 border border-slate-200/80 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 transition">
+                                <x-heroicon-o-building-office-2 class="w-6 h-6 text-emerald-600" />
+                                <span>Entreprise</span>
                             </a>
                         @endif
                     @endauth

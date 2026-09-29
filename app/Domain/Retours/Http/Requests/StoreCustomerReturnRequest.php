@@ -2,6 +2,7 @@
 
 namespace App\Domain\Retours\Http\Requests;
 
+use App\Domain\Produits\Models\StockUnit;
 use App\Domain\Retours\Models\CustomerReturn;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,6 +25,18 @@ class StoreCustomerReturnRequest extends FormRequest
             'return_date' => ['required', 'date'],
             'notes' => ['nullable', 'string', 'max:1000'],
         ];
+    }
+
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            if ($this->filled('product_id') && $this->filled('stock_unit_id')) {
+                $stockUnit = StockUnit::find($this->input('stock_unit_id'));
+                if (! $stockUnit || $stockUnit->product_id != $this->input('product_id')) {
+                    $validator->errors()->add('stock_unit_id', "L'unité sélectionnée doit appartenir au produit retourné.");
+                }
+            }
+        });
     }
 
     public function messages(): array

@@ -2,6 +2,7 @@
 
 namespace App\Domain\Reconditionnement\Http\Requests;
 
+use App\Domain\Produits\Models\StockUnit;
 use App\Domain\Reconditionnement\Models\Repackaging;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,6 +24,29 @@ class StoreRepackagingRequest extends FormRequest
             'repackaging_date' => ['required', 'date'],
             'notes' => ['nullable', 'string', 'max:1000'],
         ];
+    }
+
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            $productId = $this->input('product_id');
+            $sourceUnitId = $this->input('source_stock_unit_id');
+            $targetUnitId = $this->input('target_stock_unit_id');
+
+            if ($productId && $sourceUnitId) {
+                $sourceUnit = StockUnit::find($sourceUnitId);
+                if (! $sourceUnit || $sourceUnit->product_id != $productId) {
+                    $validator->errors()->add('source_stock_unit_id', "L'unité de départ doit appartenir au produit sélectionné.");
+                }
+            }
+
+            if ($productId && $targetUnitId) {
+                $targetUnit = StockUnit::find($targetUnitId);
+                if (! $targetUnit || $targetUnit->product_id != $productId) {
+                    $validator->errors()->add('target_stock_unit_id', "L'unité d'arrivée doit appartenir au produit sélectionné.");
+                }
+            }
+        });
     }
 
     public function messages(): array

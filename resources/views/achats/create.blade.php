@@ -27,7 +27,7 @@
 
     <form method="POST" action="{{ route('achats.store') }}"
           x-data="purchaseForm({{ Js::from($products) }})"
-          @submit="submitting = true"
+          @submit="if(parseFloat(paidAmount || 0) > parseFloat(totalAmount || 0)) { $event.preventDefault(); alert('Le montant payé ne peut pas dépasser le montant total de l\'achat (' + formatNumber(totalAmount) + ' FCFA).'); return false; }; submitting = true"
           class="space-y-6">
         @csrf
 
@@ -41,14 +41,14 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
                 <div>
                     <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Fournisseur <span class="text-red-500">*</span></label>
-                    <select name="supplier_id" required class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 sm:py-3 sm:px-4 focus:ring-2 focus:ring-emerald-500 bg-white">
-                        <option value="">-- Sélectionner un fournisseur --</option>
-                        @foreach($suppliers as $supplier)
-                            <option value="{{ $supplier->id }}" @selected(old('supplier_id') == $supplier->id)>
-                                {{ $supplier->name }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <x-ui.select-searchable
+                        name="supplier_id"
+                        :options="$suppliers"
+                        :value="old('supplier_id', '')"
+                        placeholder="Commencer à taper le nom du fournisseur..."
+                        emptyLabel="-- Sélectionner un fournisseur --"
+                        :required="true"
+                    />
                 </div>
 
                 <div>
@@ -93,13 +93,15 @@
                             <!-- Product Select -->
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 mb-1.5">Produit <span class="text-red-500">*</span></label>
-                                <select :name="'lines['+index+'][product_id]'" x-model="line.product_id" @change="onProductChange(index)" required
-                                        class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 sm:py-3 focus:ring-2 focus:ring-emerald-500 bg-white">
-                                    <option value="">-- Produit --</option>
-                                    <template x-for="p in availableProducts" :key="p.id">
-                                        <option :value="p.id" x-text="p.name"></option>
-                                    </template>
-                                </select>
+                                <x-ui.select-searchable
+                                    name="'lines[' + index + '][product_id]'"
+                                    options="availableProducts"
+                                    placeholder="Commencer à taper le nom du produit..."
+                                    emptyLabel="-- Sélectionner un produit --"
+                                    :required="true"
+                                    model="line.product_id"
+                                    onChange="onProductChange(index)"
+                                />
                             </div>
 
                             <!-- Unit Select -->
@@ -147,8 +149,11 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1">Montant Payé immédiatement (FCFA) <span class="text-red-400">*</span></label>
-                    <input type="number" min="0" name="paid_amount" x-model.number="paidAmount" required
+                    <input type="number" min="0" :max="totalAmount" name="paid_amount" x-model.number="paidAmount" required
                            class="w-full rounded-xl border border-slate-700 bg-slate-800 text-white text-xs sm:text-sm p-2.5 focus:ring-2 focus:ring-emerald-500">
+                    <p x-show="parseFloat(paidAmount || 0) > parseFloat(totalAmount || 0)" class="mt-1 text-xs text-red-400 font-semibold flex items-center gap-1">
+                        <x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" /> Le montant payé ne peut pas dépasser le total de l'achat.
+                    </p>
                 </div>
 
                 <div>

@@ -19,7 +19,7 @@ class StoreSaleRequest extends FormRequest
             'customer_id' => ['nullable', 'exists:customers,id'],
             'sale_date' => ['required', 'date'],
             'paid_amount' => ['required', 'numeric', 'min:0'],
-            'notes' => ['nullable', 'string'],
+            'notes' => ['nullable', 'string', 'max:1000'],
             'lines' => ['required', 'array', 'min:1'],
             'lines.*.product_id' => ['required', 'exists:products,id'],
             'lines.*.stock_unit_id' => ['required', 'exists:stock_units,id'],
@@ -34,6 +34,7 @@ class StoreSaleRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             $lines = $this->input('lines', []);
+            $totalSaleAmount = 0;
 
             foreach ($lines as $index => $line) {
                 if (empty($line['stock_unit_id'])) {
@@ -41,14 +42,20 @@ class StoreSaleRequest extends FormRequest
                 }
 
                 $stockUnit = StockUnit::find($line['stock_unit_id']);
-                if (! $stockUnit) {
+                if (! $stockUnit || (isset($line['product_id']) && $stockUnit->product_id != $line['product_id'])) {
+                    $validator->errors()->add(
+                        "lines.{$index}.stock_unit_id",
+                        "L'unité sélectionnée sur la ligne #" . ($index + 1) . " doit appartenir au produit sélectionné."
+                    );
                     continue;
                 }
 
-                // Rule: Price deviation vs default_selling_price requires discount_reason
+                $qty = (float) ($line['quantity'] ?? 0);
                 $unitPrice = (float) ($line['unit_price'] ?? 0);
                 $defaultPrice = (float) $stockUnit->default_selling_price;
+                $totalSaleAmount += ($qty * $unitPrice);
 
+                // Rule: Price deviation vs default_selling_price requires discount_reason
                 if (abs($unitPrice - $defaultPrice) > 0.01 && empty(trim($line['discount_reason'] ?? ''))) {
                     $validator->errors()->add(
                         "lines.{$index}.discount_reason",
@@ -72,13 +79,22 @@ class StoreSaleRequest extends FormRequest
                     }
                 } else {
                     // Direct sale: check stock on the target unit
-                    if ($stockUnit->current_stock < $line['quantity']) {
+                    if ($stockUnit->current_stock < $qty) {
                         $validator->errors()->add(
                             "lines.{$index}.quantity",
-                            "Stock insuffisant pour " . $stockUnit->name . " (disponible: " . $stockUnit->current_stock . ", demandé: " . $line['quantity'] . "). Indiquez une unité source s'il faut ouvrir un carton."
+                            "Stock insuffisant pour " . $stockUnit->name . " (disponible: " . $stockUnit->current_stock . ", demandé: " . $qty . "). Indiquez une unité source s'il faut ouvrir un carton."
                         );
                     }
                 }
+            }
+
+            // Check paid_amount <= totalSaleAmount
+            $paidAmount = (float) $this->input('paid_amount', 0);
+            if ($paidAmount > $totalSaleAmount) {
+                $validator->errors()->add(
+                    'paid_amount',
+                    "Le montant payé immédiatement (" . number_format($paidAmount, 0, ',', ' ') . " FCFA) ne peut pas dépasser le montant total de la vente (" . number_format($totalSaleAmount, 0, ',', ' ') . " FCFA)."
+                );
             }
         });
     }

@@ -29,17 +29,16 @@
                     <label for="product_id" class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
                         Produit retourné <span class="text-red-500">*</span>
                     </label>
-                    <select name="product_id"
-                            id="product_id"
-                            x-model="selectedProductId"
-                            @change="updateUnits()"
-                            required
-                            class="w-full rounded-xl border border-slate-200 bg-white py-2.5 px-3.5 sm:py-3 sm:px-4 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
-                        <option value="">-- Sélectionner un produit --</option>
-                        <template x-for="p in products" :key="p.id">
-                            <option :value="p.id" x-text="p.name"></option>
-                        </template>
-                    </select>
+                    <x-ui.select-searchable
+                        name="product_id"
+                        id="product_id"
+                        options="products"
+                        placeholder="Commencer à taper le nom du produit..."
+                        emptyLabel="-- Sélectionner un produit --"
+                        :required="true"
+                        model="selectedProductId"
+                        onChange="updateUnits()"
+                    />
                     @error('product_id')
                         <p class="mt-1 text-xs text-red-600 flex items-center gap-1"><x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" /> {{ $message }}</p>
                     @enderror
@@ -87,12 +86,14 @@
                         <label for="customer_id" class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
                             Client (Optionnel)
                         </label>
-                        <select name="customer_id" id="customer_id" class="w-full rounded-xl border border-slate-200 bg-white py-2.5 px-3.5 sm:py-3 sm:px-4 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
-                            <option value="">Client anonyme / de passage</option>
-                            @foreach($customers as $c)
-                                <option value="{{ $c->id }}" {{ old('customer_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
-                            @endforeach
-                        </select>
+                        <x-ui.select-searchable
+                            name="customer_id"
+                            id="customer_id"
+                            :options="$customers"
+                            :value="old('customer_id', '')"
+                            placeholder="Commencer à taper le nom du client..."
+                            emptyLabel="Client anonyme / de passage"
+                        />
                     </div>
 
                     <div>

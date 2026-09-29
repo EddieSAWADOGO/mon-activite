@@ -2,8 +2,10 @@
 
 namespace App\Domain\Paiements\Http\Controllers;
 
+use App\Domain\Achats\Models\Purchase;
 use App\Domain\Facturation\Models\Invoice;
 use App\Domain\Paiements\Http\Requests\StorePaymentRequest;
+use App\Domain\Paiements\Http\Requests\StorePurchasePaymentRequest;
 use App\Domain\Paiements\Models\Payment;
 use App\Domain\Paiements\Services\PaymentService;
 use App\Http\Controllers\Controller;
@@ -18,15 +20,22 @@ class PaymentController extends Controller
     {
         $this->authorize('viewAny', Payment::class);
 
-        $query = Payment::with(['invoice.customer', 'createdBy'])->latest('payment_date');
+        $query = Payment::with(['invoice.customer', 'purchase.supplier', 'createdBy'])->latest('payment_date');
 
         if ($search = $request->input('search')) {
-            $query->whereHas('invoice', function ($q) use ($search) {
-                $q->where('invoice_number', 'like', "%{$search}%")
-                  ->orWhereHas('customer', function ($cq) use ($search) {
-                      $cq->where('name', 'like', "%{$search}%")
-                        ->orWhere('company_name', 'like', "%{$search}%");
-                  });
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('invoice', function ($iq) use ($search) {
+                    $iq->where('invoice_number', 'like', "%{$search}%")
+                      ->orWhereHas('customer', function ($cq) use ($search) {
+                          $cq->where('name', 'like', "%{$search}%")
+                            ->orWhere('company_name', 'like', "%{$search}%");
+                      });
+                })->orWhereHas('purchase', function ($pq) use ($search) {
+                    $pq->where('purchase_number', 'like', "%{$search}%")
+                      ->orWhereHas('supplier', function ($sq) use ($search) {
+                          $sq->where('name', 'like', "%{$search}%");
+                      });
+                });
             });
         }
 
@@ -53,6 +62,35 @@ class PaymentController extends Controller
             $payment = $paymentService->recordPayment($request->validated(), $request->user());
 
             return redirect()->route('factures.show', $payment->invoice_id)
+                ->with('success', 'Le règlement de ' . number_format($payment->amount, 0, ',', ' ') . ' FCFA a été enregistré avec succès.');
+        } catch (InvalidArgumentException $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+        }
+    }
+
+    public function createForPurchase(Purchase $purchase): View|RedirectResponse
+    {
+        $this->authorize('create', Payment::class);
+        $this->authorize('create', Purchase::class);
+
+        if ((float) $purchase->remaining_amount <= 0) {
+            return redirect()->route('achats.show', $purchase)
+                ->with('error', 'Cet achat est déjà entièrement réglé.');
+        }
+
+        return view('paiements.create-purchase', compact('purchase'));
+    }
+
+    public function storeForPurchase(StorePurchasePaymentRequest $request, PaymentService $paymentService): RedirectResponse
+    {
+        $this->authorize('create', Payment::class);
+        $this->authorize('create', Purchase::class);
+        try {
+            $payment = $paymentService->recordPurchasePayment($request->validated(), $request->user());
+
+            return redirect()->route('achats.show', $payment->purchase_id)
                 ->with('success', 'Le règlement de ' . number_format($payment->amount, 0, ',', ' ') . ' FCFA a été enregistré avec succès.');
         } catch (InvalidArgumentException $e) {
             return redirect()->back()

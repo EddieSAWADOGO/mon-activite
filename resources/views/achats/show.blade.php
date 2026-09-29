@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200/60">
             <div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
                     <h2 class="text-base sm:text-2xl font-extrabold text-slate-900 tracking-tight">
                         Bon d'Achat N° {{ $purchase->purchase_number }}
                     </h2>
@@ -15,7 +15,16 @@
                 </p>
             </div>
 
-            <x-ui.back-button href="{{ route('achats.index') }}" label="Retour" />
+            <div class="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
+                @if($purchase->remaining_amount > 0)
+                    @can('create', App\Domain\Paiements\Models\Payment::class)
+                        <x-ui.button href="{{ route('paiements.create-purchase', $purchase) }}" variant="primary" icon="banknotes" size="sm">
+                            Enregistrer un règlement
+                        </x-ui.button>
+                    @endcan
+                @endif
+                <x-ui.back-button href="{{ route('achats.index') }}" label="Retour" />
+            </div>
         </div>
     </x-slot>
 
@@ -64,6 +73,41 @@
                 </div>
             </x-ui.card>
 
+            <!-- Payments History Block -->
+            @if($purchase->payments->count() > 0)
+                <x-ui.card class="p-4 sm:p-6">
+                    <h3 class="text-sm sm:text-base font-extrabold text-slate-900 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
+                        <x-heroicon-o-banknotes class="w-5 h-5 text-emerald-600" />
+                        <span>Historique des Règlements au Fournisseur ({{ $purchase->payments->count() }})</span>
+                    </h3>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs sm:text-sm min-w-[500px]">
+                            <thead class="bg-slate-50 text-slate-500 font-bold uppercase text-xs border-b border-slate-100">
+                                <tr>
+                                    <th class="py-2.5 px-3 whitespace-nowrap">Date</th>
+                                    <th class="py-2.5 px-3 whitespace-nowrap">Mode</th>
+                                    <th class="py-2.5 px-3 whitespace-nowrap">Référence</th>
+                                    <th class="py-2.5 px-3 text-right whitespace-nowrap">Montant</th>
+                                    <th class="py-2.5 px-3 whitespace-nowrap">Auteur</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                @foreach($purchase->payments as $payment)
+                                    <tr class="hover:bg-slate-50 transition-colors">
+                                        <td class="py-2.5 px-3 text-slate-700 font-medium whitespace-nowrap">{{ $payment->payment_date->format('d/m/Y H:i') }}</td>
+                                        <td class="py-2.5 px-3 whitespace-nowrap"><x-ui.badge color="sky">{{ $payment->payment_method }}</x-ui.badge></td>
+                                        <td class="py-2.5 px-3 text-slate-500 font-mono text-xs whitespace-nowrap">{{ $payment->reference ?: '-' }}</td>
+                                        <td class="py-2.5 px-3 text-right font-extrabold text-emerald-600 whitespace-nowrap">+ {{ number_format($payment->amount, 0, ',', ' ') }} FCFA</td>
+                                        <td class="py-2.5 px-3 text-slate-600 whitespace-nowrap">{{ $payment->createdBy ? $payment->createdBy->name : '-' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </x-ui.card>
+            @endif
+
             @if($purchase->notes)
                 <x-ui.card class="p-4 sm:p-6">
                     <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Notes & Observations</h3>
@@ -96,6 +140,16 @@
                         <span>Reste à Payer :</span>
                         <span class="font-black text-base text-red-400">{{ number_format($purchase->remaining_amount, 0, ',', ' ') }} FCFA</span>
                     </div>
+
+                    @if($purchase->remaining_amount > 0)
+                        @can('create', App\Domain\Paiements\Models\Payment::class)
+                            <div class="pt-3 border-t border-slate-800">
+                                <x-ui.button href="{{ route('paiements.create-purchase', $purchase) }}" variant="primary" size="sm" icon="banknotes" class="w-full justify-center">
+                                    Régler ce solde
+                                </x-ui.button>
+                            </div>
+                        @endcan
+                    @endif
                 </div>
             </x-ui.card>
 

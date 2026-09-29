@@ -36,8 +36,9 @@ class InvoicePdfService
         $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
 
         $formattedTotal = number_format($invoice->total_amount, 0, ',', ' ');
+        $companyName = config('company.name');
         $message = "Bonjour " . ($invoice->customer?->name ?? 'Client') . ",\n\n";
-        $message .= "Voici le récapitulatif de votre facture n° {$invoice->invoice_number} du " . $invoice->invoice_date->format('d/m/Y') . " :\n";
+        $message .= "Voici le récapitulatif de votre facture n° {$invoice->invoice_number} du " . $invoice->invoice_date->format('d/m/Y') . " émise par {$companyName} :\n";
         $message .= "- Montant total : {$formattedTotal} FCFA\n";
         $message .= "- Statut : " . $invoice->status->label() . "\n\n";
         $message .= "Merci de votre confiance !";
