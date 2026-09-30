@@ -28,6 +28,27 @@
         </div>
     </x-slot>
 
+    <!-- Metrics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <x-ui.stat-card
+            title="Montant Total Achat"
+            value="{{ number_format($purchase->total_amount, 0, ',', ' ') }} FCFA"
+            icon="banknotes"
+            color="emerald" />
+
+        <x-ui.stat-card
+            title="Montant Payé"
+            value="{{ number_format($purchase->paid_amount, 0, ',', ' ') }} FCFA"
+            icon="check-circle"
+            color="emerald" />
+
+        <x-ui.stat-card
+            title="Reste à Payer"
+            value="{{ number_format($purchase->remaining_amount, 0, ',', ' ') }} FCFA"
+            icon="exclamation-triangle"
+            :color="$purchase->remaining_amount > 0 ? 'amber' : 'slate'" />
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Main Lines Table -->
         <div class="lg:col-span-2 space-y-6">
@@ -69,6 +90,14 @@
                                 </tr>
                             @endforeach
                         </tbody>
+                        <tfoot class="border-t-2 border-slate-200 bg-slate-50 font-bold">
+                            <tr>
+                                <td colspan="4" class="py-3.5 px-4 text-right text-slate-700 uppercase tracking-wider text-xs">Montant Total Achat :</td>
+                                <td class="py-3.5 px-4 text-right font-black text-emerald-700 text-sm sm:text-base whitespace-nowrap">
+                                    {{ number_format($purchase->total_amount, 0, ',', ' ') }} FCFA
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </x-ui.card>

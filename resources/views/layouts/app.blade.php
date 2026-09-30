@@ -206,15 +206,6 @@
                         this.$refs.hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
                     }
                 },
-                    this.isOpen = false;
-                    this.$nextTick(() => {
-                        if (this.$refs.hiddenInput) {
-                            this.$refs.hiddenInput.value = '';
-                            this.$refs.hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
-                            this.$refs.hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
-                        }
-                    });
-                },
 
                 onFocus() {
                     this.isOpen = true;

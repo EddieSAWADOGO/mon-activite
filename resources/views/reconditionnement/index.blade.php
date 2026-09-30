@@ -25,6 +25,7 @@
                     <input type="text"
                            name="search"
                            value="{{ request('search') }}"
+                           x-on:input.debounce.400ms="$el.form.submit()"
                            placeholder="Rechercher par N° de reconditionnement ou produit..."
                            class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 text-xs sm:text-sm">
                 </div>

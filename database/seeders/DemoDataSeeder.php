@@ -353,16 +353,18 @@ class DemoDataSeeder extends Seeder
             $pref = $phonePrefixes[($i + 1) % count($phonePrefixes)];
             $phone = "+226 {$pref} " . sprintf('%02d', ($i % 90) + 11) . ' ' . sprintf('%02d', ($i * 5) % 90 + 10) . ' ' . sprintf('%02d', ($i * 9) % 90 + 10);
 
+            $cType = in_array($cData['type'], ['company', 'entreprise']) ? 'entreprise' : 'particulier';
+
             $c = Customer::firstOrCreate(
                 ['phone' => $phone],
                 [
-                    'type' => $cData['type'],
+                    'type' => $cType,
                     'name' => $cData['name'],
-                    'contact_person' => $cData['type'] === 'company' ? 'Responsable ' . $cData['name'] : null,
+                    'contact_person' => $cType === 'entreprise' ? 'Responsable ' . $cData['name'] : null,
                     'whatsapp' => $phone,
                     'email' => 'client' . ($i + 1) . '@client.bf',
                     'address' => $cData['city'] . ', Secteur Régal',
-                    'ifu' => $cData['type'] === 'company' ? '0001' . sprintf('%05d', $i + 1) . 'A' : null,
+                    'ifu' => $cType === 'entreprise' ? '0001' . sprintf('%05d', $i + 1) . 'A' : null,
                     'notes' => 'Client régulier de la boutique Mon-Activité',
                     'is_active' => true,
                 ]

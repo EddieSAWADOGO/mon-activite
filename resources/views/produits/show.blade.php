@@ -191,19 +191,29 @@
                                 </td>
 
                                 <td class="px-4 py-3 text-right">
-                                    @if(!$unit->is_base_unit)
-                                        @can('update', $product)
-                                            <form method="POST" action="{{ route('produits.unites.toggle-status', [$product, $unit]) }}" class="inline">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="text-xs text-slate-500 hover:text-slate-800 hover:underline">
-                                                    {{ $unit->is_active ? 'Archiver' : 'Réactiver' }}
-                                                </button>
-                                            </form>
-                                        @endcan
-                                    @else
-                                        <span class="text-xs text-slate-400">Non désactivable</span>
-                                    @endif
+                                    <div class="flex items-center justify-end gap-2">
+                                        @if(auth()->user()->canManageInventoryOperations())
+                                            <a href="{{ route('stock.inventory.create', ['product_id' => $product->id, 'stock_unit_id' => $unit->id]) }}"
+                                               class="p-1.5 text-purple-700 hover:bg-purple-50 rounded-lg transition inline-flex items-center gap-1 text-xs font-bold"
+                                               title="Ajuster le stock suite à un inventaire">
+                                                <x-heroicon-o-clipboard-document-check class="w-4 h-4" />
+                                                <span>Ajuster</span>
+                                            </a>
+                                        @endif
+                                        @if(!$unit->is_base_unit)
+                                            @can('update', $product)
+                                                <form method="POST" action="{{ route('produits.unites.toggle-status', [$product, $unit]) }}" class="inline">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="text-xs text-slate-500 hover:text-slate-800 hover:underline">
+                                                        {{ $unit->is_active ? 'Archiver' : 'Réactiver' }}
+                                                    </button>
+                                                </form>
+                                            @endcan
+                                        @else
+                                            <span class="text-xs text-slate-400">Non désactivable</span>
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

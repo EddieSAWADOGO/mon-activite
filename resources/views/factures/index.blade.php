@@ -15,10 +15,11 @@
     <x-ui.card class="mb-6 p-3 sm:p-4">
         <form method="GET" action="{{ route('factures.index') }}" class="flex flex-col sm:flex-row gap-2.5 items-center">
             <input type="text" name="search" value="{{ request('search') }}"
+                   x-on:input.debounce.400ms="$el.form.submit()"
                    placeholder="Rechercher par N° facture, client..."
                    class="w-full sm:flex-1 rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
 
-            <select name="status" class="w-full sm:w-auto rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500">
+            <select name="status" onchange="this.form.submit()" class="w-full sm:w-auto rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500">
                 <option value="">Tous les statuts</option>
                 <option value="paid" {{ request('status') === 'paid' ? 'selected' : '' }}>Payée</option>
                 <option value="partially_paid" {{ request('status') === 'partially_paid' ? 'selected' : '' }}>Partiellement payée</option>

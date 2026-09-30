@@ -11,7 +11,7 @@
         </div>
     </x-slot>
 
-    <div class="max-w-4xl sm:max-w-5xl mx-auto">
+    <div class="max-w-6xl mx-auto space-y-5">
         <x-ui.card class="p-4 sm:p-6 lg:p-7" x-data="{
             submitting: false,
             products: {{ json_encode($products) }},
@@ -24,6 +24,7 @@
             updateUnits() {
                 const prod = this.products.find(p => p.id == this.selectedProductId);
                 this.units = prod ? (prod.active_units || prod.units || []) : [];
+                this.autoCalculateTargetQty();
             },
             getSourceUnit() {
                 return this.units.find(u => u.id == this.sourceUnitId);
@@ -38,6 +39,15 @@
             getTargetBaseTotal() {
                 const u = this.getTargetUnit();
                 return u ? (parseFloat(this.targetQty || 0) * parseFloat(u.base_unit_equivalent)) : 0;
+            },
+            autoCalculateTargetQty() {
+                const sUnit = this.getSourceUnit();
+                const tUnit = this.getTargetUnit();
+                const sQty = parseFloat(this.sourceQty || 0);
+                if (sUnit && tUnit && parseFloat(tUnit.base_unit_equivalent) > 0 && sQty > 0) {
+                    const calculated = (sQty * parseFloat(sUnit.base_unit_equivalent)) / parseFloat(tUnit.base_unit_equivalent);
+                    this.targetQty = Math.round(calculated * 10000) / 10000;
+                }
             }
         }" x-init="if(selectedProductId) updateUnits()">
             <form action="{{ route('reconditionnement.store') }}" method="POST" @submit="submitting = true" class="space-y-4 sm:space-y-5">
@@ -76,6 +86,7 @@
                             <select name="source_stock_unit_id"
                                     id="source_stock_unit_id"
                                     x-model="sourceUnitId"
+                                    @change="autoCalculateTargetQty()"
                                     required
                                     class="w-full rounded-xl border border-slate-200 bg-white py-2.5 px-3.5 sm:py-3 sm:px-4 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
                                 <option value="">-- Unité source --</option>
@@ -96,6 +107,7 @@
                                    name="source_quantity"
                                    id="source_quantity"
                                    x-model="sourceQty"
+                                   @input="autoCalculateTargetQty()"
                                    step="0.01"
                                    min="0.01"
                                    required
@@ -121,6 +133,7 @@
                             <select name="target_stock_unit_id"
                                     id="target_stock_unit_id"
                                     x-model="targetUnitId"
+                                    @change="autoCalculateTargetQty()"
                                     required
                                     class="w-full rounded-xl border border-slate-200 bg-white py-2.5 px-3.5 sm:py-3 sm:px-4 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
                                 <option value="">-- Unité cible --</option>

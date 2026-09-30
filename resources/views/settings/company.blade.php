@@ -10,7 +10,7 @@
         </div>
     </x-slot>
 
-    <div class="max-w-4xl mx-auto space-y-6" x-data="{ submitting: false }">
+    <div class="max-w-6xl mx-auto space-y-5" x-data="{ submitting: false }">
         <x-ui.card class="p-4 sm:p-6 lg:p-7 bg-white shadow-xs border border-slate-200/80 rounded-3xl">
             <div class="mb-6 pb-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>

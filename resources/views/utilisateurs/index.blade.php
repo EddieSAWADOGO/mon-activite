@@ -22,9 +22,10 @@
         <x-ui.card class="p-3.5 sm:p-4">
             <form method="GET" action="{{ route('utilisateurs.index') }}" class="flex flex-col sm:flex-row gap-2.5 items-center">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Rechercher par nom ou email..."
+                       x-on:input.debounce.400ms="$el.form.submit()"
                        class="w-full sm:flex-1 rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
 
-                <select name="role" class="rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500 w-full sm:w-auto">
+                <select name="role" onchange="this.form.submit()" class="rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500 w-full sm:w-auto">
                     <option value="">Tous les rôles</option>
                     @foreach ($roles as $role)
                         <option value="{{ $role->value }}" {{ request('role') === $role->value ? 'selected' : '' }}>

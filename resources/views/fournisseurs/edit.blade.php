@@ -14,7 +14,7 @@
     <form method="POST" action="{{ route('fournisseurs.update', $supplier) }}"
           x-data="{ submitting: false }"
           @submit="submitting = true"
-          class="max-w-4xl sm:max-w-5xl mx-auto space-y-6">
+          class="max-w-6xl mx-auto space-y-5">
         @csrf
         @method('PUT')
 

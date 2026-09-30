@@ -11,7 +11,7 @@
         </div>
     </x-slot>
 
-    <div class="max-w-4xl sm:max-w-5xl mx-auto">
+    <div class="max-w-6xl mx-auto space-y-5">
         <x-ui.card class="p-4 sm:p-6 lg:p-7" x-data="{
             submitting: false,
             products: {{ json_encode($products) }},
@@ -85,14 +85,23 @@
                     <label for="reason" class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
                         Motif de la perte <span class="text-red-500">*</span>
                     </label>
-                    <select name="reason" id="reason" required class="w-full rounded-xl border border-slate-200 bg-white py-2.5 px-3.5 sm:py-3 sm:px-4 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
-                        <option value="Produit périmé" {{ old('reason') == 'Produit périmé' ? 'selected' : '' }}>Produit périmé</option>
-                        <option value="Produit cassé / abîmé" {{ old('reason') == 'Produit cassé / abîmé' ? 'selected' : '' }}>Produit cassé / abîmé</option>
-                        <option value="Vol / Disparition" {{ old('reason') == 'Vol / Disparition' ? 'selected' : '' }}>Vol / Disparition</option>
-                        <option value="Détérioration stock" {{ old('reason') == 'Détérioration stock' ? 'selected' : '' }}>Détérioration stock</option>
-                        <option value="Erreur d'inventaire" {{ old('reason') == "Erreur d'inventaire" ? 'selected' : '' }}>Erreur d'inventaire</option>
-                        <option value="Autre" {{ old('reason') == 'Autre' ? 'selected' : '' }}>Autre motif</option>
-                    </select>
+                    <input type="text"
+                           name="reason"
+                           id="reason"
+                           list="reasons_list"
+                           value="{{ old('reason') }}"
+                           required
+                           placeholder="Saisissez le motif de la perte (ex: Produit périmé, Sac percé, Fuite, Vol...)"
+                           class="w-full rounded-xl border border-slate-200 bg-white py-2.5 px-3.5 sm:py-3 sm:px-4 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
+                    <datalist id="reasons_list">
+                        <option value="Produit périmé">
+                        <option value="Produit cassé / abîmé">
+                        <option value="Sac percé / déchiré lors de la manutention">
+                        <option value="Détrempé par la pluie / Humidité">
+                        <option value="Vol / Disparition">
+                        <option value="Détérioration de stock">
+                        <option value="Erreur d'inventaire">
+                    </datalist>
                     @error('reason')
                         <p class="mt-1 text-xs text-red-600 flex items-center gap-1"><x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" /> {{ $message }}</p>
                     @enderror

@@ -27,10 +27,11 @@
                 <input type="text"
                        name="search"
                        value="{{ request('search') }}"
+                       x-on:input.debounce.400ms="$el.form.submit()"
                        placeholder="Rechercher un produit..."
                        class="flex-1 rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 w-full sm:w-auto">
 
-                <select name="status" class="rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 w-full sm:w-auto">
+                <select name="status" onchange="this.form.submit()" class="rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 w-full sm:w-auto">
                     <option value="">Tous les statuts</option>
                     <option value="active" @selected(request('status') === 'active')>Actifs uniquement</option>
                     <option value="inactive" @selected(request('status') === 'inactive')>Inactifs uniquement</option>

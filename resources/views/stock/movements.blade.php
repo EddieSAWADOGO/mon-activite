@@ -22,7 +22,7 @@
         <form method="GET" action="{{ route('stock.movements') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">Produit</label>
-                <select name="product_id" class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3 focus:ring-2 focus:ring-emerald-500 bg-white">
+                <select name="product_id" onchange="this.form.submit()" class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3 focus:ring-2 focus:ring-emerald-500 bg-white">
                     <option value="">Tous les produits</option>
                     @foreach($products as $product)
                         <option value="{{ $product->id }}" @selected(request('product_id') == $product->id)>
@@ -34,7 +34,7 @@
 
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">Type de Mouvement</label>
-                <select name="type" class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3 focus:ring-2 focus:ring-emerald-500 bg-white">
+                <select name="type" onchange="this.form.submit()" class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3 focus:ring-2 focus:ring-emerald-500 bg-white">
                     <option value="">Tous les types</option>
                     @foreach(App\Support\Enums\MovementType::cases() as $case)
                         <option value="{{ $case->value }}" @selected(request('type') == $case->value)>

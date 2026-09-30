@@ -309,9 +309,6 @@
                     <td style="text-align: center; color: #64748b; font-weight: 800;">{{ $index + 1 }}</td>
                     <td>
                         <strong style="font-size: 15.5px; color: #0f172a;">{{ $line->product->name }}</strong>
-                        @if($line->discount_reason)
-                            <div style="font-size: 12px; color: #b45309; font-style: italic;">Motif remise : {{ $line->discount_reason }}</div>
-                        @endif
                     </td>
                     <td style="font-weight: 800;">{{ $line->stockUnit->name }}</td>
                     <td class="text-right"><strong style="font-size: 15.5px;">{{ number_format($line->quantity, 2, ',', ' ') }}</strong></td>

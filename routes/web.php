@@ -169,6 +169,8 @@ Route::middleware(['auth'])->group(function () {
     // Stock Module
     Route::get('stock', [StockController::class, 'index'])->name('stock.index');
     Route::get('stock/mouvements', [StockController::class, 'movements'])->name('stock.movements');
+    Route::get('stock/inventaire', [StockController::class, 'createInventory'])->name('stock.inventory.create');
+    Route::post('stock/inventaire', [StockController::class, 'storeInventory'])->name('stock.inventory.store');
 
     // History & Tracking Module
     Route::get('historique', [HistoryController::class, 'index'])->name('historique.index');

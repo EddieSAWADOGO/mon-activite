@@ -163,19 +163,12 @@
             </x-ui.card>
 
             <!-- Unités Additionnelles Déclarées -->
-            <x-ui.card>
-                <x-slot:title>
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 w-full">
-                        <div>
-                            <h3 class="text-base font-bold text-slate-900">3. Autres unités déclarées (Optionnel)</h3>
-                            <p class="hidden sm:block text-xs text-slate-500 mt-0.5">Formats de conditionnement pour l'achat/vente (ex: Carton de 12, Sac de 25kg, Paquet de 6).</p>
-                        </div>
-
-                        <x-ui.button type="button" variant="outline" size="sm" icon="plus" @click="addUnit()" class="w-full sm:w-auto">
-                            Ajouter une unité
-                        </x-ui.button>
-                    </div>
-                </x-slot:title>
+            <x-ui.card title="3. Autres unités déclarées (Optionnel)" subtitle="Formats de conditionnement pour l'achat/vente (ex: Carton de 12, Sac de 25kg, Paquet de 6).">
+                <x-slot:actions>
+                    <x-ui.button type="button" variant="outline" size="sm" icon="plus" @click="addUnit()" class="w-full sm:w-auto">
+                        Ajouter une unité
+                    </x-ui.button>
+                </x-slot:actions>
 
                 <div class="space-y-4">
                     <template x-if="units.length === 0">

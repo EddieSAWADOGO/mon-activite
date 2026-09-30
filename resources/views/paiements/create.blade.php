@@ -11,7 +11,7 @@
         </div>
     </x-slot>
 
-    <div class="max-w-4xl sm:max-w-5xl mx-auto space-y-4 sm:space-y-6">
+    <div class="max-w-6xl mx-auto space-y-5">
         <!-- Récapitulatif Facture -->
         <x-ui.card class="p-4 sm:p-6 lg:p-7">
             <div class="space-y-3.5">

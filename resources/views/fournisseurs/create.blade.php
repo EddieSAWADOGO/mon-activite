@@ -17,7 +17,7 @@
     <form method="POST" action="{{ route('fournisseurs.store') }}"
           x-data="{ submitting: false }"
           @submit="submitting = true"
-          class="max-w-4xl sm:max-w-5xl mx-auto space-y-6">
+          class="max-w-6xl mx-auto space-y-5">
         @csrf
 
         <x-ui.card class="p-4 sm:p-6 lg:p-7 space-y-4 sm:space-y-5">

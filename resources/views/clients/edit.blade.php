@@ -14,7 +14,7 @@
         </div>
     </x-slot>
 
-    <div class="max-w-4xl sm:max-w-5xl mx-auto" x-data="{ submitting: false, type: '{{ old('type', $customer->type) }}' }">
+    <div class="max-w-6xl mx-auto space-y-5" x-data="{ submitting: false, type: '{{ old('type', $customer->type) }}' }">
         <x-ui.card class="p-4 sm:p-6 lg:p-7">
             <form method="POST" action="{{ route('clients.update', $customer) }}" @submit="submitting = true" class="space-y-4 sm:space-y-5">
                 @csrf

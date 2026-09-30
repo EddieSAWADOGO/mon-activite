@@ -22,16 +22,19 @@
         <form method="GET" action="{{ route('ventes.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 items-center">
             <div class="sm:col-span-2 lg:col-span-2">
                 <input type="text" name="search" value="{{ request('search') }}"
+                       x-on:input.debounce.400ms="$el.form.submit()"
                        placeholder="Rechercher par N° vente, client..."
                        class="w-full rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
             </div>
 
             <div class="grid grid-cols-2 gap-2">
                 <input type="date" name="start_date" value="{{ request('start_date') }}"
+                       onchange="this.form.submit()"
                        class="w-full rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-2.5 focus:bg-white focus:ring-2 focus:ring-emerald-500"
                        title="Date début">
 
                 <input type="date" name="end_date" value="{{ request('end_date') }}"
+                       onchange="this.form.submit()"
                        class="w-full rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-2.5 focus:bg-white focus:ring-2 focus:ring-emerald-500"
                        title="Date fin">
             </div>

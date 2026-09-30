@@ -26,12 +26,13 @@
         <form method="GET" action="{{ route('achats.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 items-center">
             <div class="sm:col-span-2 lg:col-span-1">
                 <input type="text" name="search" value="{{ request('search') }}"
+                       x-on:input.debounce.400ms="$el.form.submit()"
                        placeholder="N° d'achat ou fournisseur..."
                        class="w-full rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500">
             </div>
 
             <div>
-                <select name="supplier_id" class="w-full rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500">
+                <select name="supplier_id" onchange="this.form.submit()" class="w-full rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500">
                     <option value="">Tous les fournisseurs</option>
                     @foreach($suppliers as $supplier)
                         <option value="{{ $supplier->id }}" @selected(request('supplier_id') == $supplier->id)>
@@ -43,10 +44,12 @@
 
             <div class="grid grid-cols-2 gap-2 sm:col-span-2 lg:col-span-2">
                 <input type="date" name="start_date" value="{{ request('start_date') }}"
+                       onchange="this.form.submit()"
                        class="w-full rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-2.5 sm:px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500"
                        title="Date début">
 
                 <input type="date" name="end_date" value="{{ request('end_date') }}"
+                       onchange="this.form.submit()"
                        class="w-full rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-2.5 sm:px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500"
                        title="Date fin">
             </div>

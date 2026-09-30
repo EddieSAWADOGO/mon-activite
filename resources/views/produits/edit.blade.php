@@ -155,19 +155,12 @@
             </x-ui.card>
 
             <!-- Nouvelles Unités Déclarées -->
-            <x-ui.card>
-                <x-slot:title>
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 w-full">
-                        <div>
-                            <h3 class="text-base font-bold text-slate-900">3. Ajouter de nouvelles unités</h3>
-                            <p class="hidden sm:block text-xs text-slate-500 mt-0.5">Si le conditionnement d'un produit a changé, créez un nouveau format d'unité ici.</p>
-                        </div>
-
-                        <x-ui.button type="button" variant="outline" size="sm" icon="plus" @click="addNewUnit()" class="w-full sm:w-auto">
-                            Ajouter un format
-                        </x-ui.button>
-                    </div>
-                </x-slot:title>
+            <x-ui.card title="3. Ajouter de nouvelles unités" subtitle="Si le conditionnement d'un produit a changé, créez un nouveau format d'unité ici.">
+                <x-slot:actions>
+                    <x-ui.button type="button" variant="outline" size="sm" icon="plus" @click="addNewUnit()" class="w-full sm:w-auto">
+                        Ajouter un format
+                    </x-ui.button>
+                </x-slot:actions>
 
                 <div class="space-y-4">
                     <template x-if="newUnits.length === 0">

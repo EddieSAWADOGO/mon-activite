@@ -20,7 +20,7 @@
             <form action="{{ route('historique.sales') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-end">
                 <div>
                     <label for="product_id" class="block text-xs font-semibold text-slate-700 mb-1">Produit</label>
-                    <select name="product_id" id="product_id" class="w-full py-2.5 px-3 border border-slate-200 rounded-xl bg-slate-50 text-xs sm:text-sm focus:bg-white focus:ring-2 focus:ring-emerald-500">
+                    <select name="product_id" id="product_id" onchange="this.form.submit()" class="w-full py-2.5 px-3 border border-slate-200 rounded-xl bg-slate-50 text-xs sm:text-sm focus:bg-white focus:ring-2 focus:ring-emerald-500">
                         <option value="">Tous les produits</option>
                         @foreach($products as $p)
                             <option value="{{ $p->id }}" {{ $selectedProductId == $p->id ? 'selected' : '' }}>{{ $p->name }}</option>
@@ -30,7 +30,7 @@
 
                 <div>
                     <label for="period" class="block text-xs font-semibold text-slate-700 mb-1">Période</label>
-                    <select name="period" id="period" x-model="period" class="w-full py-2.5 px-3 border border-slate-200 rounded-xl bg-slate-50 text-xs sm:text-sm focus:bg-white focus:ring-2 focus:ring-emerald-500">
+                    <select name="period" id="period" x-model="period" onchange="this.form.submit()" class="w-full py-2.5 px-3 border border-slate-200 rounded-xl bg-slate-50 text-xs sm:text-sm focus:bg-white focus:ring-2 focus:ring-emerald-500">
                         <option value="today">Aujourd'hui</option>
                         <option value="week">Cette semaine</option>
                         <option value="month">Ce mois-ci</option>

@@ -23,6 +23,7 @@
                 <input type="text"
                        name="search"
                        value="{{ request('search') }}"
+                       x-on:input.debounce.400ms="$el.form.submit()"
                        placeholder="Rechercher par N° de retour, produit, client..."
                        class="w-full sm:flex-1 rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 focus:ring-2 focus:ring-emerald-500">
 

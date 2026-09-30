@@ -28,7 +28,13 @@ class CustomerController extends Controller
         }
 
         if ($type = $request->input('type')) {
-            $query->where('type', $type);
+            if ($type === 'particulier') {
+                $query->whereIn('type', ['particulier', 'individual']);
+            } elseif ($type === 'entreprise') {
+                $query->whereIn('type', ['entreprise', 'company']);
+            } else {
+                $query->where('type', $type);
+            }
         }
 
         $customers = $query->paginate(15)->withQueryString();

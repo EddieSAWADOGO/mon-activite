@@ -10,19 +10,47 @@
 
     <div class="space-y-6">
         <x-ui.card class="mb-6 p-3.5 sm:p-4">
-            <form action="{{ route('paiements.index') }}" method="GET" class="flex flex-col sm:flex-row gap-2.5 items-center">
-                <input type="text"
-                       name="search"
-                       value="{{ request('search') }}"
-                       placeholder="Rechercher par N° de facture, N° d'achat, client ou fournisseur..."
-                       class="w-full sm:flex-1 rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 focus:ring-2 focus:ring-emerald-500">
+            <form action="{{ route('paiements.index') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 items-center">
+                <div class="sm:col-span-2 lg:col-span-1">
+                    <input type="text"
+                           name="search"
+                           value="{{ request('search') }}"
+                           x-on:input.debounce.400ms="$el.form.submit()"
+                           placeholder="N° document, client, fournisseur..."
+                           class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 focus:ring-2 focus:ring-emerald-500">
+                </div>
+
+                <div>
+                    <select name="type" onchange="this.form.submit()" class="w-full rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500">
+                        <option value="">Tous les types</option>
+                        <option value="customer" @selected(request('type') === 'customer' || request('type') === 'client')>Clients (Factures)</option>
+                        <option value="supplier" @selected(request('type') === 'supplier' || request('type') === 'fournisseur')>Fournisseurs (Achats)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <select name="payment_method" onchange="this.form.submit()" class="w-full rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-3.5 focus:bg-white focus:ring-2 focus:ring-emerald-500">
+                        <option value="">Tous les modes</option>
+                        <option value="Espèces" @selected(request('payment_method') === 'Espèces')>Espèces</option>
+                        <option value="Orange Money" @selected(request('payment_method') === 'Orange Money')>Orange Money</option>
+                        <option value="Moov Money" @selected(request('payment_method') === 'Moov Money')>Moov Money</option>
+                        <option value="Wave" @selected(request('payment_method') === 'Wave')>Wave</option>
+                        <option value="Virement bancaire" @selected(request('payment_method') === 'Virement bancaire')>Virement bancaire</option>
+                        <option value="Chèque" @selected(request('payment_method') === 'Chèque')>Chèque</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="date" name="start_date" value="{{ request('start_date') }}" onchange="this.form.submit()" class="w-full rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-2.5 focus:bg-white focus:ring-2 focus:ring-emerald-500" title="Date début">
+                    <input type="date" name="end_date" value="{{ request('end_date') }}" onchange="this.form.submit()" class="w-full rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm py-2.5 px-2.5 focus:bg-white focus:ring-2 focus:ring-emerald-500" title="Date fin">
+                </div>
 
                 <div class="flex gap-2 w-full sm:w-auto [&>a]:flex-1 [&>button]:flex-1 sm:[&>a]:flex-none sm:[&>button]:flex-none">
-                    <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" size="sm" class="w-full sm:w-auto">
-                        Rechercher
+                    <x-ui.button type="submit" variant="secondary" icon="magnifying-glass" size="sm" class="w-full sm:w-auto justify-center">
+                        Filtrer
                     </x-ui.button>
 
-                    @if(request('search'))
+                    @if(request()->hasAny(['search', 'type', 'payment_method', 'start_date', 'end_date']))
                         <a href="{{ route('paiements.index') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center justify-center whitespace-nowrap bg-white min-h-[42px] transition active:scale-98">
                             Effacer
                         </a>

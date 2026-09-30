@@ -12,6 +12,7 @@ enum MovementType: string
     case LOSS = 'loss';
     case REPACKAGING_OUT = 'repackaging_out';
     case REPACKAGING_IN = 'repackaging_in';
+    case INVENTORY_ADJUSTMENT = 'inventory_adjustment';
 
     public function label(): string
     {
@@ -24,6 +25,7 @@ enum MovementType: string
             self::LOSS => 'Perte (Sortie)',
             self::REPACKAGING_OUT => 'Reconditionnement (Sortie source)',
             self::REPACKAGING_IN => 'Reconditionnement (Entrée cible)',
+            self::INVENTORY_ADJUSTMENT => 'Ajustement d\'inventaire',
         };
     }
 
@@ -33,6 +35,7 @@ enum MovementType: string
             self::PURCHASE, self::BREAKAGE_IN, self::RETURN, self::REPACKAGING_IN => 'emerald',
             self::SALE, self::BREAKAGE_OUT, self::REPACKAGING_OUT => 'sky',
             self::LOSS => 'red',
+            self::INVENTORY_ADJUSTMENT => 'purple',
         };
     }
 }

@@ -28,15 +28,37 @@ class PaymentController extends Controller
                     $iq->where('invoice_number', 'like', "%{$search}%")
                       ->orWhereHas('customer', function ($cq) use ($search) {
                           $cq->where('name', 'like', "%{$search}%")
-                            ->orWhere('company_name', 'like', "%{$search}%");
+                            ->orWhere('phone', 'like', "%{$search}%")
+                            ->orWhere('contact_person', 'like', "%{$search}%");
                       });
                 })->orWhereHas('purchase', function ($pq) use ($search) {
                     $pq->where('purchase_number', 'like', "%{$search}%")
                       ->orWhereHas('supplier', function ($sq) use ($search) {
-                          $sq->where('name', 'like', "%{$search}%");
+                          $sq->where('name', 'like', "%{$search}%")
+                            ->orWhere('phone', 'like', "%{$search}%");
                       });
-                });
+                })->orWhere('reference', 'like', "%{$search}%");
             });
+        }
+
+        if ($type = $request->input('type')) {
+            if ($type === 'customer' || $type === 'client') {
+                $query->whereNotNull('invoice_id');
+            } elseif ($type === 'supplier' || $type === 'fournisseur') {
+                $query->whereNotNull('purchase_id');
+            }
+        }
+
+        if ($method = $request->input('payment_method')) {
+            $query->where('payment_method', $method);
+        }
+
+        if ($startDate = $request->input('start_date')) {
+            $query->whereDate('payment_date', '>=', $startDate);
+        }
+
+        if ($endDate = $request->input('end_date')) {
+            $query->whereDate('payment_date', '<=', $endDate);
         }
 
         $payments = $query->paginate(15)->withQueryString();

@@ -24,9 +24,11 @@
                 @endif
 
 
-                <x-ui.button href="{{ route('factures.pdf', $invoice) }}" variant="secondary" icon="arrow-down-tray" size="sm" title="Télécharger le fichier PDF" class="w-full sm:w-auto">
-                    PDF
-                </x-ui.button>
+                <div x-data="{ downloading: false }">
+                    <x-ui.button href="{{ route('factures.pdf', $invoice) }}" @click="downloading = true; setTimeout(() => downloading = false, 4000)" variant="secondary" icon="arrow-down-tray" size="sm" title="Télécharger le fichier PDF" class="w-full sm:w-auto">
+                        <span x-text="downloading ? 'Génération PDF...' : 'PDF'">PDF</span>
+                    </x-ui.button>
+                </div>
 
                 <a href="{{ route('factures.whatsapp', $invoice) }}" target="_blank" title="Envoyer le récapitulatif par WhatsApp" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-800 text-xs sm:text-sm font-bold hover:bg-emerald-100 focus:ring-2 focus:ring-emerald-500/20 transition shadow-2xs cursor-pointer">
                     <x-ui.whatsapp-icon class="w-4 h-4 text-[#25D366] fill-[#25D366] shrink-0" />
@@ -175,11 +177,6 @@
                                     <td class="py-3 px-3.5 text-center font-mono text-slate-500 text-xs">{{ $index + 1 }}</td>
                                     <td class="py-3 px-3.5 font-bold text-slate-900 text-xs sm:text-sm">
                                         {{ $line->product->name }}
-                                        @if($line->discount_reason)
-                                            <div class="text-2xs text-amber-800 font-normal italic">
-                                                Motif remise : {{ $line->discount_reason }}
-                                            </div>
-                                        @endif
                                     </td>
                                     <td class="py-3 px-3.5 text-slate-900 font-bold text-xs sm:text-sm">{{ $line->stockUnit->name }}</td>
                                     <td class="py-3 px-3.5 text-right font-black text-slate-900 text-xs sm:text-sm">{{ number_format($line->quantity, 2, ',', ' ') }}</td>
