@@ -20,7 +20,7 @@ class PaymentController extends Controller
     {
         $this->authorize('viewAny', Payment::class);
 
-        $query = Payment::with(['invoice.customer', 'purchase.supplier', 'createdBy'])->latest('payment_date');
+        $query = Payment::with(['invoice.customer', 'purchase.supplier', 'createdBy'])->latest('payment_date')->latest('id');
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {

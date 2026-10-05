@@ -33,7 +33,7 @@ class DemoDataSeeder extends Seeder
 
         // 3 Comptes Principaux de Rôle
         $superAdmin = User::firstOrCreate(
-            ['email' => 'superadmin@mon-activite.com'],
+            ['email' => 'superadmin@suivremoncommerce.com'],
             [
                 'name' => 'Super Admin',
                 'password' => Hash::make('password'),
@@ -44,7 +44,7 @@ class DemoDataSeeder extends Seeder
         $users[] = $superAdmin;
 
         $admin = User::firstOrCreate(
-            ['email' => 'admin@mon-activite.com'],
+            ['email' => 'admin@suivremoncommerce.com'],
             [
                 'name' => 'Propriétaire Admin',
                 'password' => Hash::make('password'),
@@ -55,7 +55,7 @@ class DemoDataSeeder extends Seeder
         $users[] = $admin;
 
         $cashier = User::firstOrCreate(
-            ['email' => 'cashier@mon-activite.com'],
+            ['email' => 'cashier@suivremoncommerce.com'],
             [
                 'name' => 'Caissier Principal',
                 'password' => Hash::make('password'),
@@ -100,7 +100,7 @@ class DemoDataSeeder extends Seeder
                 default => UserRole::SUPER_ADMIN,
             };
 
-            $email = 'agent' . ($idx + 1) . '@mon-activite.com';
+            $email = 'agent' . ($idx + 1) . '@suivremoncommerce.com';
             $u = User::firstOrCreate(
                 ['email' => $email],
                 [
@@ -365,7 +365,7 @@ class DemoDataSeeder extends Seeder
                     'email' => 'client' . ($i + 1) . '@client.bf',
                     'address' => $cData['city'] . ', Secteur Régal',
                     'ifu' => $cType === 'entreprise' ? '0001' . sprintf('%05d', $i + 1) . 'A' : null,
-                    'notes' => 'Client régulier de la boutique Mon-Activité',
+                    'notes' => 'Client régulier de la boutique SuivreMonCommerce',
                     'is_active' => true,
                 ]
             );

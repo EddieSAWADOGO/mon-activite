@@ -219,8 +219,11 @@
                                            @input="calculateLine(index)" required
                                            class="w-full rounded-xl border text-xs sm:text-sm py-2.5 px-3.5 sm:py-3 focus:ring-2 focus:ring-emerald-500 bg-white transition font-bold"
                                            :class="hasDiscount(line) ? 'border-amber-400 bg-amber-50 text-amber-900 ring-2 ring-amber-400/30' : 'border-slate-200'">
-                                    <div x-show="line.default_unit_price > 0" class="text-xs text-slate-500 mt-1 font-medium">
-                                        Prix normal : <span x-text="line.default_unit_price"></span> FCFA
+                                    <div x-show="line.unit_price > 0" class="text-xs font-bold text-emerald-700 mt-1">
+                                        = <span x-text="formatNumberFR(line.unit_price)"></span> FCFA
+                                    </div>
+                                    <div x-show="line.default_unit_price > 0" class="text-xs text-slate-500 mt-0.5 font-medium">
+                                        Prix normal : <span x-text="formatNumberFR(line.default_unit_price)"></span> FCFA
                                     </div>
                                 </div>
 
@@ -234,22 +237,59 @@
                             </div>
 
                             <!-- Mandatory Discount Reason if price deviates (Spacious Box) -->
-                            <div class="p-3.5 sm:p-4 rounded-2xl bg-amber-50/90 border-2 border-amber-300 text-xs sm:text-sm text-amber-950 space-y-2 mt-2 w-full"
+                            <div class="p-3.5 sm:p-4 rounded-2xl bg-amber-50/90 border-2 border-amber-300 text-xs sm:text-sm text-amber-950 space-y-2.5 mt-2 w-full"
                                  x-show="hasDiscount(line)" x-transition>
                                 <div class="flex items-center gap-2 font-bold text-amber-900">
                                     <x-heroicon-o-information-circle class="w-5 h-5 text-amber-600 shrink-0" />
                                     <span>Remise ou modification de prix détectée</span>
                                 </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-amber-950 mb-1.5">
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-semibold text-amber-950">
                                         Motif de l'écart / remise <span class="text-red-500">*</span>
                                     </label>
+                                    <!-- Options rapides en 1 clic -->
+                                    <div class="flex flex-wrap gap-1.5 mb-2">
+                                        <button type="button" @click="line.discount_reason = 'Prix de gros'"
+                                                class="px-2.5 py-1 rounded-lg text-xs font-semibold border transition"
+                                                :class="line.discount_reason === 'Prix de gros' ? 'bg-amber-600 text-white border-amber-700' : 'bg-white text-amber-900 border-amber-200 hover:bg-amber-100'">
+                                            Prix de gros
+                                        </button>
+                                        <button type="button" @click="line.discount_reason = 'Remise commerciale'"
+                                                class="px-2.5 py-1 rounded-lg text-xs font-semibold border transition"
+                                                :class="line.discount_reason === 'Remise commerciale' ? 'bg-amber-600 text-white border-amber-700' : 'bg-white text-amber-900 border-amber-200 hover:bg-amber-100'">
+                                            Remise commerciale
+                                        </button>
+                                        <button type="button" @click="line.discount_reason = 'Achat en quantité'"
+                                                class="px-2.5 py-1 rounded-lg text-xs font-semibold border transition"
+                                                :class="line.discount_reason === 'Achat en quantité' ? 'bg-amber-600 text-white border-amber-700' : 'bg-white text-amber-900 border-amber-200 hover:bg-amber-100'">
+                                            Achat en quantité
+                                        </button>
+                                        <button type="button" @click="line.discount_reason = 'Client fidèle'"
+                                                class="px-2.5 py-1 rounded-lg text-xs font-semibold border transition"
+                                                :class="line.discount_reason === 'Client fidèle' ? 'bg-amber-600 text-white border-amber-700' : 'bg-white text-amber-900 border-amber-200 hover:bg-amber-100'">
+                                            Client fidèle
+                                        </button>
+                                        <button type="button" @click="line.discount_reason = 'Promotion'"
+                                                class="px-2.5 py-1 rounded-lg text-xs font-semibold border transition"
+                                                :class="line.discount_reason === 'Promotion' ? 'bg-amber-600 text-white border-amber-700' : 'bg-white text-amber-900 border-amber-200 hover:bg-amber-100'">
+                                            Promotion
+                                        </button>
+                                    </div>
                                     <input type="text"
                                            :name="'lines[' + index + '][discount_reason]'"
                                            x-model="line.discount_reason"
-                                           placeholder="ex: Remise fidélité, Prix de gros..."
+                                           list="discount-preset-reasons"
+                                           placeholder="Sélectionner une option ci-dessus ou saisir..."
                                            :required="hasDiscount(line)"
                                            class="w-full rounded-xl border border-amber-300 bg-white text-xs sm:text-sm py-2.5 px-3.5 sm:py-3 focus:ring-2 focus:ring-amber-500 font-medium">
+                                    <datalist id="discount-preset-reasons">
+                                        <option value="Prix de gros"></option>
+                                        <option value="Remise commerciale"></option>
+                                        <option value="Achat en quantité"></option>
+                                        <option value="Client fidèle"></option>
+                                        <option value="Promotion"></option>
+                                        <option value="Déstockage"></option>
+                                    </datalist>
                                 </div>
                             </div>
 
@@ -295,7 +335,10 @@
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">Montant Payé immédiatement <span class="text-red-500">*</span></label>
                         <input type="number" step="1" min="0" :max="grandTotal" name="paid_amount" x-model.number="paidAmount" required
-                               class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 focus:ring-2 focus:ring-emerald-500 bg-white">
+                               class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 focus:ring-2 focus:ring-emerald-500 bg-white font-bold">
+                        <div x-show="paidAmount > 0" class="text-xs font-bold text-emerald-700 mt-1">
+                            = <span x-text="formatNumberFR(paidAmount)"></span> FCFA
+                        </div>
                         <p x-show="parseFloat(paidAmount || 0) > parseFloat(grandTotal || 0)" class="mt-1 text-xs text-red-600 font-semibold flex items-center gap-1">
                             <x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" /> Le montant payé ne peut pas dépasser le total de la vente.
                         </p>

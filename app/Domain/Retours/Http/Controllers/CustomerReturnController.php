@@ -20,7 +20,7 @@ class CustomerReturnController extends Controller
     {
         $this->authorize('viewAny', CustomerReturn::class);
 
-        $query = CustomerReturn::with(['product', 'stockUnit', 'customer', 'invoice', 'createdBy', 'validatedBy'])->latest();
+        $query = CustomerReturn::with(['product', 'stockUnit', 'customer', 'invoice', 'createdBy', 'validatedBy'])->latest('return_date')->latest('id');
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {

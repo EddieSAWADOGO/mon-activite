@@ -84,6 +84,7 @@ Route::middleware(['auth'])->group(function () {
     ]);
 
     // Customers
+    Route::get('clients/{customer}/releve-pdf', [CustomerController::class, 'statementPdf'])->name('clients.statement-pdf');
     Route::resource('clients', CustomerController::class)->parameters([
         'clients' => 'customer',
     ])->names([

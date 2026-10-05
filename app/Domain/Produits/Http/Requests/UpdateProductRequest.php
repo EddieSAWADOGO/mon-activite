@@ -56,11 +56,11 @@ class UpdateProductRequest extends FormRequest
             'is_active' => 'statut actif',
             'existing_units.*.name' => "nom de l'unité",
             'existing_units.*.default_selling_price' => "prix de vente par défaut",
-            'existing_units.*.low_stock_threshold' => "seuil d'alerte",
+            'existing_units.*.low_stock_threshold' => "stock minimum d'alerte",
             'new_units.*.name' => "nom de la nouvelle unité",
             'new_units.*.base_unit_equivalent' => "équivalence en unité de base",
             'new_units.*.default_selling_price' => "prix de vente par défaut",
-            'new_units.*.low_stock_threshold' => "seuil d'alerte",
+            'new_units.*.low_stock_threshold' => "stock minimum d'alerte",
         ];
     }
 }

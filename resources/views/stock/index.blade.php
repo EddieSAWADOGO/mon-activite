@@ -136,7 +136,7 @@
                                 </div>
 
                                 <div class="flex items-baseline justify-between text-xs text-slate-500 border-t border-slate-200/60 pt-1">
-                                    <span>Seuil alerte :</span>
+                                    <span>Stock min. alerte :</span>
                                     <span>{{ rtrim(rtrim(number_format($thresholdVal, 4, ',', ' '), '0'), ',') }}</span>
                                 </div>
                             </div>

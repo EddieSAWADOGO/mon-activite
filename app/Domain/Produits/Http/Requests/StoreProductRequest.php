@@ -52,12 +52,12 @@ class StoreProductRequest extends FormRequest
             'description' => 'description',
             'base_unit_name' => "nom de l'unité de base",
             'base_unit_price' => "prix de vente de l'unité de base",
-            'base_unit_low_stock_threshold' => "seuil d'alerte de l'unité de base",
+            'base_unit_low_stock_threshold' => "stock minimum d'alerte de l'unité de base",
             'base_unit_initial_stock' => "stock initial de l'unité de base",
             'additional_units.*.name' => "nom de l'unité additionnelle",
             'additional_units.*.base_unit_equivalent' => "équivalence en unité de base",
             'additional_units.*.default_selling_price' => "prix de vente par défaut",
-            'additional_units.*.low_stock_threshold' => "seuil d'alerte",
+            'additional_units.*.low_stock_threshold' => "stock minimum d'alerte",
             'additional_units.*.initial_stock' => "stock initial",
         ];
     }

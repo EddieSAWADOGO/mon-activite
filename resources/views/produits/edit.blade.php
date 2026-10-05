@@ -137,9 +137,9 @@
                                            class="w-full py-2 px-3 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
                                 </div>
 
-                                <!-- Seuil alerte stock bas -->
+                                <!-- Stock min d'alerte -->
                                 <div>
-                                    <label class="block text-xs font-medium text-slate-700 mb-1">Seuil alerte stock <span class="text-red-500">*</span></label>
+                                    <label class="block text-xs font-medium text-slate-700 mb-1">Stock min. d'alerte <span class="text-red-500">*</span></label>
                                     <input type="number"
                                            step="0.01"
                                            min="0"
@@ -215,9 +215,9 @@
                                            class="w-full py-2 px-3 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
                                 </div>
 
-                                <!-- Seuil alerte -->
+                                <!-- Stock min d'alerte -->
                                 <div>
-                                    <label class="block text-xs font-medium text-slate-700 mb-1">Seuil alerte <span class="text-red-500">*</span></label>
+                                    <label class="block text-xs font-medium text-slate-700 mb-1">Stock min. d'alerte <span class="text-red-500">*</span></label>
                                     <input type="number"
                                            step="0.01"
                                            min="0"

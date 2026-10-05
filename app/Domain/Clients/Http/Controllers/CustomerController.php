@@ -64,7 +64,11 @@ class CustomerController extends Controller
     {
         $this->authorize('view', $customer);
 
-        $customer->load(['sales.createdBy', 'invoices']);
+        $customer->load([
+            'sales' => fn ($q) => $q->latest('sale_date')->latest('id'),
+            'sales.createdBy',
+            'invoices' => fn ($q) => $q->latest('invoice_date')->latest('id'),
+        ]);
 
         $totalPurchased = $customer->sales->sum('total_amount');
         $totalPaid = $customer->sales->sum('paid_amount');
@@ -72,6 +76,38 @@ class CustomerController extends Controller
         $lastOrderDate = $customer->sales->max('sale_date');
 
         return view('clients.show', compact('customer', 'totalPurchased', 'totalPaid', 'remainingDue', 'lastOrderDate'));
+    }
+
+    public function statementPdf(Customer $customer)
+    {
+        $this->authorize('view', $customer);
+
+        $customer->load([
+            'sales' => fn ($q) => $q->latest('sale_date')->latest('id')->with(['invoice', 'lines.product', 'lines.stockUnit']),
+            'invoices' => fn ($q) => $q->latest('invoice_date')->latest('id')->with('payments'),
+        ]);
+
+        $company = \App\Domain\Settings\Models\CompanySetting::getSettings();
+
+        $totalPurchased = (float) $customer->sales->sum('total_amount');
+        $totalPaid = (float) $customer->sales->sum('paid_amount');
+        $remainingDue = (float) $customer->sales->sum('remaining_amount');
+
+        $payments = \App\Domain\Paiements\Models\Payment::whereHas('invoice', function ($q) use ($customer) {
+            $q->where('customer_id', $customer->id);
+        })->with(['invoice', 'createdBy'])->latest('payment_date')->latest('id')->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('clients.statement-pdf', compact(
+            'customer',
+            'company',
+            'totalPurchased',
+            'totalPaid',
+            'remainingDue',
+            'payments'
+        ))->setPaper('a4', 'portrait');
+
+        $cleanName = preg_replace('/[^A-Za-z0-9_]/', '_', $customer->name);
+        return $pdf->download("Releve_compte_{$cleanName}.pdf");
     }
 
     public function edit(Customer $customer): View

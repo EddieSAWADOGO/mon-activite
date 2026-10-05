@@ -72,7 +72,7 @@
             <x-ui.stat-card
                 title="État du stock"
                 :value="$product->isLowStock() ? 'Alerte Stock Bas' : 'Stock Normal'"
-                :subtitle="$product->isLowStock() ? 'Au moins une unité sous le seuil' : 'Toutes les unités supérieures au seuil'"
+                :subtitle="$product->isLowStock() ? 'Au moins une unité sous le stock min. d\'alerte' : 'Toutes les unités supérieures au stock min.'"
                 icon="exclamation-triangle"
                 :color="$product->isLowStock() ? 'red' : 'emerald'"
             />
@@ -115,7 +115,7 @@
                                 </strong>
                             </div>
                             <div>
-                                <span class="text-slate-400 block">Seuil d'alerte:</span>
+                                <span class="text-slate-400 block">Stock min. d'alerte:</span>
                                 <span>{{ number_format($unit->low_stock_threshold, 2, ',', ' ') }}</span>
                             </div>
                         </div>
@@ -144,7 +144,7 @@
                             <th class="px-4 py-3">Équivalence unité base</th>
                             <th class="px-4 py-3">Prix de vente par défaut</th>
                             <th class="px-4 py-3">Stock actuel</th>
-                            <th class="px-4 py-3">Seuil d'alerte</th>
+                            <th class="px-4 py-3">Stock min. d'alerte</th>
                             <th class="px-4 py-3">Statut</th>
                             <th class="px-4 py-3 text-right">Action</th>
                         </tr>

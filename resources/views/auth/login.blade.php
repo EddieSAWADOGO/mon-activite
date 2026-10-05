@@ -3,8 +3,22 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion — Mon-Activité</title>
+    <title>Connexion — SuivreMonCommerce</title>
+    <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png">
     <link rel="icon" type="image/webp" href="/logo.webp">
+
+    <!-- iOS Apple Touch Icon & PWA Metas -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SuivreMonCommerce">
+
+    <!-- PWA Web App Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#059669">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="SuivreMonCommerce">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -368,7 +382,7 @@
     <div class="panel-left">
         <div class="panel-left-content">
             <div class="panel-logo">
-                <img src="/logo.webp" alt="Mon-Activité">
+                <img src="/logo.webp" alt="SuivreMonCommerce">
             </div>
 
             <h2 class="panel-title">
@@ -507,12 +521,22 @@
 
             <!-- Footer -->
             <div class="form-footer">
-                Mon-Activité &copy; {{ date('Y') }}
+                SuivreMonCommerce &copy; {{ date('Y') }}
             </div>
         </div>
     </div>
 
 </div>
 
+<!-- PWA Service Worker Registration -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                console.log('SW registration failed: ', err);
+            });
+        });
+    }
+</script>
 </body>
 </html>

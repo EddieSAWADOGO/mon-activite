@@ -188,19 +188,62 @@
                     </table>
                 </div>
 
-                <!-- 5. Totaux -->
-                <div class="flex justify-center sm:justify-end pt-2 mb-6">
-                    <div class="w-full sm:w-80 space-y-2 text-xs sm:text-sm text-center sm:text-right font-bold">
-                        @if($invoice->discount_amount > 0)
-                            <div class="flex justify-between text-amber-800 font-bold">
-                                <span>Remise :</span>
-                                <span>- {{ number_format($invoice->discount_amount, 0, ',', ' ') }} FCFA</span>
-                            </div>
-                        @endif
+                <!-- 5. Totaux & Point de Crédit du Client -->
+                <div class="space-y-4 pt-2 mb-6">
+                    <div class="flex justify-center sm:justify-end">
+                        <div class="w-full sm:w-96 space-y-2 text-xs sm:text-sm text-center sm:text-right font-bold">
+                            @if($invoice->discount_amount > 0)
+                                <div class="flex justify-between text-amber-800 font-bold">
+                                    <span>Remise :</span>
+                                    <span>- {{ number_format($invoice->discount_amount, 0, ',', ' ') }} FCFA</span>
+                                </div>
+                            @endif
 
-                        <div class="flex justify-between items-center text-base sm:text-xl font-black text-slate-900 pt-2.5 border-t-2 border-slate-900">
-                            <span>Montant Total :</span>
-                            <span class="text-slate-900">{{ number_format($invoice->total_amount, 0, ',', ' ') }} FCFA</span>
+                            <div class="flex justify-between items-center text-base sm:text-xl font-black text-slate-900 pt-2.5 border-t-2 border-slate-900">
+                                <span>Montant Total Facture :</span>
+                                <span class="text-slate-900">{{ number_format($invoice->total_amount, 0, ',', ' ') }} FCFA</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Point de Crédit / Situation Financière du Client -->
+                    <div class="rounded-xl border-2 border-slate-900 bg-white text-xs sm:text-sm text-slate-800 overflow-hidden shadow-2xs">
+                        <div class="bg-slate-900 text-white px-3.5 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-2">
+                            <span class="font-extrabold uppercase tracking-wide text-xs sm:text-sm flex items-center gap-1.5">
+                                <x-heroicon-o-calculator class="w-4 h-4 text-emerald-400 shrink-0" />
+                                <span>SITUATION DE CRÉDIT & COMPTE CLIENT</span>
+                            </span>
+                            @if($invoice->customer)
+                                <a href="{{ route('clients.statement-pdf', $invoice->customer) }}"
+                                   title="Télécharger le relevé de compte complet du client au format PDF"
+                                   class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-2xs sm:text-xs transition">
+                                    <x-heroicon-o-arrow-down-tray class="w-3.5 h-3.5 shrink-0" />
+                                    <span>Télécharger le Relevé de Compte (PDF)</span>
+                                </a>
+                            @endif
+                        </div>
+
+                        <div class="p-3.5 sm:p-4 space-y-3 font-medium bg-slate-50/50">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center sm:text-left">
+                                <div class="p-2.5 bg-white rounded-xl border border-slate-200">
+                                    <span class="text-slate-500 block text-2xs font-bold uppercase">Reliquat cette facture (N° {{ $invoice->invoice_number }})</span>
+                                    <strong class="text-slate-900 text-sm sm:text-base font-black">
+                                        {{ number_format($invoice->remaining_amount, 0, ',', ' ') }} FCFA
+                                    </strong>
+                                </div>
+                                <div class="p-2.5 bg-white rounded-xl border border-slate-200">
+                                    <span class="text-slate-500 block text-2xs font-bold uppercase">Anciens crédits (Factures précédentes)</span>
+                                    <strong class="{{ $previousCustomerDebt > 0 ? 'text-amber-800' : 'text-slate-900' }} text-sm sm:text-base font-black">
+                                        {{ number_format($previousCustomerDebt, 0, ',', ' ') }} FCFA
+                                    </strong>
+                                </div>
+                                <div class="p-2.5 bg-slate-900 text-white rounded-xl border border-slate-900">
+                                    <span class="text-slate-300 block text-2xs font-bold uppercase">TOTAL DÛ GLOBAL PAR LE CLIENT</span>
+                                    <strong class="text-emerald-400 text-base sm:text-lg font-black">
+                                        {{ number_format($invoice->remaining_amount + $previousCustomerDebt, 0, ',', ' ') }} FCFA
+                                    </strong>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

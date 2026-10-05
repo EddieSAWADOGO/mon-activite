@@ -80,7 +80,7 @@
                             </div>
                             <div>
                                 <h2 class="font-bold text-slate-900 text-sm sm:text-base">Alertes de Stock</h2>
-                                <p class="text-xs text-slate-400">Seuil d'alerte atteint</p>
+                                <p class="text-xs text-slate-400">Stock minimum atteint</p>
                             </div>
                         </div>
                         <a href="{{ route('stock.index') }}" class="text-xs sm:text-sm text-emerald-600 hover:text-emerald-700 font-semibold inline-flex items-center gap-1">
@@ -95,7 +95,7 @@
                                 <x-heroicon-o-check-circle class="w-5 h-5" />
                             </div>
                             <p class="font-semibold text-slate-700">Stock optimal</p>
-                            <p class="text-xs text-slate-400">Aucun produit sous le seuil d'alerte.</p>
+                            <p class="text-xs text-slate-400">Aucun produit sous le stock minimum d'alerte.</p>
                         </div>
                     @else
                         <div class="divide-y divide-slate-100">
@@ -111,7 +111,7 @@
                                         <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200/80">
                                             <span>Restant : {{ number_format($unit->current_stock, 0, ',', ' ') }}</span>
                                             <span class="text-amber-400">&bull;</span>
-                                            <span class="font-medium text-amber-700">Seuil : {{ number_format($unit->low_stock_threshold, 0, ',', ' ') }}</span>
+                                            <span class="font-medium text-amber-700">Alerte min : {{ number_format($unit->low_stock_threshold, 0, ',', ' ') }}</span>
                                         </span>
                                     </div>
                                 </div>

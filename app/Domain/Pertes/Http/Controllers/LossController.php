@@ -17,7 +17,7 @@ class LossController extends Controller
     {
         $this->authorize('viewAny', Loss::class);
 
-        $query = Loss::with(['product', 'stockUnit', 'createdBy'])->latest();
+        $query = Loss::with(['product', 'stockUnit', 'createdBy'])->latest('loss_date')->latest('id');
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {

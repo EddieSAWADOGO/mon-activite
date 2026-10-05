@@ -16,13 +16,19 @@
                 </div>
             </div>
 
-            @can('update', $customer)
-                <div class="w-full sm:w-auto">
+            <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto [&>a]:w-full [&>a]:sm:w-auto [&>button]:w-full [&>button]:sm:w-auto">
+                <a href="{{ route('clients.statement-pdf', $customer) }}" title="Télécharger le Relevé de Compte complet du client en PDF"
+                   class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 text-xs sm:text-sm font-bold transition shadow-xs cursor-pointer">
+                    <x-heroicon-o-arrow-down-tray class="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>Relevé de Compte (PDF)</span>
+                </a>
+
+                @can('update', $customer)
                     <x-ui.button href="{{ route('clients.edit', $customer) }}" variant="secondary" icon="pencil-square" size="sm" class="w-full sm:w-auto">
                         Éditer
                     </x-ui.button>
-                </div>
-            @endcan
+                @endcan
+            </div>
         </div>
     </x-slot>
 

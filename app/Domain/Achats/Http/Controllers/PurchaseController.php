@@ -21,7 +21,8 @@ class PurchaseController extends Controller
         $this->authorize('viewAny', Purchase::class);
 
         $query = Purchase::with(['supplier', 'createdBy', 'lines.product'])
-            ->latest('purchase_date');
+            ->latest('purchase_date')
+            ->latest('id');
 
         if ($request->filled('search')) {
             $search = $request->input('search');

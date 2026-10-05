@@ -82,6 +82,9 @@
                            x-model.number="amount"
                            required
                            class="w-full rounded-xl border border-slate-200 bg-white py-3 px-4 text-base sm:text-lg font-extrabold text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
+                    <div x-show="amount > 0" class="text-xs font-bold text-emerald-700 mt-1">
+                        = <span x-text="formatNumberFR(amount)"></span> FCFA
+                    </div>
                     <p x-show="amount > maxAmount" class="mt-1 text-xs text-red-600 font-semibold flex items-center gap-1">
                         <x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" /> Le montant ne peut pas dépasser {{ number_format($invoice->remaining_amount, 0, ',', ' ') }} FCFA.
                     </p>

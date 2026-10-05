@@ -319,7 +319,7 @@
         </tbody>
     </table>
 
-    <!-- Totaux -->
+    <!-- Totaux & Situation de Crédit du Client -->
     <div class="totals-section">
         <table class="totals-table">
             @if($invoice->discount_amount > 0)
@@ -329,8 +329,31 @@
                 </tr>
             @endif
             <tr class="total-row">
-                <td style="font-size: 18px; font-weight: 900;">Montant Total :</td>
+                <td style="font-size: 18px; font-weight: 900;">Montant Total Facture :</td>
                 <td class="text-right" style="font-size: 21px; font-weight: 900;">{{ number_format($invoice->total_amount, 0, ',', ' ') }} FCFA</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Point de Crédit / Situation Financière du Client -->
+    <div style="margin-top: 20px; border: 2px solid #0f172a; border-radius: 8px; overflow: hidden; page-break-inside: avoid;">
+        <div style="background-color: #0f172a; color: #ffffff; padding: 7px 12px; font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">
+            SITUATION DE CRÉDIT & COMPTE CLIENT
+        </div>
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px; font-weight: 700; background-color: #f8fafc;">
+            <tr>
+                <td style="width: 35%; padding: 10px 12px; border-right: 1px solid #cbd5e1; vertical-align: top;">
+                    <div style="color: #64748b; font-size: 10.5px; font-weight: 800; text-transform: uppercase;">Reliquat cette facture (N° {{ $invoice->invoice_number }}) :</div>
+                    <div style="font-size: 15px; font-weight: 900; color: #0f172a; margin-top: 2px;">{{ number_format($invoice->remaining_amount, 0, ',', ' ') }} FCFA</div>
+                </td>
+                <td style="width: 35%; padding: 10px 12px; border-right: 1px solid #cbd5e1; vertical-align: top;">
+                    <div style="color: #64748b; font-size: 10.5px; font-weight: 800; text-transform: uppercase;">Anciens crédits (Factures précédentes) :</div>
+                    <div style="font-size: 15px; font-weight: 900; color: #0f172a; margin-top: 2px;">{{ number_format($previousCustomerDebt, 0, ',', ' ') }} FCFA</div>
+                </td>
+                <td style="width: 30%; padding: 10px 12px; vertical-align: top; text-align: right; background-color: #f1f5f9;">
+                    <div style="color: #0f172a; font-size: 10.5px; font-weight: 900; text-transform: uppercase;">TOTAL DÛ GLOBAL :</div>
+                    <div style="font-size: 16px; font-weight: 900; color: #0f172a; margin-top: 2px;">{{ number_format($invoice->remaining_amount + $previousCustomerDebt, 0, ',', ' ') }} FCFA</div>
+                </td>
             </tr>
         </table>
     </div>

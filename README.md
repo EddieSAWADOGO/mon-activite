@@ -1,6 +1,6 @@
-# Mon-Activité — Application de Gestion Commerciale & Traçabilité
+# SuivreMonCommerce — Application de Gestion Commerciale & Traçabilité
 
-**Mon-Activité** est une application web PWA (Progressive Web App) monolithique développée avec **Laravel 13 (Blade)**, **Alpine.js** et **Tailwind CSS**, conçue pour la gestion commerciale et la traçabilité complète de l'activité d'un commerçant (négoce de produits auprès de fournisseurs et revente aux clients).
+**SuivreMonCommerce** (`suivremoncommerce.com`) est une application web PWA (Progressive Web App) monolithique développée avec **Laravel 13 (Blade)**, **Alpine.js** et **Tailwind CSS**, conçue pour la gestion commerciale et la traçabilité complète de l'activité d'un commerçant (négoce de produits auprès de fournisseurs et revente aux clients).
 
 ---
 
@@ -100,9 +100,9 @@ Le seeder `DatabaseSeeder` génère les comptes suivants (Mot de passe commun : 
 
 | Rôle | Email | Responsabilités |
 |---|---|---|
-| **Super Administrateur** | `superadmin@mon-activite.com` | Accès complet, gestion des utilisateurs & système |
-| **Administrateur** | `admin@mon-activite.com` | Produits, stocks, achats, ventes, retours, pertes, historique & finances |
-| **Caissier** | `cashier@mon-activite.com` | Ventes, création de clients, consultation stock, enregistrement des règlements |
+| **Super Administrateur** | `superadmin@suivremoncommerce.com` | Accès complet, gestion des utilisateurs & système |
+| **Administrateur** | `admin@suivremoncommerce.com` | Produits, stocks, achats, ventes, retours, pertes, historique & finances |
+| **Caissier** | `cashier@suivremoncommerce.com` | Ventes, création de clients, consultation stock, enregistrement des règlements |
 
 ---
 
@@ -157,4 +157,4 @@ L'application intègre un manifeste PWA (`public/manifest.json`) et est optimis�
 
 ## 📜 Licence
 
-Ce projet est un logiciel propriétaire développé pour la gestion commerciale de **Mon-Activité**. Tous droits réservés.
+Ce projet est un logiciel propriétaire développé pour la gestion commerciale de **SuivreMonCommerce** (`suivremoncommerce.com`). Tous droits réservés.

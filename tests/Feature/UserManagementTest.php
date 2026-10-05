@@ -36,7 +36,7 @@ class UserManagementTest extends TestCase
 
         $response = $this->actingAs($admin)->post('/utilisateurs', [
             'name' => 'Nouveau Caissier',
-            'email' => 'caissier.nouveau@mon-activite.com',
+            'email' => 'caissier.nouveau@suivremoncommerce.com',
             'password' => 'secret123',
             'role' => UserRole::CASHIER->value,
             'is_active' => '1',
@@ -44,7 +44,7 @@ class UserManagementTest extends TestCase
 
         $response->assertRedirect('/utilisateurs');
         $this->assertDatabaseHas('users', [
-            'email' => 'caissier.nouveau@mon-activite.com',
+            'email' => 'caissier.nouveau@suivremoncommerce.com',
             'role' => UserRole::CASHIER->value,
         ]);
     }

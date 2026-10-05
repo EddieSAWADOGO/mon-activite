@@ -33,7 +33,7 @@ class UserController extends Controller
             $query->where('role', $request->input('role'));
         }
 
-        $users = $query->orderBy('name')->paginate(15)->withQueryString();
+        $users = $query->latest()->paginate(15)->withQueryString();
         $roles = UserRole::cases();
 
         return view('utilisateurs.index', compact('users', 'roles'));

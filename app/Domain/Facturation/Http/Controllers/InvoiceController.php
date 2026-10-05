@@ -16,7 +16,7 @@ class InvoiceController extends Controller
     {
         $this->authorize('viewAny', Invoice::class);
 
-        $query = Invoice::with(['customer', 'createdBy'])->latest('invoice_date');
+        $query = Invoice::with(['customer', 'createdBy'])->latest('invoice_date')->latest('id');
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
@@ -51,7 +51,14 @@ class InvoiceController extends Controller
         $invoice->load(['customer', 'createdBy', 'sale', 'lines.product', 'lines.stockUnit']);
         $company = CompanySetting::getSettings();
 
-        return view('factures.show', compact('invoice', 'company'));
+        // Anciens crédits / reliquats impayés du client (hors présente vente)
+        $previousCustomerDebt = $invoice->customer
+            ? (float) $invoice->customer->sales()
+                ->where('id', '!=', $invoice->sale_id)
+                ->sum('remaining_amount')
+            : 0;
+
+        return view('factures.show', compact('invoice', 'company', 'previousCustomerDebt'));
     }
 
     public function pdf(Invoice $invoice)
@@ -61,7 +68,14 @@ class InvoiceController extends Controller
         $invoice->load(['customer', 'createdBy', 'lines.product', 'lines.stockUnit']);
         $company = CompanySetting::getSettings();
 
-        $pdf = Pdf::loadView('factures.pdf', compact('invoice', 'company'))
+        // Anciens crédits / reliquats impayés du client (hors présente vente)
+        $previousCustomerDebt = $invoice->customer
+            ? (float) $invoice->customer->sales()
+                ->where('id', '!=', $invoice->sale_id)
+                ->sum('remaining_amount')
+            : 0;
+
+        $pdf = Pdf::loadView('factures.pdf', compact('invoice', 'company', 'previousCustomerDebt'))
             ->setPaper('a4', 'portrait');
 
         return $pdf->download("Facture_{$invoice->invoice_number}.pdf");
@@ -75,14 +89,24 @@ class InvoiceController extends Controller
         $cleanPhone = $customerPhone ? preg_replace('/[^0-9]/', '', $customerPhone) : '';
 
         $company = CompanySetting::getSettings();
+
+        $previousCustomerDebt = $invoice->customer
+            ? (float) $invoice->customer->sales()
+                ->where('id', '!=', $invoice->sale_id)
+                ->sum('remaining_amount')
+            : 0;
+        $totalGlobalDue = $invoice->remaining_amount + $previousCustomerDebt;
+
         $message = sprintf(
-            "Bonjour %s, voici votre facture n° %s du %s émise par %s d'un montant total de %s FCFA (Reste à payer : %s FCFA). Merci pour votre confiance !",
+            "Bonjour %s, voici votre facture n° %s du %s émise par %s d'un montant total de %s FCFA (Reste sur cette facture : %s FCFA - Reliquat antérieur : %s FCFA - Total dû global : %s FCFA). Merci pour votre confiance !",
             $invoice->customer?->name ?? 'Client',
             $invoice->invoice_number,
             $invoice->invoice_date->format('d/m/Y'),
             $company->name,
             number_format($invoice->total_amount, 0, ',', ' '),
-            number_format($invoice->remaining_amount, 0, ',', ' ')
+            number_format($invoice->remaining_amount, 0, ',', ' '),
+            number_format($previousCustomerDebt, 0, ',', ' '),
+            number_format($totalGlobalDue, 0, ',', ' ')
         );
 
         $url = "https://wa.me/{$cleanPhone}?text=" . urlencode($message);

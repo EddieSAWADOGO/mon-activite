@@ -128,6 +128,9 @@
                                 <label class="block text-xs font-semibold text-slate-700 mb-1.5">Prix Unitaire D'Achat (FCFA) <span class="text-red-500">*</span></label>
                                 <input type="number" min="0" :name="'lines['+index+'][unit_price]'" x-model.number="line.unit_price" required
                                        class="w-full rounded-xl border border-slate-200 text-xs sm:text-sm py-2.5 px-3.5 sm:py-3 focus:ring-2 focus:ring-emerald-500 bg-white font-bold">
+                                <div x-show="line.unit_price > 0" class="text-xs font-bold text-emerald-700 mt-1">
+                                    = <span x-text="formatNumber(line.unit_price)"></span> FCFA
+                                </div>
                             </div>
                         </div>
 
@@ -150,7 +153,10 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1">Montant Payé immédiatement (FCFA) <span class="text-red-400">*</span></label>
                     <input type="number" min="0" :max="totalAmount" name="paid_amount" x-model.number="paidAmount" required
-                           class="w-full rounded-xl border border-slate-700 bg-slate-800 text-white text-xs sm:text-sm p-2.5 focus:ring-2 focus:ring-emerald-500">
+                           class="w-full rounded-xl border border-slate-700 bg-slate-800 text-white text-xs sm:text-sm p-2.5 focus:ring-2 focus:ring-emerald-500 font-bold">
+                    <div x-show="paidAmount > 0" class="text-xs font-bold text-emerald-400 mt-1">
+                        = <span x-text="formatNumber(paidAmount)"></span> FCFA
+                    </div>
                     <p x-show="parseFloat(paidAmount || 0) > parseFloat(totalAmount || 0)" class="mt-1 text-xs text-red-400 font-semibold flex items-center gap-1">
                         <x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" /> Le montant payé ne peut pas dépasser le total de l'achat.
                     </p>

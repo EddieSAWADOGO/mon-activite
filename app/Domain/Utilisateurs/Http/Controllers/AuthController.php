@@ -29,7 +29,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             return redirect()->intended(route('dashboard'))
-                ->with('success', 'Bienvenue sur Mon-Activité, ' . Auth::user()->name . ' !');
+                ->with('success', 'Bienvenue sur SuivreMonCommerce, ' . Auth::user()->name . ' !');
         }
 
         return back()->withErrors([

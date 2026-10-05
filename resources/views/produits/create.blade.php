@@ -99,7 +99,7 @@
                     </div>
 
                     <!-- Prix de vente par défaut -->
-                    <div>
+                    <div x-data="{ basePrice: {{ old('base_unit_price', 0) }} }">
                         <label for="base_unit_price" class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
                             Prix de vente (FCFA) <span class="text-red-500">*</span>
                         </label>
@@ -108,9 +108,12 @@
                                min="0"
                                name="base_unit_price"
                                id="base_unit_price"
-                               value="{{ old('base_unit_price', 0) }}"
+                               x-model.number="basePrice"
                                required
-                               class="w-full py-2.5 px-3.5 sm:py-3 sm:px-4 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition @error('base_unit_price') border-red-500 @enderror">
+                               class="w-full py-2.5 px-3.5 sm:py-3 sm:px-4 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition font-bold @error('base_unit_price') border-red-500 @enderror">
+                        <div x-show="basePrice > 0" class="text-xs font-bold text-emerald-700 mt-1">
+                            = <span x-text="formatNumberFR(basePrice)"></span> FCFA
+                        </div>
                         @error('base_unit_price')
                             <p class="text-xs text-red-600 mt-1 flex items-center gap-1">
                                 <x-heroicon-o-exclamation-circle class="w-3.5 h-3.5 shrink-0" />
@@ -119,10 +122,10 @@
                         @enderror
                     </div>
 
-                    <!-- Seuil d'alerte stock bas -->
+                    <!-- Seuil/Stock min d'alerte bas -->
                     <div>
                         <label for="base_unit_low_stock_threshold" class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
-                            Seuil alerte stock <span class="text-red-500">*</span>
+                            Stock min. d'alerte <span class="text-red-500">*</span>
                         </label>
                         <input type="number"
                                step="0.01"
@@ -223,9 +226,9 @@
                                            class="w-full py-2 px-3 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
                                 </div>
 
-                                <!-- Seuil alerte -->
+                                <!-- Stock min d'alerte -->
                                 <div>
-                                    <label class="block text-xs font-medium text-slate-700 mb-1">Seuil alerte <span class="text-red-500">*</span></label>
+                                    <label class="block text-xs font-medium text-slate-700 mb-1">Stock min. d'alerte <span class="text-red-500">*</span></label>
                                     <input type="number"
                                            step="0.01"
                                            min="0"

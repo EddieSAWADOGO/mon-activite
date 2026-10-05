@@ -22,13 +22,13 @@ class AuthTest extends TestCase
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
         $user = User::factory()->create([
-            'email' => 'test@mon-activite.com',
+            'email' => 'test@suivremoncommerce.com',
             'password' => bcrypt('password123'),
             'is_active' => true,
         ]);
 
         $response = $this->post('/login', [
-            'email' => 'test@mon-activite.com',
+            'email' => 'test@suivremoncommerce.com',
             'password' => 'password123',
         ]);
 
@@ -39,12 +39,12 @@ class AuthTest extends TestCase
     public function test_users_can_not_authenticate_with_invalid_password(): void
     {
         $user = User::factory()->create([
-            'email' => 'test@mon-activite.com',
+            'email' => 'test@suivremoncommerce.com',
             'password' => bcrypt('password123'),
         ]);
 
         $this->post('/login', [
-            'email' => 'test@mon-activite.com',
+            'email' => 'test@suivremoncommerce.com',
             'password' => 'wrong-password',
         ]);
 
@@ -54,13 +54,13 @@ class AuthTest extends TestCase
     public function test_inactive_users_cannot_authenticate(): void
     {
         $user = User::factory()->create([
-            'email' => 'inactive@mon-activite.com',
+            'email' => 'inactive@suivremoncommerce.com',
             'password' => bcrypt('password123'),
             'is_active' => false,
         ]);
 
         $this->post('/login', [
-            'email' => 'inactive@mon-activite.com',
+            'email' => 'inactive@suivremoncommerce.com',
             'password' => 'password123',
         ]);
 

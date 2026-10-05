@@ -40,7 +40,7 @@ class ProductController extends Controller
             $query->lowStock();
         }
 
-        $products = $query->orderBy('name', 'asc')->paginate(15)->withQueryString();
+        $products = $query->latest()->paginate(15)->withQueryString();
 
         return view('produits.index', compact('products'));
     }

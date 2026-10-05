@@ -56,7 +56,7 @@ class SupplierController extends Controller
     public function show(Supplier $supplier)
     {
         $supplier->load(['purchases' => function ($q) {
-            $q->latest()->limit(10);
+            $q->latest('purchase_date')->latest('id');
         }]);
 
         $totalPurchased = $supplier->purchases()->sum('total_amount');

@@ -928,6 +928,114 @@ Prise en compte des consignes sur la navigation et l'historique des paiements : 
   - Purge des vues : `php artisan view:clear`.
   - Exécution du test d'intégrité Blade : **100% Vert**.
 
+---
+
+## Session 45 — Harmonisation de la Terminologie "Stock Minimum d'Alerte", Tri Antéchronologique Universel, Options de Remises, Point de Crédit Client & Saisie des Montants Séparés
+
+### 1. Tâche réalisée
+Prise en compte intégrale de toutes les exigences formulées par l'utilisateur :
+1. Remplacement systématique du terme "seuil" par "Stock minimum d'alerte" / "Alerte min" pour une meilleure compréhension utilisateur.
+2. Tri antéchronologique universel sur TOUTES les listes et sous-historiques du projet (les enregistrements les plus récents figurent systématiquement tout en haut).
+3. Enrichissement de la saisie des remises avec des boutons d'options prédéfinies en 1 clic ("Prix de gros", "Remise commerciale", "Achat en quantité", "Client fidèle", "Promotion") et liste de suggestions réactives.
+4. Intégration d'un relevé automatique de la situation de crédit globale du client sur chaque facture émise (facture écran web, document PDF et message WhatsApp) indiquant le solde de la présente facture, le reliquat des factures précédentes, et le total dû global.
+5. Sécurisation directe de la navigation du bouton retour (`<x-ui.back-button>`) pour éviter tout problème de renvoi de formulaire navigateur après soumission.
+6. Affichage dynamique en temps réel des montants avec séparateur de milliers par espace (ex: `1 500 000 FCFA`) lors de la saisie sur tous les formulaires financiers.
+
+### 2. Améliorations apportées
+- **Terminologie Plus Claire ("Stock minimum d'alerte")** :
+  - Remplacement de "Seuil d'alerte" / "seuil" dans l'ensemble des formulaires de création et d'édition de produits, la fiche produit, la gestion des stocks, le tableau de bord et les messages de validation par "Stock min. d'alerte" / "Alerte min".
+- **Tri Antéchronologique Généralisé (`latest()`)** :
+  - Mise à jour de l'ensemble des contrôleurs (`CustomerController`, `SupplierController`, `SaleController`, `PurchaseController`, `InvoiceController`, `PaymentController`, `ProductController`, `UserController`, `LossController`, `CustomerReturnController`, `RepackagingController`, `StockController`) pour trier systématiquement les listes et relations par date et ID décroissant.
+- **Boutons de Remises Prédéfinies en 1 Clic (`ventes/create.blade.php`)** :
+  - Ajout de 5 boutons de choix instantanés ("Prix de gros", "Remise commerciale", "Achat en quantité", "Client fidèle", "Promotion") lors de la détection d'un écart de prix, préremplissant le champ `discount_reason` sans saisie manuelle obligatoire.
+- **Situation de Crédit Globale du Client sur la Facture (`InvoiceController`, `factures/show`, `factures/pdf`, `factures/whatsapp`)** :
+  - Calcul dynamique en temps réel des anciens crédits/reliquats dus par le client sur ses autres factures précédentes.
+  - Ajout d'un encadré officiel **SITUATION DE CRÉDIT DU CLIENT** indiquant le reliquat sur la facture présente, les anciens crédits antérieurs, et le **TOTAL DÛ GLOBAL PAR LE CLIENT**.
+- **Sécurisation du Bouton Retour (`<x-ui.back-button>`)** :
+  - Navigation directe et prévisible vers l'URL cible sans intercepter `window.history.back()`, éliminant définitivement les erreurs de renvoi de formulaire POST du navigateur.
+- **Lecture et Saisie des Montants avec Séparateurs de Milliers (`formatNumberFR` / `formatFCFA`)** :
+  - Fonctions JS globales de formatage et affichage dynamique d'équivalence sous les champs de saisie des montants et prix (ex: `= 1 500 000 FCFA`).
+- **Validation Globale** :
+  - Compilation des vues Blade : **100% Réussie**.
+  - Suite de tests unitaires et fonctionnels : **100% Réussie (63 tests validés)**.
+
+---
+
+## Session 46 — Refonte de la Situation de Crédit Client sur la Facture & Téléchargement du Relevé de Compte Client Complet (PDF)
+
+### 1. Tâche réalisée
+Amélioration majeure de la présentation de la situation de compte client sur la facture (écran web & PDF) et création du document officiel **Relevé de Compte Client (PDF)** téléchargeable directement en 1 clic depuis la facture (`factures/show.blade.php`) et la fiche client (`clients/show.blade.php`).
+
+### 2. Fonctionnalités & Améliorations Apportées
+- **Mise en Valeur de la Situation de Crédit Client sur la Facture (`factures/show.blade.php` & `factures/pdf.blade.php`)** :
+  - Encadré officiel noir/émeraude haut de gamme avec en-tête sombre *"SITUATION DE CRÉDIT & COMPTE CLIENT"*.
+  - Décomposition claire et lisible en 3 blocs distincts :
+    1. *Reliquat sur cette facture*
+    2. *Anciens crédits (Reliquat des factures précédentes)*
+    3. *TOTAL DÛ GLOBAL PAR LE CLIENT* (mis en avant en gros caractères gras).
+- **Génération du Relevé de Compte Client Complet (`clients.statement-pdf`)** :
+  - Nouvelle route `GET /clients/{customer}/releve-pdf` (`CustomerController::statementPdf`).
+  - Template PDF professionnel `resources/views/clients/statement-pdf.blade.php` :
+    - En-tête officiel de l'entreprise (Nom, IFU, RCCM, Adresse, Téléphones) et informations client.
+    - Bloc de synthèse financière globale (*Total Achats Effectués*, *Total Montant Réglé*, *SOLDE TOTAL RESTANT DÛ*).
+    - Section 1 : Tableau chronologique exhaustif de toutes les Ventes & Factures du client (Date, N° Vente/Facture, Montant Total, Montant Réglé, Reliquat Dû).
+    - Section 2 : Tableau chronologique de tous les Encaissements & Règlements effectués (Date, N° Facture, Mode de paiement, Référence transactionnelle, Montant Versé).
+- **Accès Rapide en 1 Clic** :
+  - Bouton vert émeraude *"Télécharger le Relevé de Compte (PDF)"* intégré directement dans l'en-tête du bloc Situation de Compte sur la facture (`factures/show.blade.php`).
+  - Bouton noir/émeraude *"Relevé de Compte (PDF)"* présent dans la barre d'actions de la fiche client (`clients/show.blade.php`).
+- **Validation** :
+  - Purge des vues : `php artisan view:clear`.
+  - Exécution des tests fonctionnels : **100% Vert**.
+
+---
+
+## Session 47 — Configuration Optimisée du PWA, des Icônes d'Écran d'Accueil iOS (Apple Touch Icons) & Service Worker Caching
+
+### 1. Tâche réalisée
+Résolution complète du problème d'affichage du logo sur l'icône de l'écran d'accueil Safari / iOS ("Sur l'écran d'accueil" / "Add to Home Screen"). Génération de l'ensemble des fichiers icônes PNG haute résolution adaptées (avec fond sombre `#0f172a` et marge de sécurité pour le découpage arrondi d'iOS), configuration des balises `<link rel="apple-touch-icon">` et métas PWA sur toutes les vues, enrichissement du manifeste PWA (`manifest.json`) et mise en place du Service Worker (`public/sw.js`).
+
+### 2. Fonctionnalités & Améliorations Apportées
+- **Pourquoi l'icône iOS affichait uniquement une lettre ou une capture tronquée ?**
+  - iOS Safari n'utilise pas le fichier `manifest.json` pour créer le raccourci sur l'écran d'accueil, mais recherche exclusivement des balises `<link rel="apple-touch-icon" ...>` au format PNG carré avec des dimensions spécifiques.
+  - Sans ces balises ou avec un dossier d'icônes manquant (`/public/icons` absent), Safari génère automatiquement une capture d'écran du coin supérieur gauche du site ou affiche la première lettre du titre du domaine.
+- **Génération des Icônes PNG Réelles (`public/icons/` & Root)** :
+  - `public/apple-touch-icon.png` (180x180) & `apple-touch-icon-precomposed.png` (180x180) au niveau de la racine web pour le fallback automatique d'iOS.
+  - `public/icons/icon-180.png`, `icon-192.png`, `icon-512.png` et `icon-maskable-512.png` pour Android et Chrome PWA.
+  - Fond bleu nuit (`#0f172a`) assurant un contraste parfait et un logo centré sans rognage sur iOS et Android.
+- **Balises Meta iOS & Manifest PWA Unifiés** :
+  - Ajout des balises `<link rel="apple-touch-icon">`, `<meta name="apple-mobile-web-app-capable" content="yes">`, `<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">`, `<meta name="apple-mobile-web-app-title" content="Mon-Activité">` dans `layouts/app.blade.php`, `components/layouts/app.blade.php` et `auth/login.blade.php`.
+  - Mise à jour de `manifest.json` (icônes standard + maskable, orientation portrait, scope `/`, `display: standalone`).
+- **PWA Service Worker (`public/sw.js`)** :
+  - Script Service Worker pour mise en cache intelligente, démarrage rapide et comportement PWA fluide ("Comme une application native") sur iOS 16.4+ et Android.
+- **Validation** :
+  - `php artisan view:clear` & `php vendor/bin/phpunit tests/Unit/BladeViewsTest.php` : **100% Réussi**.
+
+---
+
+## Session 48 — Changement d'Identité & Branding : Migration vers "SuivreMonCommerce" (`suivremoncommerce.com`)
+
+### 1. Tâche réalisée
+Mise à jour intégrale de l'identité et du nom de l'application dans l'ensemble du projet suite à l'acquisition du nom de domaine officiel `suivremoncommerce.com` et à la création du nouveau logo de la marque.
+
+### 2. Modifications apportées
+- **Mise à Jour des Métadonnées & PWA (`public/manifest.json`, `.env`, layouts)** :
+  - `APP_NAME="SuivreMonCommerce"` dans `.env`.
+  - Nom d'application `"name": "SuivreMonCommerce"` et `"short_name": "SuivreMonCommerce"` dans `public/manifest.json`.
+  - `<meta name="apple-mobile-web-app-title" content="SuivreMonCommerce">` et `<meta name="application-name" content="SuivreMonCommerce">` dans tous les layouts Blade.
+- **Mise à Jour de l'Interface Utilisateur (Navbars, Footers, Connexion)** :
+  - Actualisation des titres de pages, du logo alt, de l'en-tête de la barre latérale desktop et du menu déroulant mobile vers `SuivreMonCommerce`.
+  - Message de bienvenue post-connexion mis à jour dans `AuthController`.
+  - Footer de la page de connexion actualisé (`SuivreMonCommerce © 2026`).
+- **Mise à Jour des Seeders & Emails de Démonstration (`database/seeders/DemoDataSeeder.php`)** :
+  - Adresses e-mails par défaut actualisées vers `@suivremoncommerce.com` (`superadmin@suivremoncommerce.com`, `admin@suivremoncommerce.com`, `cashier@suivremoncommerce.com`, `agentX@suivremoncommerce.com`).
+- **Validation** :
+  - Purge des vues compilées `php artisan view:clear`.
+  - Exécution du test unitaire des vues Blade : **100% Réussi**.
+
+
+
+
+
 
 
 

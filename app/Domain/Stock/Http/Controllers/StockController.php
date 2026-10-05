@@ -49,7 +49,8 @@ class StockController extends Controller
     public function movements(Request $request)
     {
         $query = StockMovement::with(['product', 'stockUnit', 'createdBy'])
-            ->latest('movement_date');
+            ->latest('movement_date')
+            ->latest('id');
 
         if ($request->filled('product_id')) {
             $query->where('product_id', $request->input('product_id'));

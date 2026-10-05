@@ -18,7 +18,7 @@ class RepackagingController extends Controller
     {
         $this->authorize('viewAny', Repackaging::class);
 
-        $query = Repackaging::with(['product', 'sourceStockUnit', 'targetStockUnit', 'createdBy'])->latest();
+        $query = Repackaging::with(['product', 'sourceStockUnit', 'targetStockUnit', 'createdBy'])->latest('repackaging_date')->latest('id');
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {

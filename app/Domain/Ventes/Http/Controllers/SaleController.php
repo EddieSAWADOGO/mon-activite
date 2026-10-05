@@ -22,7 +22,7 @@ class SaleController extends Controller
     {
         $this->authorize('viewAny', Sale::class);
 
-        $query = Sale::with(['customer', 'createdBy', 'invoice'])->latest('sale_date');
+        $query = Sale::with(['customer', 'createdBy', 'invoice'])->latest('sale_date')->latest('id');
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
